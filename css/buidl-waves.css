@@ -374,12 +374,6 @@ md-progress-linear .md-bar{background-color:#9C27B0}
 .wavesDD{display:inline-block;height:90%;padding:6.4px;padding:.4rem}
 .wavesDD select{font-family:Roboto;font-size:18.4px;font-size:1.15rem;padding:1.6px;padding:.1rem}
 #hResults{height:auto;padding-bottom:16px;padding-bottom:1rem}
-#mBB-token{width:100%;text-align:center}
-#mBB-token form{width:500px;margin:0 auto}
-#mBB-token form button{margin-top:16px;margin-top:1rem}
-#mBB-token table{width:100%}
-#mBB-token table tbody tr:last-child{background-color:#fff;font-style:italic;color:#999;text-align:right;padding-right:8px;padding-right:.5rem}
-#mBB-token table tbody tr:last-child:hover{cursor:default}
 .massPayRecap{max-width:435px;max-height:65vh;overflow-y:scroll}
 .massPayRecap p:first-child{margin-bottom:16px;margin-bottom:1rem}
 .massPayRecap p:first-child,.massPayRecap p:nth-child(2){padding-left:16px;padding-left:1rem;padding-right:16px;padding-right:1rem}
@@ -388,8 +382,30 @@ md-progress-linear .md-bar{background-color:#9C27B0}
 #asset-mass-pay-dialog{max-width:550px;text-align:center}
 #asset-mass-pay-dialog p{text-align:center;margin-bottom:8px;margin-bottom:.5rem;word-break:break-all;word-wrap:break-word}
 #massPaymentFilesForm input[type=file]{font-family:Roboto}
-#create-asset-form{padding-bottom:60px}
-#create-asset-form div:first-child{margin-bottom:-20px}
+
+/* TOKENS */
+
+#mBB-token{
+	width:100%;
+	text-align:center;
+}
+#create-asset-buttons{
+	margin-top:1rem;
+}
+#create-asset-fee {
+	background-color:#fff;
+	color:#999;
+	font-style:italic;
+	padding-right:.5rem;
+	text-align:right;
+}
+#create-asset-form{
+	margin:0 auto;
+	padding-bottom:60px;
+	width:20rem;
+}
+
+
 #mBB-community{width:100%;text-align:center}
 #mBB-community>p{text-align:center;margin-bottom:16px;margin-bottom:1rem;font-size:19.2px;font-size:1.2rem;color:#e1b47d;font-weight:600}
 @media only screen and (max-width:1024px){
