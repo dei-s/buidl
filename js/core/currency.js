@@ -18,6 +18,8 @@
  * @requires {decimal.js}
  */
 var Currency = (function () {
+	'use strict';
+
 	var currencyCache = {};
 
 	function Currency(data) {

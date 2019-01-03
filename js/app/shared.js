@@ -4532,7 +4532,7 @@
 (function () {
     'use strict';
 
-    var url = 'wallet.dei.su';
+    var url = DEI_SUPPORT_LINK;
 
     function SupportLinkController() {}
 
