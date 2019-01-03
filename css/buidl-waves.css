@@ -392,7 +392,7 @@ md-progress-linear .md-bar{background-color:#9C27B0}
 #create-asset-buttons{
 	margin-top:1rem;
 }
-#create-asset-fee {
+#create-asset-fee{
 	background-color:#fff;
 	color:#999;
 	font-style:italic;
@@ -402,7 +402,11 @@ md-progress-linear .md-bar{background-color:#9C27B0}
 #create-asset-form{
 	margin:0 auto;
 	padding-bottom:60px;
-	width:20rem;
+	text-align:left;
+	width:40rem;
+}
+#create-asset-form>div{
+	margin:0.4rem;
 }
 
 
