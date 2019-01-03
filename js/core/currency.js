@@ -52,6 +52,7 @@ var Currency = (function () {
 		precision: 8,
 		verified: true
 	});
+	var BASE = WAVES;
 
 	var BTC = new Currency({
 		id: '8LQW8f7P5d5PZM7GtZEBgaqRPGSzS3DfPuiXrURJ4AJS',
@@ -108,6 +109,7 @@ var Currency = (function () {
 	function invalidateCache() {
 		currencyCache = {};
 
+		currencyCache[BASE.id] = BASE;
 		currencyCache[WAVES.id] = WAVES;
 		currencyCache[BTC.id] = BTC;
 		currencyCache[USD.id] = USD;
@@ -134,6 +136,7 @@ var Currency = (function () {
 		},
 		invalidateCache: invalidateCache,
 		isCached: isCached,
+		BASE: BASE,
 		WAVES: WAVES,
 		BTC: BTC,
 		USD: USD,
@@ -145,4 +148,4 @@ var Currency = (function () {
 })();
 
 // set up decimal to format 0.00000001 as is instead of 1e-8
-Decimal.config({toExpNeg: -(Currency.WAVES.precision + 1)});
+Decimal.config({toExpNeg: -(Currency.BASE.precision + 1)});
