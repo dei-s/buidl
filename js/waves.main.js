@@ -61,7 +61,6 @@ var app = angular.module('app', [
     'app.tokens',
     'app.dex',
     'app.history',
-    'app.community',
     'app.portfolio'
 ]).config(AngularApplicationConfig).run(AngularApplicationRun);
 

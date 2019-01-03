@@ -1083,8 +1083,7 @@
 								<span tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="The FEE you will be charged<br/>for this process.">{{::ctrl.asset.fee.formatAmount(true)}} {{::ctrl.asset.fee.currency.displayName}}</span>
 							</div>
 							<div id="create-asset-buttons">
-								<button class="wButton wButton-neg fade" type="submit">OK</button><span class="divider-2"></span>
-								<!--button class="wButton wButton-neg fade" type="button" ng-click="ctrl.resetForm()">CLEAR</button-->
+								<button class="wButton wButton-neg fade" type="submit">OK</button>
 							</div>
 						</form>
 
@@ -1139,7 +1138,7 @@
 				<!-- / MESSAGES TAB -->
 
 				<!-- COMMUNITY TAB -->
-				<div id="mBB-community" class="mBB-content" ng-switch-when="community" ng-controller="communityController as community">
+				<div id="mBB-community" class="mBB-content" ng-switch-when="community">
 					<h2 class="sectionHeader">LATEST MESSAGE TO ALIASE DIGITALECONOMY</h2>
 					<div id="app" class="flex-item">
 						<div class="msg-wrapper flex-item bordered" ref="msgWrapper">
@@ -1152,7 +1151,10 @@
 										<a :href="'https://wavesexplorer.com/tx/' + msg.id">{{ formatSender(msg.sender) }}</a>:
 									</td>
 									<td>
-										{{ msg.text }} ({{ (msg.amount / 100000000).toLocaleString('ru-ru', {maximumSignificantDigits: 20}) }} МИР)
+										{{ msg.text }}
+									</td>
+									<td>
+										{{ (msg.amount / 100000000).toLocaleString('ru-ru', {maximumSignificantDigits: 20}) }} МИР
 									</td>
 								</tr>
 							</table>
@@ -1210,7 +1212,6 @@
 <script src="js/waves.app.tokens.js"></script>
 <script src="js/waves.app.dex.js"></script>
 <script src="js/waves.app.history.js"></script>
-<script src="js/waves.app.community.js"></script>
 <script src="js/waves.app.portfolio.js"></script>
 <script src="js/waves.main.js"></script>
 <!-- community -->
