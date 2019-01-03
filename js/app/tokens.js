@@ -14,6 +14,70 @@
  *                                                                            *
  ******************************************************************************/
 
+var Tokens = (function(){
+	'use strict';
+
+	var ASSET_DESCRIPTION_MAX = 1000;
+	var ASSET_NAME_MIN = 4;
+	if (isMir()) { ASSET_NAME_MIN = 1; }
+	var ASSET_NAME_MAX = 16;
+	var TOKEN_DECIMALS_MAX = 8;
+	var FIXED_ISSUE_FEE = new Money(1, Currency.BASE);
+
+	function appTokensAssetNameOnBlur() {
+		var assetCreateFee = $('#assetCreateFee')[0];
+		var assetFeeValue = assetCreateFee.innerText;
+		var baseBalanceValue = $('#create-asset-baseBalance')[0].innerText;
+		if (assetFeeValue > baseBalanceValue) {
+			$('#create-asset-hint1')[0].innerText = 'Not enough funds for the issue transaction fee';
+			return;
+		} else {
+			$('#create-asset-hint1')[0].innerText = '';
+		}
+
+		var evl = $('#assetName')[0].value.length;
+		if (evl > 0) {
+			if (evl < ASSET_NAME_MIN) {
+				assetCreateFee.innerText = '-';
+				$('#create-asset-hint2')[0].innerText = 'Asset name is too short. Please give your asset a longer name';
+			} else if (evl > ASSET_NAME_MAX ) {
+				assetCreateFee.innerText = '-';
+				$('#create-asset-hint2')[0].innerText = 'Asset name is too short. Please give your asset a longer name';
+			} else {
+				$('#create-asset-hint2')[0].innerText = '';
+				if (isMir()) {
+					if (evl = 1) {
+						assetCreateFee.innerText = '1 000 000'
+					} else if (evl = 2) {
+						assetCreateFee.innerText = '100 000'
+					} else if (evl = 3) {
+						assetCreateFee.innerText = '10 000'
+					} else if (evl = 4) {
+						assetCreateFee.innerText = '1000'
+					} else if (evl = 5) {
+						assetCreateFee.innerText = '100'
+					} else if (evl = 6) {
+						assetCreateFee.innerText = '10'
+					} else if (evl > 6) {
+						assetCreateFee.innerText = '1'
+					}
+				} else {
+					assetCreateFee.innerText = 1;
+				}
+			}
+		}
+	}
+
+	return {
+		ASSET_DESCRIPTION_MAX: ASSET_DESCRIPTION_MAX,
+		ASSET_NAME_MAX: ASSET_NAME_MAX,
+		ASSET_NAME_MIN: ASSET_NAME_MIN,
+		TOKEN_DECIMALS_MAX: TOKEN_DECIMALS_MAX,
+		FIXED_ISSUE_FEE: FIXED_ISSUE_FEE,
+		appTokensAssetNameOnBlur: appTokensAssetNameOnBlur
+	};
+})();
+
 (function() {
 	'use strict';
 
@@ -22,13 +86,6 @@
 
 (function () {
 	'use strict';
-
-	var ASSET_DESCRIPTION_MAX = 1000;
-	var ASSET_NAME_MIN = 4;
-	var ASSET_NAME_MAX = 16;
-	var TOKEN_DECIMALS_MAX = 8;
-	var FIXED_ISSUE_FEE = new Money(1, Currency.BASE);
-
 
 	function TokenCreateController($scope, $interval, constants, applicationContext, assetService, dialogService, apiService, notificationService, formattingService, transactionBroadcast) {
 		var refreshPromise;
@@ -48,11 +105,11 @@
 			rules: {
 				assetName: {
 					required: true,
-					minbytelength: ASSET_NAME_MIN,
-					maxbytelength: ASSET_NAME_MAX
+					minbytelength: Tokens.ASSET_NAME_MIN,
+					maxbytelength: Tokens.ASSET_NAME_MAX
 				},
 				assetDescription: {
-					maxbytelength: ASSET_DESCRIPTION_MAX
+					maxbytelength: Tokens.ASSET_DESCRIPTION_MAX
 				},
 				assetTotalTokens: {
 					required: true,
@@ -61,7 +118,7 @@
 				assetTokenDecimalPlaces: {
 					required: true,
 					min: 0,
-					max: TOKEN_DECIMALS_MAX
+					max: Tokens.TOKEN_DECIMALS_MAX
 				}
 			},
 			messages: {
@@ -80,12 +137,12 @@
 				assetTokenDecimalPlaces: {
 					required: 'Number of token decimal places is required',
 					min: 'Number of token decimal places must be greater or equal to zero',
-					max: 'Number of token decimal places must be less than or equal to ' + TOKEN_DECIMALS_MAX
+					max: 'Number of token decimal places must be less than or equal to ' + Tokens.TOKEN_DECIMALS_MAX
 				}
 			}
 		};
 		ctrl.asset = {
-			fee: FIXED_ISSUE_FEE
+			/*fee: Tokens.FIXED_ISSUE_FEE*/
 		};
 		ctrl.confirm = {};
 		ctrl.broadcast = new transactionBroadcast.instance(apiService.assets.issue,
@@ -113,16 +170,19 @@
 				return;
 			}
 
-			if (ctrl.asset.fee.greaterThan(ctrl.baseBalance)) {
+			/*
+			var ctrlAssetFee = $('#assetCreateFee')[0].innerText;
+			var ctrlBaseBalance = ctrl.baseBalance;
+			if (ctrlAssetFee > ctrl.baseBalance) {
 				notificationService.error('Not enough funds for the issue transaction fee');
 				return;
 			}
+			*/
 
 			var decimalPlaces = Number(ctrl.asset.decimalPlaces);
 			var maxTokens = Math.floor(constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
 			if (ctrl.asset.totalTokens > maxTokens) {
 				notificationService.error('Total issued tokens amount must be less than ' + maxTokens);
-
 				return;
 			}
 
@@ -131,8 +191,8 @@
 				description: ctrl.asset.description,
 				totalTokens: ctrl.asset.totalTokens,
 				decimalPlaces: Number(ctrl.asset.decimalPlaces),
-				reissuable: ctrl.asset.reissuable,
-				fee: ctrl.asset.fee
+				reissuable: ctrl.asset.reissuable/*,
+				fee: ctrl.asset.fee*/
 			};
 
 			var sender = {
@@ -173,6 +233,8 @@
 			apiService.address.balance(applicationContext.account.address)
 				.then(function (response) {
 					ctrl.baseBalance = Money.fromCoins(response.balance, Currency.BASE);
+					$('#create-asset-baseBalance')[0].innerText = ctrl.baseBalance.formatAmount(true, false);
+					$('#create-asset-baseShortName')[0].innerText = Currency.BASE.shortName;
 				});
 		}
 	}

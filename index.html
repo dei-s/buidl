@@ -1046,12 +1046,20 @@
 						<h2 class="sectionHeader">НОВЫЙ ПРОЕКТ</h2>
 						<form id="create-asset-form" name="createAssetForm" novalidate ng-validate="ctrl.issuanceValidationOptions" ng-submit="ctrl.assetIssueConfirmation(createAssetForm, $event)">
 							<div class="balanceAmt">
-								<p>Waves balance: </p><span class="balancewaves">{{ctrl.wavesBalance | moneyLong:true}}</span>
+								<p>
+									Balance:
+									<span id="create-asset-baseBalance" class="balancewaves"></span>
+									<span id="create-asset-baseShortName" class="balancewaves"></span>
+								</p>
 							</div>
 							<div>
-								<label for="assetName">Наименование</label>
+								<label for="assetName">Короткое имя (shortName)</label>
 								<br/>
-								<input id="assetName" name="assetName" type="text" class="wInput form-control" focus-me="true" ng-model="ctrl.asset.name" tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="This field defines the NAME of your<br/>asset.<br/><br/>It can contain up to 16 alphanumeric<br/>characters."/>
+								<input id="assetName" name="assetName" type="text" class="wInput form-control" focus-me="true" onblur="Tokens.appTokensAssetNameOnBlur();" ng-model="ctrl.asset.name" tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="This field defines the ShortName of your asset.<br/><br/>It can contain up to 16 alphanumeric characters."/>
+								<br/>
+								<label>Наименование (displayName)</label>
+								<br/>
+								<input id="assetDisplayName" name="assetDisplayName" type="text" class="wInput form-control" title="This field defines the DisplayName of your asset.<br/>It can contain up to 16 alphanumeric characters."/>
 								<br/>
 								<label for="assetDescription">Описание</label>
 								<br/>
@@ -1061,26 +1069,28 @@
 								<br/>
 								<input type="radio" name="project-asset-type" value="pie" checked> Доли (ограниченный выпуск токенов)
 								<br/>
-								<input type="radio" name="project-asset-type" value="dep" checked> Учет вкладов (не граниченный выпуск токенов)
+								<input type="radio" name="project-asset-type" value="dep"> Учет вкладов (не граниченный выпуск токенов)
 								<br/>
 								<!--
 								<label for="assetTotalTokens">Всего токенов (долей/учетных единиц)</label>
 								<br/>
 								<input id="assetTotalTokens" name="assetTotalTokens" class="wInput" type="text" ng-model="ctrl.asset.totalTokens" integer-input-restrictor tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="This field defines the TOTAL TOKENS<br/>supply that your asset will contain."/>
-								-->
 								<label for="assetTokenDecimalPlaces">Кол-во знаков после запятой</label>
 								<br/>
 								<input id="assetTokenDecimalPlaces" name="assetTokenDecimalPlaces" class="wInput" type="text" ng-model="ctrl.asset.decimalPlaces" integer-input-restrictor tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="This field defines the number of DECIMALS<br/>that your asset tokens will be divided in.<br/><br/>Example: Three decimals would allow the<br/>tokens to be divided by 1,000, so 0.001<br/>would be the smallest token fraction." value="8"/>
 								<br/>
-								<!--
 								<label for="assetReissuable">Возможен дополнительный выпуск</label>
 								<br/>
 								<input id="assetReissuable" name="assetReissuable" type="checkbox" class="wInput" ng-model="ctrl.asset.reissuable" tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="RE-ISSUABILITY allows for additional<br/>tokens creation that will be added<br/>to the total token supply of the asset.<br/><br/>A non RE-ISSUABLE asset will be<br/> permanently limited to the total<br/>token supply defined on this process."/>
 								-->
 							</div>
+							<div id="create-asset-hint" class="noSelect">
+								<p id="create-asset-hint1"></p>
+								<p id="create-asset-hint2"></p>
+							</div>
 							<div id="create-asset-fee" class="noSelect">
 								Стоимость операции
-								<span tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="The FEE you will be charged<br/>for this process.">{{::ctrl.asset.fee.formatAmount(true)}} {{::ctrl.asset.fee.currency.displayName}}</span>
+								<span id="assetCreateFee" tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="The FEE you will be charged<br/>for this process."></span>
 							</div>
 							<div id="create-asset-buttons">
 								<button class="wButton wButton-neg fade" type="submit">OK</button>
@@ -1170,6 +1180,19 @@
 	</div> <!-- navigationContainer -->
 </div> <!-- Wrapper div END -->
 
+<script>
+DEI_VERSION = '0.1.0'
+DEI_NETWORK_CODE = 'W';
+DEI_NETWORK_NAME = 'mainnet';
+DEI_ADDRESS_VERSION = 1;
+DEI_NODE_ADDRESS = 'https://nodes.wavesplatform.com';
+DEI_MATCHER_ADDRESS = 'https://matcher.wavesplatform.com';
+DEI_SUPPORT_LINK = 'dei.su';
+
+function isMir() {
+	return DEI_NETWORK_NAME == 'mirnet';
+}
+</script>
 
 <script src="js/jquery.js"></script>
 <script src="js/sha3.js"></script>
