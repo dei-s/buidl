@@ -21,7 +21,7 @@
 
 var Money = function(amount, currency) {
 	var DECIMAL_SEPARATOR = '.';
-	var THOUSANDS_SEPARATOR = ',';
+	var THOUSANDS_SEPARATOR = ' ';
 
 	if (amount === undefined)
 		throw Error('Amount is required');
