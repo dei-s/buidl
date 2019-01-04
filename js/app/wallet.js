@@ -760,8 +760,7 @@
 
 	var DEFAULT_ERROR_MESSAGE = 'Connection is lost';
 
-	function WalletDepositController($scope, events, coinomatService, dialogService, notificationService, applicationContext, bitcoinUriService, utilsService, $element) {
-
+	function WalletDepositController($scope, events, coinomatService, dialogService, notificationService, applicationContext, uriService, utilsService, $element) {
 		var ctrl = this;
 		var currencyId = Currency[$element.data('currency')].id;
 
@@ -793,7 +792,7 @@
 					amount: ctrl.btc.bitcoinAmount
 				};
 			}
-			ctrl.btc.bitcoinUri = bitcoinUriService.generate(ctrl.btc.bitcoinAddress, params);
+			ctrl.btc.bitcoinUri = uriService.generate(ctrl.btc.bitcoinAddress, params);
 		};
 
 		ctrl.refreshLbrUri = function () {
@@ -803,7 +802,7 @@
 					amount: ctrl.lbr.lbrAmount
 				};
 			}
-			ctrl.lbr.lbrUri = lbrUriService.generate(ctrl.lbr.lbrAddress, params);
+			ctrl.lbr.lbrUri = uriService.generate(ctrl.lbr.lbrAddress, params);
 		};
 
 		$scope.$on(events.WALLET_DEPOSIT + currencyId, function (event, eventData) {
@@ -845,7 +844,7 @@
 				.then(function (depositDetails) {
 					dialogService.open('#deposit-btc-dialog');
 					ctrl.btc.bitcoinAddress = depositDetails.address;
-					ctrl.btc.bitcoinUri = bitcoinUriService.generate(ctrl.btc.bitcoinAddress);
+					ctrl.btc.bitcoinUri = uriService.generate(ctrl.btc.bitcoinAddress);
 				})
 				.catch(catchErrorMessage);
 		}
@@ -856,7 +855,7 @@
 				.then(function (depositDetails) {
 					dialogService.open('#deposit-lbr-dialog');
 					ctrl.lbr.lbrAddress = depositDetails.address;
-					ctrl.lbr.lbrUri = lbrUriService.generate(ctrl.lbr.lbrAddress);
+					ctrl.lbr.lbrUri = uriService.generate(ctrl.lbr.lbrAddress);
 				})
 				.catch(catchErrorMessage);
 		}
@@ -872,7 +871,7 @@
 
 	WalletDepositController.$inject = [
 		'$scope', 'wallet.events', 'coinomatService', 'dialogService', 'notificationService',
-		'applicationContext', 'bitcoinUriService', 'utilsService', '$element'
+		'applicationContext', 'uriService', 'utilsService', '$element'
 	];
 
 	angular

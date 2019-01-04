@@ -168,7 +168,7 @@
 
 	angular
 		.module('app.shared')
-		.service('bitcoinUriService', [function () {
+		.service('uriService', [function () {
 
 			this.generate = function (address, params) {
 
