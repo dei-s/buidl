@@ -115,11 +115,11 @@
 
 		function sendCommandEvent(event, currency) {
 			var assetWallet = findWalletByCurrency(currency);
-			var wavesWallet = findWalletByCurrency(Currency.BASE);
+			var baseWallet = findWalletByCurrency(Currency.BASE);
 
 			$scope.$broadcast(event, {
 				assetBalance: assetWallet.balance,
-				wavesBalance: wavesWallet.balance
+				baseBalance: baseWallet.balance
 			});
 		}
 
@@ -369,7 +369,7 @@
 
 			resetForm();
 
-			ctrl.feeAssetBalance = eventData.wavesBalance;
+			ctrl.feeAssetBalance = eventData.baseBalance;
 			ctrl.assetBalance = eventData.assetBalance;
 			ctrl.feeAndTransferAssetsAreTheSame = eventData.assetBalance.currency === FEE_CURRENCY;
 			ctrl.currency = eventData.assetBalance.currency.displayName;
@@ -553,7 +553,7 @@
 
 		$scope.$on(events.WALLET_WITHDRAW + type, function (event, eventData) {
 			ctrl.assetBalance = eventData.assetBalance;
-			ctrl.wavesBalance = eventData.wavesBalance;
+			ctrl.baseBalance = eventData.baseBalance;
 
 			if (isMir()) {
 				if (ctrl.assetBalance.currency === Currency.LBR) {
@@ -584,6 +584,9 @@
 					var maximumPayment = Money.fromTokens(Math.min(ctrl.assetBalance.toTokens(),
 						response.in_max), ctrl.assetBalance.currency);
 					ctrl.sourceCurrency = ctrl.assetBalance.currency.displayName;
+					if (!isMir()) {
+						ctrl.isEthereum = (ctrl.assetBalance.currency === Currency.ETH);
+					}
 					ctrl.exchangeRate = response.xrate;
 					ctrl.feeIn = response.fee_in;
 					ctrl.feeOut = response.fee_out;
@@ -661,7 +664,11 @@
 
 		function validateWithdrawCost(withdrawCost, availableFunds) {
 			if (withdrawCost.greaterThan(availableFunds)) {
-				throw new Error('Not enough Waves for the withdraw transfer');
+				if (isMir()) {
+					throw new Error('Not enough Mir for the withdraw transfer');
+				} else {
+					throw new Error('Not enough Waves for the withdraw transfer');
+				}
 			}
 		}
 
@@ -672,7 +679,7 @@
 
 			try {
 				var withdrawCost = Money.fromTokens(ctrl.autocomplete.getFeeAmount(), Currency.BASE);
-				validateWithdrawCost(withdrawCost, ctrl.wavesBalance);
+				validateWithdrawCost(withdrawCost, ctrl.baseBalance);
 				if (isMir()) {
 					if (ctrl.assetBalance.currency === Currency.LBR) {
 						validateRecipientLbrAddress(ctrl.recipient);

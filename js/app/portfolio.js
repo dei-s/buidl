@@ -34,7 +34,7 @@
 		var refreshPromise;
 		var refreshDelay = 10 * 1000;
 
-		ctrl.wavesBalance = new Money(0, Currency.BASE);
+		ctrl.baseBalance = new Money(0, Currency.BASE);
 		ctrl.assets = [];
 		ctrl.noData = true;
 		ctrl.assetTransfer = assetTransfer;
@@ -63,7 +63,7 @@
 		function assetTransfer(assetId) {
 			$scope.$broadcast(events.ASSET_TRANSFER, {
 				assetId: assetId,
-				wavesBalance: ctrl.wavesBalance
+				baseBalance: ctrl.baseBalance
 			});
 		}
 
@@ -74,14 +74,14 @@
 		function assetReissue(assetId) {
 			$scope.$broadcast(events.ASSET_REISSUE, {
 				assetId: assetId,
-				wavesBalance: ctrl.wavesBalance
+				baseBalance: ctrl.baseBalance
 			});
 		}
 
 		function assetMassPay(assetId) {
 			$scope.$broadcast(events.ASSET_MASSPAY, {
 				assetId: assetId,
-				wavesBalance: ctrl.wavesBalance
+				baseBalance: ctrl.baseBalance
 			});
 		}
 
@@ -98,7 +98,7 @@
 		function refreshBalance() {
 			apiService.address.balance(applicationContext.account.address)
 				.then(function (response) {
-					ctrl.wavesBalance = Money.fromCoins(response.balance, Currency.BASE);
+					ctrl.baseBalance = Money.fromCoins(response.balance, Currency.BASE);
 				});
 		}
 
@@ -243,7 +243,7 @@
 		$scope.$on(events.ASSET_TRANSFER, function (event, eventData) {
 			var asset = applicationContext.cache.assets[eventData.assetId];
 			ctrl.availableBalance = asset.balance;
-			ctrl.feeAssetBalance = eventData.wavesBalance;
+			ctrl.feeAssetBalance = eventData.baseBalance;
 			ctrl.asset = asset;
 
 			resetPaymentForm();
@@ -426,7 +426,7 @@
 			reissue.assetName = asset.currency.displayName;
 			reissue.totalTokens = asset.totalTokens;
 			reissue.asset = asset;
-			reissue.wavesBalance = eventData.wavesBalance;
+			reissue.baseBalance = eventData.baseBalance;
 
 			// update validation options and check how it affects form validation
 			reissue.validationOptions.rules.assetAmount.decimal = asset.currency.precision;
@@ -450,7 +450,7 @@
 				// prevent dialog from closing
 				return false;
 
-			if (reissue.fee.greaterThan(reissue.wavesBalance)) {
+			if (reissue.fee.greaterThan(reissue.baseBalance)) {
 				notificationService.error('Not enough funds for the reissue transaction fee');
 
 				return false;
@@ -610,8 +610,8 @@
 		cleanup();
 
 		$scope.$on(events.ASSET_MASSPAY, function (event, eventData) {
-			mass.wavesBalance = eventData.wavesBalance;
-			mass.assetBalance = eventData.wavesBalance;
+			mass.baseBalance = eventData.baseBalance;
+			mass.assetBalance = eventData.baseBalance;
 			if (eventData.assetId) {
 				mass.assetBalance = applicationContext.cache.assets[eventData.assetId].balance;
 			}
@@ -790,7 +790,7 @@
 				mass.summary.totalFee :
 				mass.summary.totalFee.plus(mass.summary.totalAmount);
 
-			if (paymentCost.greaterThan(mass.wavesBalance)) {
+			if (paymentCost.greaterThan(mass.baseBalance)) {
 				if (isMir()) {
 					notificationService.error('Not enough Mir to make mass payment');
 				} else {
