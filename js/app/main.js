@@ -237,11 +237,6 @@ angular.module('app').run(['$templateCache', function($templateCache) {
 	);
 
 
-	$templateCache.put('leasing/balance.details.component',
-		"<section-header>BALANCE DETAILS</section-header><table class=\"waves-table\"><tbody><tr><td>Regular</td><td>{{$ctrl.formattedBalance.regular}}</td></tr><tr><td>Effective</td><td>{{$ctrl.formattedBalance.effective}}</td></tr><tr><td>Generating</td><td>{{$ctrl.formattedBalance.generating}}</td></tr></tbody></table>"
-	);
-
-
 	$templateCache.put('navigation/tab.directive',
 		"<img ng-src=\"img/tabs-iconset-{{pageId}}.svg\" class=\"fFade\" alt=\"{{caption}}\" ng-click=\"onClick()\" ng-class=\"[{selected: isSelected()}]\">"
 	);
