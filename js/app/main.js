@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright Â© 2016 The Waves Core Developers.                                *
+ * Copyright © 2016 The Waves Core Developers.                                *
  *                                                                            *
  * See the LICENSE.txt files at                                               *
  * the top-level directory of this distribution for the individual copyright  *
@@ -69,15 +69,15 @@ function AngularApplicationConfig($provide, $compileProvider, $validatorProvider
 
 	$provide.constant(networkConstants,
 		angular.extend(networkConstants, {
-			NETWORK_NAME: 'mainnet',
-			NETWORK_CODE: 'W'
+			NETWORK_NAME: DEI_NETWORK_NAME,
+			NETWORK_CODE: DEI_NETWORK_CODE
 		}));
 	$provide.constant(applicationSettings,
 		angular.extend(applicationSettings, {
-			CLIENT_VERSION: '0.5.22a',
-			NODE_ADDRESS: 'https://nodes.wavesplatform.com',
+			CLIENT_VERSION: DEI_VERSION,
+			NODE_ADDRESS: DEI_NODE_ADDRESS,
 			COINOMAT_ADDRESS: 'https://coinomat.com',
-			MATCHER_ADDRESS: 'https://matcher.wavesplatform.com',
+			MATCHER_ADDRESS: DEI_MATCHER_ADDRESS,
 			DATAFEED_ADDRESS: 'https://marketdata.wavesplatform.com'
 		}));
 
@@ -173,10 +173,6 @@ function AngularApplicationRun(rest, applicationConstants, notificationService, 
 		timeout: 10000 // milliseconds
 	});
 	var url = applicationConstants.NODE_ADDRESS;
-	//var url = 'http://52.28.66.217:6869';
-	//var url = 'http://52.77.111.219:6869';
-	//var url = 'http://127.0.0.1:6869';
-	//var url = 'http://127.0.0.1:8089';
 	rest.setBaseUrl(url);
 
 	// override mock methods cos in config phase services are not available yet
@@ -229,7 +225,7 @@ angular.module('app').run(['$templateCache', function($templateCache) {
 
 
 	$templateCache.put('dex/pair.chart.component',
-		"<img src=\"http://www.ifmr.co.in/blog/wp-content/uploads/2014/04/BitcoinPrice.png\">"
+		"<img src=\"img/BitcoinPrice.png\">"
 	);
 
 
@@ -238,21 +234,11 @@ angular.module('app').run(['$templateCache', function($templateCache) {
 		"            'filled': order.status === 'Filled' || order.status === 'Cancelled',\n" +
 		"            'not-found': order.status === 'NotFound'\n" +
 		"          }\"><td>{{order.statusTitle}}</td><td class=\"type\" ng-class=\"order.type\">{{order.typeTitle}}</td><td>{{order.price | number:8}}</td><td>{{order.amount | number:8}}</td><td>{{order.total | number:8}}</td><td ng-click=\"$ctrl.cancel({order: order})\">&times;</td></tr><tr ng-if=\"!$ctrl.orders.length\"><td colspan=\"6\"><span>Create your first order!</span></td></tr></tbody></table></waves-scrollbox>"
-  );
+	);
 
 
 	$templateCache.put('leasing/balance.details.component',
 		"<section-header>BALANCE DETAILS</section-header><table class=\"waves-table\"><tbody><tr><td>Regular</td><td>{{$ctrl.formattedBalance.regular}}</td></tr><tr><td>Effective</td><td>{{$ctrl.formattedBalance.effective}}</td></tr><tr><td>Generating</td><td>{{$ctrl.formattedBalance.generating}}</td></tr></tbody></table>"
-	);
-
-
-	$templateCache.put('leasing/component',
-		"<div class=\"leasing\"><div class=\"tools\"><div class=\"column balance\"><waves-leasing-balance-details balance-details=\"$ctrl.balanceDetails\"></waves-leasing-balance-details></div><div class=\"column form\"><waves-leasing-lease-form></waves-leasing-lease-form></div><div class=\"column quick-note\"><section-header>QUICK NOTE</section-header><p>You can only transfer or trade Waves that arenâ€™t leased. The leased amount cannot be transferred or traded by you or anyone else.</p><p>You can cancel a leasing transaction as soon as it appears in the blockchain which usually occurs in a minute or less.</p><p>To cancel a lease, click on the black button in the far right column of the Leasing Transactions table below and select Cancel Leasing.</p><p>The generating balance will be updated after 1000 blocks.</p></div></div><waves-transaction-history heading=\"LEASING TRANSACTIONS\" transactions=\"$ctrl.transactions\" limit-to=\"$ctrl.limitTo\"></waves-transaction-history></div>"
-	);
-
-
-	$templateCache.put('leasing/lease.form.component',
-		"<section-header>BALANCE LEASING</section-header><form name=\"$ctrl.form\" novalidate ng-validate=\"$ctrl.validationOptions\"><table class=\"form-table\"><tbody><tr><td>Recipient</td><td><input class=\"wInput form-control\" name=\"leasingRecipient\" type=\"text\" placeholder=\"Recipient address\" ng-model=\"$ctrl.recipient\"></td></tr><tr><td>Amount</td><td><input class=\"wInput form-control\" name=\"leasingAmount\" type=\"text\" placeholder=\"Leasing amount\" ng-model=\"$ctrl.amount\" decimal-input-restrictor></td></tr><tr><td class=\"fee\">Fee</td><td class=\"fee\">{{$ctrl.fee | moneyLong:true}}</td></tr><tr><td colspan=\"2\" class=\"button-container\"><button class=\"wButton wButton-neg fade\" ng-click=\"$ctrl.confirmLease($ctrl.form)\">LEASE</button></td></tr></tbody></table></form><div id=\"start-leasing-confirmation\" waves-dialog ok-button-caption=\"CONFIRM\" ok-button-enabled=\"!$ctrl.broadcast.pending\" on-dialog-ok=\"$ctrl.broadcastTransaction()\"><div class=\"dialog-confirmation\"><p class=\"dialog-text\">You are going to lease <span class=\"confirmation-value\">{{$ctrl.confirm.amount | moneyLong:true}}</span> with <span class=\"confirmation-value\">{{$ctrl.confirm.fee | moneyLong:true}}</span> fee to the address<br><span class=\"confirmation-value\">{{$ctrl.confirm.recipient}}</span></p><p class=\"dialog-text\">Please <span class=\"fontBold\">CONFIRM </span>to execute or <span class=\"fontBold\">CANCEL </span>to discard.</p></div></div>"
 	);
 
 
