@@ -984,7 +984,7 @@
 							<div>
 								<label for="assetName">Короткое имя (shortName)</label>
 								<br/>
-								<input id="assetName" name="assetName" type="text" class="wInput form-control" focus-me="true" onblur="Tokens.appTokensAssetNameOnBlur();" ng-model="ctrl.asset.name" tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="This field defines the ShortName of your asset.<br/><br/>It can contain up to 16 alphanumeric characters."/>
+								<input id="assetName" name="assetName" type="text" class="wInput form-control" focus-me="true" onblur="Tokens.AssetNameOnBlur();" ng-model="ctrl.asset.name" tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="This field defines the ShortName of your asset.<br/><br/>It can contain up to 16 alphanumeric characters."/>
 								<br/>
 								<label>Наименование (displayName)</label>
 								<br/>
@@ -1000,10 +1000,11 @@
 								<br/>
 								<input type="radio" name="project-asset-type" value="dep"> Учет вкладов (не граниченный выпуск токенов)
 								<br/>
-								<!--
 								<label for="assetTotalTokens">Всего токенов (долей/учетных единиц)</label>
 								<br/>
-								<input id="assetTotalTokens" name="assetTotalTokens" class="wInput" type="text" ng-model="ctrl.asset.totalTokens" integer-input-restrictor tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="This field defines the TOTAL TOKENS<br/>supply that your asset will contain."/>
+								<input id="assetTotalTokens" name="assetTotalTokens" class="wInput" type="text" onkeyup="Tokens.AssetTotalTokensOnKeyPress();" value="1000" ng-model="ctrl.asset.totalTokens" integer-input-restrictor tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="This field defines the TOTAL TOKENS<br/>supply that your asset will contain."/>
+								<br/>
+								<!--
 								<label for="assetTokenDecimalPlaces">Кол-во знаков после запятой</label>
 								<br/>
 								<input id="assetTokenDecimalPlaces" name="assetTokenDecimalPlaces" class="wInput" type="text" ng-model="ctrl.asset.decimalPlaces" integer-input-restrictor tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="This field defines the number of DECIMALS<br/>that your asset tokens will be divided in.<br/><br/>Example: Three decimals would allow the<br/>tokens to be divided by 1,000, so 0.001<br/>would be the smallest token fraction." value="8"/>
@@ -1016,6 +1017,7 @@
 							<div id="create-asset-hint" class="noSelect">
 								<p id="create-asset-hint1"></p>
 								<p id="create-asset-hint2"></p>
+								<p id="create-asset-hint3"></p>
 							</div>
 							<div id="create-asset-fee" class="noSelect">
 								Стоимость операции

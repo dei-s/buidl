@@ -24,13 +24,12 @@ var Tokens = (function(){
 	var TOKEN_DECIMALS_MAX = 8;
 	var FIXED_ISSUE_FEE = new Money(1, Currency.BASE);
 
-	function appTokensAssetNameOnBlur() {
+	function AssetNameOnBlur() {
 		var assetCreateFee = $('#assetCreateFee')[0];
 		var assetFeeValue = assetCreateFee.innerText;
 		var baseBalanceValue = $('#create-asset-baseBalance')[0].innerText;
 		if (assetFeeValue > baseBalanceValue) {
 			$('#create-asset-hint1')[0].innerText = 'Not enough funds for the issue transaction fee';
-			return;
 		} else {
 			$('#create-asset-hint1')[0].innerText = '';
 		}
@@ -46,20 +45,20 @@ var Tokens = (function(){
 			} else {
 				$('#create-asset-hint2')[0].innerText = '';
 				if (isMir()) {
-					if (evl = 1) {
-						assetCreateFee.innerText = '1 000 000'
-					} else if (evl = 2) {
-						assetCreateFee.innerText = '100 000'
-					} else if (evl = 3) {
-						assetCreateFee.innerText = '10 000'
-					} else if (evl = 4) {
-						assetCreateFee.innerText = '1000'
-					} else if (evl = 5) {
-						assetCreateFee.innerText = '100'
-					} else if (evl = 6) {
-						assetCreateFee.innerText = '10'
+					if (evl == 1) {
+						assetCreateFee.innerText = '1 000 000';
+					} else if (evl == 2) {
+						assetCreateFee.innerText = '100 000';
+					} else if (evl == 3) {
+						assetCreateFee.innerText = '10 000';
+					} else if (evl == 4) {
+						assetCreateFee.innerText = '1000';
+					} else if (evl == 5) {
+						assetCreateFee.innerText = '100';
+					} else if (evl == 6) {
+						assetCreateFee.innerText = '10';
 					} else if (evl > 6) {
-						assetCreateFee.innerText = '1'
+						assetCreateFee.innerText = '1';
 					}
 				} else {
 					assetCreateFee.innerText = 1;
@@ -68,13 +67,34 @@ var Tokens = (function(){
 		}
 	}
 
+	function AssetTotalTokensOnKeyPress(){
+		var decimalPlaces = Number(8);
+		var totalTokens = Number($('#assetTotalTokens')[0].value);
+		var maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
+		if (totalTokens > maxTokens) {
+			decimalPlaces = Number(5);
+			maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
+			if (totalTokens > maxTokens) {
+				decimalPlaces = Number(2);
+				maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
+				if (totalTokens > maxTokens) {
+					$('#create-asset-hint3')[0].innerText = 'Total issued tokens amount must be less than ' + maxTokens;
+					return;
+				}
+			}
+		}
+		var s = '0'.repeat(decimalPlaces);
+		$('#create-asset-hint3')[0].innerText = 'MAX: '+maxTokens+'.'+s; //Math.pow(10,decimalPlaces);
+	}
+
 	return {
 		ASSET_DESCRIPTION_MAX: ASSET_DESCRIPTION_MAX,
 		ASSET_NAME_MAX: ASSET_NAME_MAX,
 		ASSET_NAME_MIN: ASSET_NAME_MIN,
 		TOKEN_DECIMALS_MAX: TOKEN_DECIMALS_MAX,
 		FIXED_ISSUE_FEE: FIXED_ISSUE_FEE,
-		appTokensAssetNameOnBlur: appTokensAssetNameOnBlur
+		AssetNameOnBlur: AssetNameOnBlur,
+		AssetTotalTokensOnKeyPress: AssetTotalTokensOnKeyPress
 	};
 })();
 
@@ -179,11 +199,20 @@ var Tokens = (function(){
 			}
 			*/
 
-			var decimalPlaces = Number(ctrl.asset.decimalPlaces);
+			var decimalPlaces = Number(8); //Number(ctrl.asset.decimalPlaces);
+			var totalTokens = ctrl.asset.totalTokens;
 			var maxTokens = Math.floor(constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
-			if (ctrl.asset.totalTokens > maxTokens) {
-				notificationService.error('Total issued tokens amount must be less than ' + maxTokens);
-				return;
+			if (totalTokens > maxTokens) {
+				decimalPlaces = Number(5);
+				maxTokens = Math.floor(constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
+				if (totalTokens > maxTokens) {
+					decimalPlaces = Number(2);
+					maxTokens = Math.floor(constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
+					if (totalTokens > maxTokens) {
+						notificationService.error('Total issued tokens amount must be less than ' + maxTokens);
+						return;
+					}
+				}
 			}
 
 			var asset = {
