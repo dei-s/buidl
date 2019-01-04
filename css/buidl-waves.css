@@ -651,12 +651,3 @@ waves-dex-user-orders table.user tbody tr.filled td.type.sell,waves-dex-user-ord
 waves-dex-user-orders table.user tbody tr.not-found{color:#ff696e}
 waves-dex-user-orders table.user tbody tr:nth-child(2n){background:#f0f0f0}
 waves-dex-user-orders waves-scrollbox{max-height:240px;overflow:auto}
-waves-leasing{display:-ms-flexbox;display:flex;width:100%;min-height:100%}
-waves-leasing .leasing{width:100%}
-waves-leasing .leasing .tools{display:-ms-flexbox;display:flex}
-waves-leasing .leasing .tools .column{width:33.3%;padding:30px 4% 20px}
-waves-leasing .leasing .tools .column.balance table{margin-top:5px}
-waves-leasing .leasing .tools .column.form table{width:100%;margin-bottom:10px}
-waves-leasing .leasing .tools .column.form table .padded-more{padding-top:4px}
-waves-leasing .leasing .tools .column.form table .button-container{padding-top:10px;text-align:center}
-waves-leasing .leasing .tools .column.quick-note p{margin:5px 0 10px} 10px}px 0 10px} 10p
