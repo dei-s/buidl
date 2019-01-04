@@ -33,34 +33,34 @@
 		var ctrl = this;
 
 		var mapping = {};
-		mapping[Currency.WAVES.displayName] = {
-			image: 'wB-bg-WAV.svg',
-			displayName: Currency.WAVES.displayName
-		};
-		mapping[Currency.BTC.displayName] = {
-			image: 'wB-bg-BTC.svg',
-			displayName: Currency.BTC.displayName
-		};
-		mapping[Currency.USD.displayName] = {
-			image: 'wB-bg-USD.svg',
-			displayName: Currency.USD.displayName
-		};
-		mapping[Currency.EUR.displayName] = {
-			image: 'wB-bg-EUR.svg',
-			displayName: Currency.EUR.displayName
-		};
-		mapping[Currency.DEIP.displayName] = {
-			image: 'wB-bg-DEIP.svg',
-			displayName: Currency.DEIP.displayName
-		};
-		mapping[Currency.LIBRE.displayName] = {
-			image: 'wB-bg-LIBRE.svg',
-			displayName: Currency.LIBRE.displayName
-		};
-		mapping[Currency.MIR.displayName] = {
-			image: 'wB-bg-MIR.svg',
-			displayName: Currency.MIR.displayName
-		};
+			mapping[Currency.WAVES.displayName] = {
+				image: 'wB-bg-WAV.svg',
+				displayName: Currency.WAVES.displayName
+			};
+			mapping[Currency.BTC.displayName] = {
+				image: 'wB-bg-BTC.svg',
+				displayName: Currency.BTC.displayName
+			};
+			mapping[Currency.USD.displayName] = {
+				image: 'wB-bg-USD.svg',
+				displayName: Currency.USD.displayName
+			};
+			mapping[Currency.EUR.displayName] = {
+				image: 'wB-bg-EUR.svg',
+				displayName: Currency.EUR.displayName
+			};
+			mapping[Currency.DEIP.displayName] = {
+				image: 'wB-bg-DEIP.svg',
+				displayName: Currency.DEIP.displayName
+			};
+			mapping[Currency.LIBRE.displayName] = {
+				image: 'wB-bg-LIBRE.svg',
+				displayName: Currency.LIBRE.displayName
+			};
+			mapping[Currency.MIR.displayName] = {
+				image: 'wB-bg-MIR.svg',
+				displayName: Currency.MIR.displayName
+			};
 
 		ctrl.$onChanges = function (changesObject) {
 			if (changesObject.balance) {
@@ -97,7 +97,7 @@
 
 	var TRANSACTIONS_TO_LOAD = 100;
 
-	function WavesWalletListController($scope, $interval, events, applicationContext, apiService, transactionLoadingService, dialogService) {
+	function WalletListController($scope, $interval, events, applicationContext, apiService, transactionLoadingService, dialogService) {
 		var ctrl = this;
 		var refreshPromise;
 		var refreshDelay = 10 * 1000;
@@ -118,20 +118,20 @@
 			});
 		}
 
-		ctrl.wallets = [
-			{
-				balance: new Money(0, Currency.BASE),
-				depositWith: Currency.BTC
-			},
-						{
-				balance: new Money(0, Currency.MIR),
-				depositWith: Currency.BTC
-			},
-						{
-				balance: new Money(0, Currency.BTC),
-				depositWith: Currency.BTC
-			}
-		];
+			ctrl.wallets = [
+				{
+					balance: new Money(0, Currency.BASE),
+					depositWith: Currency.BTC
+				},
+							{
+					balance: new Money(0, Currency.MIR),
+					depositWith: Currency.BTC
+				},
+							{
+					balance: new Money(0, Currency.BTC),
+					depositWith: Currency.BTC
+				}
+			];
 
 		ctrl.transactions = [];
 		ctrl.send = send;
@@ -157,15 +157,17 @@
 			var id = wallet.balance.currency.id,
 				type;
 
-			if (id === Currency.BTC.id || id === Currency.BASE.id) {
-				type = 'crypto';
-			} else if (id === Currency.EUR.id || id === Currency.USD.id) {
-				type = 'fiat';
-			} else if (id === Currency.DEIP.id || id === Currency.LIBRE.id || id === Currency.MIR.id) {
-				dialogService.open('#feat-not-active');
-			} else {
-				throw new Error('Add an option here!');
-			}
+				if (id === Currency.BASE.id) {
+					type = 'crypto';
+				} else if (id === Currency.BTC.id) {
+					type = 'crypto';
+				} else if (id === Currency.EUR.id || id === Currency.USD.id) {
+					type = 'fiat';
+				} else if (id === Currency.DEIP.id || id === Currency.LIBRE.id || id === Currency.MIR.id) {
+					dialogService.open('#feat-not-active');
+				} else {
+					throw new Error('Add an option here!');
+				}
 
 			sendCommandEvent(events.WALLET_WITHDRAW + type, wallet.balance.currency);
 		}
@@ -251,12 +253,11 @@
 		}
 	}
 
-	WavesWalletListController.$inject = ['$scope', '$interval', 'wallet.events', 'applicationContext',
-			'apiService', 'transactionLoadingService', 'dialogService'];
+	WalletListController.$inject = ['$scope', '$interval', 'wallet.events', 'applicationContext', 'apiService', 'transactionLoadingService', 'dialogService'];
 
 	angular
 		.module('app.wallet')
-		.controller('walletListController', WavesWalletListController);
+		.controller('walletListController', WalletListController);
 })();
 
 (function () {
@@ -436,7 +437,7 @@
 	var DEFAULT_FEE_AMOUNT = '0.001',
 		DEFAULT_ERROR_MESSAGE = 'Connection is lost';
 
-	function WavesWalletWithdrawController($scope, constants, events, autocomplete, dialogService, $element, coinomatService, transactionBroadcast, notificationService, apiService, formattingService, assetService, applicationContext) {
+	function WalletWithdrawController($scope, constants, events, autocomplete, dialogService, $element, coinomatService, transactionBroadcast, notificationService, apiService, formattingService, assetService, applicationContext) {
 
 		var ctrl = this;
 		var type = $element.data('type');
@@ -522,15 +523,15 @@
 			ctrl.assetBalance = eventData.assetBalance;
 			ctrl.wavesBalance = eventData.wavesBalance;
 
-			if (ctrl.assetBalance.currency === Currency.BTC) {
-				withdrawCrypto();
-			} else if (ctrl.assetBalance.currency === Currency.EUR) {
-				withdrawEUR();
-			} else if (ctrl.assetBalance.currency === Currency.USD) {
-				withdrawUSD();
-			} else {
-				$scope.home.featureUnderDevelopment();
-			}
+				if (ctrl.assetBalance.currency === Currency.BTC) {
+					withdrawCrypto();
+				} else if (ctrl.assetBalance.currency === Currency.EUR) {
+					withdrawEUR();
+				} else if (ctrl.assetBalance.currency === Currency.USD) {
+					withdrawUSD();
+				} else {
+					$scope.home.featureUnderDevelopment();
+				}
 		});
 
 		function withdrawCrypto() {
@@ -684,7 +685,7 @@
 		}
 	}
 
-	WavesWalletWithdrawController.$inject = [
+	WalletWithdrawController.$inject = [
 		'$scope', 'constants.ui', 'wallet.events', 'autocomplete.fees', 'dialogService', '$element',
 		'coinomatService', 'transactionBroadcast', 'notificationService',
 		'apiService', 'formattingService', 'assetService', 'applicationContext'
@@ -692,7 +693,7 @@
 
 	angular
 		.module('app.wallet')
-		.controller('walletWithdrawController', WavesWalletWithdrawController);
+		.controller('walletWithdrawController', WalletWithdrawController);
 })();
 
 (function () {
@@ -700,16 +701,16 @@
 
 	var DEFAULT_ERROR_MESSAGE = 'Connection is lost';
 
-	function WavesWalletDepositController($scope, events, coinomatService, dialogService, notificationService, applicationContext, bitcoinUriService, utilsService, $element) {
+	function WalletDepositController($scope, events, coinomatService, dialogService, notificationService, applicationContext, bitcoinUriService, utilsService, $element) {
 		var ctrl = this;
 		var currencyId = Currency[$element.data('currency')].id;
 
-		ctrl.btc = {
-			bitcoinAddress: '',
-			bitcoinAmount: '',
-			bitcoinUri: '',
-			minimumAmount: 0.001
-		};
+			ctrl.btc = {
+				bitcoinAddress: '',
+				bitcoinAmount: '',
+				bitcoinUri: '',
+				minimumAmount: 0.001
+			};
 
 		ctrl.fiat = {
 			verificationLink: 'https://go.idnow.de/coinomat/userdata/' + applicationContext.account.address,
@@ -732,15 +733,15 @@
 			ctrl.currency = ctrl.assetBalance.currency.displayName;
 
 			// Show deposit popups only on mainnet
-			if (ctrl.assetBalance.currency === Currency.BTC && !utilsService.isTestnet()) {
-				depositBTC();
-			} else if (ctrl.assetBalance.currency === Currency.EUR) {
-				depositEUR();
-			} else if (ctrl.assetBalance.currency === Currency.USD) {
-				depositUSD();
-			} else {
-				$scope.home.featureUnderDevelopment();
-			}
+				if (ctrl.assetBalance.currency === Currency.BTC && !utilsService.isTestnet()) {
+					depositBTC();
+				} else if (ctrl.assetBalance.currency === Currency.EUR) {
+					depositEUR();
+				} else if (ctrl.assetBalance.currency === Currency.USD) {
+					depositUSD();
+				} else {
+					$scope.home.featureUnderDevelopment();
+				}
 		});
 
 		function catchErrorMessage(e) {
@@ -771,14 +772,14 @@
 		}
 	}
 
-	WavesWalletDepositController.$inject = [
+	WalletDepositController.$inject = [
 		'$scope', 'wallet.events', 'coinomatService', 'dialogService', 'notificationService',
 		'applicationContext', 'bitcoinUriService', 'utilsService', '$element'
 	];
 
 	angular
 		.module('app.wallet')
-		.controller('walletDepositController', WavesWalletDepositController);
+		.controller('walletDepositController', WalletDepositController);
 })();
 
 (function () {
@@ -795,7 +796,7 @@
 		}
 	}
 
-	function WavesCardDepositController($scope, $window, $q, events, dialogService, fiatService, applicationContext, notificationService) {
+	function CardDepositController($scope, $window, $q, events, dialogService, fiatService, applicationContext, notificationService) {
 		var deferred;
 		var ctrl = this;
 		ctrl.currencies = [new FiatCurrency('EURO', 'Euro'), new FiatCurrency('USD')];
@@ -909,10 +910,10 @@
 		}
 	}
 
-	WavesCardDepositController.$inject = ['$scope', '$window', '$q', 'wallet.events', 'dialogService',
+	CardDepositController.$inject = ['$scope', '$window', '$q', 'wallet.events', 'dialogService',
 			'coinomatFiatService', 'applicationContext', 'notificationService'];
 
 	angular
 		.module('app.wallet')
-		.controller('cardDepositController', WavesCardDepositController);
+		.controller('cardDepositController', CardDepositController);
 })();
