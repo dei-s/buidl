@@ -176,8 +176,12 @@
 					return '';
 				}
 
-				var uri = 'bitcoin:' + address,
-					keys = Object.keys(params || {});
+				if (isMir()) {
+					var uri = 'lbr:' + address;
+				} else {
+					var uri = 'bitcoin:' + address;
+				}
+				var keys = Object.keys(params || {});
 
 				if (keys.length) {
 					uri += keys.reduce(function (queryString, key) {
