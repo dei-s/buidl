@@ -104,7 +104,7 @@
 
 		function sendCommandEvent(event, currency) {
 			var assetWallet = findWalletByCurrency(currency);
-			var wavesWallet = findWalletByCurrency(Currency.WAVES);
+			var wavesWallet = findWalletByCurrency(Currency.BASE);
 
 			$scope.$broadcast(event, {
 				assetBalance: assetWallet.balance,
@@ -120,7 +120,7 @@
 
 		ctrl.wallets = [
 			{
-				balance: new Money(0, Currency.WAVES),
+				balance: new Money(0, Currency.BASE),
 				depositWith: Currency.BTC
 			},
 						{
@@ -157,7 +157,7 @@
 			var id = wallet.balance.currency.id,
 				type;
 
-			if (id === Currency.BTC.id || id === Currency.WAVES.id) {
+			if (id === Currency.BTC.id || id === Currency.BASE.id) {
 				type = 'crypto';
 			} else if (id === Currency.EUR.id || id === Currency.USD.id) {
 				type = 'fiat';
@@ -171,7 +171,7 @@
 		}
 
 		function deposit (wallet) {
-			if (wallet.balance.currency === Currency.WAVES) {
+			if (wallet.balance.currency === Currency.BASE) {
 				depositFromCard(wallet.balance.currency);
 			} else if (wallet.balance.currency === Currency.DEIP || wallet.balance.currency === Currency.LIBRE || wallet.balance.currency === Currency.MIR) {
 				dialogService.open('#feat-not-active');
@@ -204,8 +204,8 @@
 		function refreshWallets() {
 			apiService.address.balance(applicationContext.account.address)
 				.then(function (response) {
-					var wavesWallet = findWalletByCurrency(Currency.WAVES);
-					wavesWallet.balance = Money.fromCoins(response.balance, Currency.WAVES);
+					var wavesWallet = findWalletByCurrency(Currency.BASE);
+					wavesWallet.balance = Money.fromCoins(response.balance, Currency.BASE);
 				});
 
 			apiService.assets.balance(applicationContext.account.address).then(function (response) {
@@ -263,7 +263,7 @@
 	'use strict';
 
 	var DEFAULT_FEE_AMOUNT = '0.001';
-	var FEE_CURRENCY = Currency.WAVES;
+	var FEE_CURRENCY = Currency.BASE;
 
 	function WalletSendController($scope, $timeout, constants, events, autocomplete, applicationContext, apiService, dialogService, transactionBroadcast, assetService, notificationService, formattingService, addressService) {
 		var ctrl = this;
@@ -300,7 +300,7 @@
 				},
 				sendFee: {
 					required: true,
-					decimal: Currency.WAVES.precision,
+					decimal: Currency.BASE.precision,
 					min: minimumFee.toTokens()
 				},
 				sendAttachment: {
@@ -415,7 +415,7 @@
 		function resetForm() {
 			ctrl.recipient = '';
 			ctrl.amount = '0';
-			ctrl.confirm.amount = Money.fromTokens(0, Currency.WAVES);
+			ctrl.confirm.amount = Money.fromTokens(0, Currency.BASE);
 			ctrl.confirm.fee = Money.fromTokens(DEFAULT_FEE_AMOUNT, FEE_CURRENCY);
 			ctrl.autocomplete.defaultFee(Number(DEFAULT_FEE_AMOUNT));
 		}
@@ -441,7 +441,7 @@
 		var ctrl = this;
 		var type = $element.data('type');
 
-		var minimumFee = new Money(constants.MINIMUM_TRANSACTION_FEE, Currency.WAVES);
+		var minimumFee = new Money(constants.MINIMUM_TRANSACTION_FEE, Currency.BASE);
 		var notPermittedBitcoinAddresses = {};
 
 		ctrl.broadcast = new transactionBroadcast.instance(apiService.assets.transfer,
@@ -473,7 +473,7 @@
 				},
 				withdrawFee: {
 					required: true,
-					decimal: Currency.WAVES.precision,
+					decimal: Currency.BASE.precision,
 					min: minimumFee.toTokens()
 				},
 				withdrawTotal: {
@@ -578,7 +578,7 @@
 			}).then(function (depositDetails) {
 				notPermittedBitcoinAddresses[depositDetails.address] = 1;
 
-				return coinomatService.getDepositDetails(Currency.BTC, Currency.WAVES,
+				return coinomatService.getDepositDetails(Currency.BTC, Currency.BASE,
 					applicationContext.account.address);
 			}).then(function (depositDetails) {
 				notPermittedBitcoinAddresses[depositDetails.address] = 1;
@@ -617,7 +617,7 @@
 			}
 
 			try {
-				var withdrawCost = Money.fromTokens(ctrl.autocomplete.getFeeAmount(), Currency.WAVES);
+				var withdrawCost = Money.fromTokens(ctrl.autocomplete.getFeeAmount(), Currency.BASE);
 				validateWithdrawCost(withdrawCost, ctrl.wavesBalance);
 				if (ctrl.assetBalance.currency === Currency.BTC) {
 					validateRecipientBTCAddress(ctrl.recipient);
@@ -628,7 +628,7 @@
 			}
 
 			var total = Money.fromTokens(ctrl.total, ctrl.assetBalance.currency);
-			var fee = Money.fromTokens(ctrl.autocomplete.getFeeAmount(), Currency.WAVES);
+			var fee = Money.fromTokens(ctrl.autocomplete.getFeeAmount(), Currency.BASE);
 			ctrl.confirm.amount = total;
 			ctrl.confirm.fee = fee;
 			ctrl.confirm.recipient = ctrl.recipient;

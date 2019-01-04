@@ -122,7 +122,7 @@
 (function () {
 	'use strict';
 
-	var DEFAULT_FEE = Money.fromTokens(0.001, Currency.WAVES);
+	var DEFAULT_FEE = Money.fromTokens(0.001, Currency.BASE);
 	var ALIAS_MINIMUM_LENGTH = 4;
 	var ALIAS_MAXIMUM_LENGTH = 30;
 

@@ -41,16 +41,16 @@
 		ctrl.assetsList = [];
 
 		ctrl.pair = {
-			amountAsset: Currency.WAVES,
+			amountAsset: Currency.BASE,
 			priceAsset: Currency.MIR
 		};
 
 		emptyDataFields();
 
 		var favoritePairs = [
-			{ amountAsset: Currency.WAVES, priceAsset: Currency.DEIP },
-			{ amountAsset: Currency.WAVES, priceAsset: Currency.LIBRE },
-			{ amountAsset: Currency.WAVES, priceAsset: Currency.MIR }
+			{ amountAsset: Currency.BASE, priceAsset: Currency.DEIP },
+			{ amountAsset: Currency.BASE, priceAsset: Currency.LIBRE },
+			{ amountAsset: Currency.BASE, priceAsset: Currency.MIR }
 		];
 
 		ctrl.favoritePairs = favoritePairs;
@@ -98,7 +98,7 @@
 					orderType: type,
 					amount: Money.fromTokens(amount, ctrl.pair.amountAsset),
 					price: OrderPrice.fromTokens(price, ctrl.pair),
-					fee: Money.fromTokens(fee, Currency.WAVES)
+					fee: Money.fromTokens(fee, Currency.BASE)
 				}, sender)
 				.then(function () {
 					refreshOrderbooks();
