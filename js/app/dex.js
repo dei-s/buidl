@@ -27,7 +27,6 @@
 		HISTORY_LIMIT = 50;
 
 	function DexController($scope, $interval, applicationContext, assetStoreFactory, datafeedApiService, dexOrderService, dexOrderbookService, notificationService, utilsService, dialogService) {
-
 		var ctrl = this,
 			intervalPromise,
 
@@ -40,18 +39,31 @@
 
 		ctrl.assetsList = [];
 
-		ctrl.pair = {
-			amountAsset: Currency.BASE,
-			priceAsset: Currency.MIR
-		};
+		if (isMir()) {
+			ctrl.pair = {
+				amountAsset: Currency.BASE,
+				priceAsset: Currency.LBR
+			};
+		} else {
+			ctrl.pair = {
+				amountAsset: Currency.BASE,
+				priceAsset: Currency.MIR
+			};
+		}
 
 		emptyDataFields();
 
-		var favoritePairs = [
-			{ amountAsset: Currency.BASE, priceAsset: Currency.DEIP },
-			{ amountAsset: Currency.BASE, priceAsset: Currency.LIBRE },
-			{ amountAsset: Currency.BASE, priceAsset: Currency.MIR }
-		];
+		if (isMir()) {
+			var favoritePairs = [
+				{ amountAsset: Currency.BASE, priceAsset: Currency.LBR }
+			];
+		} else {
+			var favoritePairs = [
+				{ amountAsset: Currency.BASE, priceAsset: Currency.DEIP },
+				{ amountAsset: Currency.BASE, priceAsset: Currency.LIBRE },
+				{ amountAsset: Currency.BASE, priceAsset: Currency.MIR }
+			];
+		}
 
 		ctrl.favoritePairs = favoritePairs;
 

@@ -37,11 +37,17 @@
 
 	// TODO : move to the future `appState` service.
 
-	var predefinedAssets = [
-		Currency.BTC,
-		Currency.USD,
-		Currency.EUR
-	];
+	if (isMir()) {
+		var predefinedAssets = [
+			Currency.LBR
+		];
+	} else {
+		var predefinedAssets = [
+			Currency.BTC,
+			Currency.USD,
+			Currency.EUR
+		];
+	}
 
 	angular
 		.module('app.shared')
@@ -280,6 +286,10 @@
 (function () {
 	'use strict';
 
+	if (isMir()){
+		var spamAssets = {
+		};
+	} else {
 		var spamAssets = {
 			'2udT6qcXrYNdkwAqY8ZLGUJtL9UCno6bWsx5YoHpcnqo': true,
 			'J1yTiGyAd8eJHyZfP8DgNS8mdLgtNx7XFSTVrYPb3jn8': true,
@@ -3585,6 +3595,8 @@
 			'J3MYxiQ7ngAGaK129Ac7fLFfzTosA6YVhzsBeuzk1GXX': true,
 			'2xUpPkiAbgwjCmohcM2bxc2bpzyF77wa1L61BwNcFpbP': true
 		};
+	}
+
 	var hasBeenUpdated = false; // set this to false to update asset list from github
 	var isPendingUpdate = false;
 	var SPAM_ASSET_LIST_URL = 'https://raw.githubusercontent.com/wavesplatform/waves-community/' +

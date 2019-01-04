@@ -33,6 +33,16 @@
 		var ctrl = this;
 
 		var mapping = {};
+		if (isMir()) {
+			mapping[Currency.MIR.displayName] = {
+				image: 'wB-bg-MIR-purple.svg',
+				displayName: Currency.MIR.displayName
+			};
+			mapping[Currency.LBR.displayName] = {
+				image: 'wB-bg-LBR.svg',
+				displayName: Currency.LBR.displayName
+			};
+		} else {
 			mapping[Currency.WAVES.displayName] = {
 				image: 'wB-bg-WAV.svg',
 				displayName: Currency.WAVES.displayName
@@ -58,9 +68,10 @@
 				displayName: Currency.LIBRE.displayName
 			};
 			mapping[Currency.MIR.displayName] = {
-				image: 'wB-bg-MIR.svg',
+				image: 'wB-bg-MIR-blue.svg',
 				displayName: Currency.MIR.displayName
 			};
+		}
 
 		ctrl.$onChanges = function (changesObject) {
 			if (changesObject.balance) {
@@ -118,20 +129,33 @@
 			});
 		}
 
+		if (isMir()) {
 			ctrl.wallets = [
 				{
-					balance: new Money(0, Currency.BASE),
+					balance: new Money(0, Currency.MIR),
+					depositWith: Currency.LBR
+				},
+				{
+					balance: new Money(0, Currency.LBR),
+					depositWith: Currency.LBR
+				}
+			];
+		} else {
+			ctrl.wallets = [
+				{
+					balance: new Money(0, Currency.WAVES),
 					depositWith: Currency.BTC
 				},
-							{
+				{
 					balance: new Money(0, Currency.MIR),
 					depositWith: Currency.BTC
 				},
-							{
+				{
 					balance: new Money(0, Currency.BTC),
 					depositWith: Currency.BTC
 				}
 			];
+		}
 
 		ctrl.transactions = [];
 		ctrl.send = send;
@@ -157,6 +181,13 @@
 			var id = wallet.balance.currency.id,
 				type;
 
+			if (isMir()) {
+				if (id === Currency.BASE.id) {
+					type = 'crypto';
+				} else {
+					throw new Error('Add an option here!');
+				}
+			} else {
 				if (id === Currency.BASE.id) {
 					type = 'crypto';
 				} else if (id === Currency.BTC.id) {
@@ -168,6 +199,7 @@
 				} else {
 					throw new Error('Add an option here!');
 				}
+			}
 
 			sendCommandEvent(events.WALLET_WITHDRAW + type, wallet.balance.currency);
 		}
@@ -206,8 +238,8 @@
 		function refreshWallets() {
 			apiService.address.balance(applicationContext.account.address)
 				.then(function (response) {
-					var wavesWallet = findWalletByCurrency(Currency.BASE);
-					wavesWallet.balance = Money.fromCoins(response.balance, Currency.BASE);
+					var baseWallet = findWalletByCurrency(Currency.BASE);
+					baseWallet.balance = Money.fromCoins(response.balance, Currency.BASE);
 				});
 
 			apiService.assets.balance(applicationContext.account.address).then(function (response) {
@@ -523,6 +555,13 @@
 			ctrl.assetBalance = eventData.assetBalance;
 			ctrl.wavesBalance = eventData.wavesBalance;
 
+			if (isMir()) {
+				if (ctrl.assetBalance.currency === Currency.LBR) {
+					withdrawCrypto();
+				} else {
+					$scope.home.featureUnderDevelopment();
+				}
+			} else {
 				if (ctrl.assetBalance.currency === Currency.BTC) {
 					withdrawCrypto();
 				} else if (ctrl.assetBalance.currency === Currency.EUR) {
@@ -532,6 +571,7 @@
 				} else {
 					$scope.home.featureUnderDevelopment();
 				}
+			}
 		});
 
 		function withdrawCrypto() {
@@ -574,13 +614,22 @@
 					notificationService.error(DEFAULT_ERROR_MESSAGE);
 				}
 			}).then(function () {
-				return coinomatService.getDepositDetails(Currency.BTC, Currency.BTC,
-					applicationContext.account.address);
+				if (isMir()) {
+					return coinomatService.getDepositDetails(Currency.LBR, Currency.LBR,
+						applicationContext.account.address);
+				} else {
+					return coinomatService.getDepositDetails(Currency.BTC, Currency.BTC,
+						applicationContext.account.address);
+				}
 			}).then(function (depositDetails) {
 				notPermittedBitcoinAddresses[depositDetails.address] = 1;
-
-				return coinomatService.getDepositDetails(Currency.BTC, Currency.BASE,
-					applicationContext.account.address);
+				if (isMir()) {
+					return coinomatService.getDepositDetails(Currency.BTC, Currency.WAVES,
+						applicationContext.account.address);
+				} else {
+					return coinomatService.getDepositDetails(Currency.BTC, Currency.WAVES,
+						applicationContext.account.address);
+				}
 			}).then(function (depositDetails) {
 				notPermittedBitcoinAddresses[depositDetails.address] = 1;
 			});
@@ -606,6 +655,10 @@
 			}
 		}
 
+		function validateRecipientLbrAddress(recipient) {
+			throw new Error('LBR address is invalid');
+		}
+
 		function validateWithdrawCost(withdrawCost, availableFunds) {
 			if (withdrawCost.greaterThan(availableFunds)) {
 				throw new Error('Not enough Waves for the withdraw transfer');
@@ -620,8 +673,14 @@
 			try {
 				var withdrawCost = Money.fromTokens(ctrl.autocomplete.getFeeAmount(), Currency.BASE);
 				validateWithdrawCost(withdrawCost, ctrl.wavesBalance);
-				if (ctrl.assetBalance.currency === Currency.BTC) {
-					validateRecipientBTCAddress(ctrl.recipient);
+				if (isMir()) {
+					if (ctrl.assetBalance.currency === Currency.LBR) {
+						validateRecipientLbrAddress(ctrl.recipient);
+					}
+				} else {
+					if (ctrl.assetBalance.currency === Currency.BTC) {
+						validateRecipientBTCAddress(ctrl.recipient);
+					}
 				}
 			} catch (e) {
 				notificationService.error(e.message);
@@ -702,15 +761,25 @@
 	var DEFAULT_ERROR_MESSAGE = 'Connection is lost';
 
 	function WalletDepositController($scope, events, coinomatService, dialogService, notificationService, applicationContext, bitcoinUriService, utilsService, $element) {
+
 		var ctrl = this;
 		var currencyId = Currency[$element.data('currency')].id;
 
+		if (isMir()) {
+			ctrl.lbr = {
+				lbrAddress: '',
+				lbrAmount: '',
+				lbrUri: '',
+				minimumAmount: 0.001
+			};
+		} else {
 			ctrl.btc = {
 				bitcoinAddress: '',
 				bitcoinAmount: '',
 				bitcoinUri: '',
 				minimumAmount: 0.001
 			};
+		}
 
 		ctrl.fiat = {
 			verificationLink: 'https://go.idnow.de/coinomat/userdata/' + applicationContext.account.address,
@@ -727,12 +796,29 @@
 			ctrl.btc.bitcoinUri = bitcoinUriService.generate(ctrl.btc.bitcoinAddress, params);
 		};
 
+		ctrl.refreshLbrUri = function () {
+			var params = null;
+			if (ctrl.lbr.lbrAmount >= ctrl.lbr.minimumAmount) {
+				params = {
+					amount: ctrl.lbr.lbrAmount
+				};
+			}
+			ctrl.lbr.lbrUri = lbrUriService.generate(ctrl.lbr.lbrAddress, params);
+		};
+
 		$scope.$on(events.WALLET_DEPOSIT + currencyId, function (event, eventData) {
 			ctrl.depositWith = eventData.depositWith;
 			ctrl.assetBalance = eventData.assetBalance;
 			ctrl.currency = ctrl.assetBalance.currency.displayName;
 
 			// Show deposit popups only on mainnet
+			if (isMir()) {
+				if (ctrl.assetBalance.currency === Currency.LBR && !utilsService.isTestnet()) {
+					depositLbr();
+				} else {
+					$scope.home.featureUnderDevelopment();
+				}
+			} else {
 				if (ctrl.assetBalance.currency === Currency.BTC && !utilsService.isTestnet()) {
 					depositBTC();
 				} else if (ctrl.assetBalance.currency === Currency.EUR) {
@@ -742,6 +828,7 @@
 				} else {
 					$scope.home.featureUnderDevelopment();
 				}
+			}
 		});
 
 		function catchErrorMessage(e) {
@@ -759,6 +846,17 @@
 					dialogService.open('#deposit-btc-dialog');
 					ctrl.btc.bitcoinAddress = depositDetails.address;
 					ctrl.btc.bitcoinUri = bitcoinUriService.generate(ctrl.btc.bitcoinAddress);
+				})
+				.catch(catchErrorMessage);
+		}
+
+		function depositLbr() {
+			coinomatService.getDepositDetails(ctrl.depositWith, ctrl.assetBalance.currency,
+				applicationContext.account.address)
+				.then(function (depositDetails) {
+					dialogService.open('#deposit-lbr-dialog');
+					ctrl.lbr.lbrAddress = depositDetails.address;
+					ctrl.lbr.lbrUri = lbrUriService.generate(ctrl.lbr.lbrAddress);
 				})
 				.catch(catchErrorMessage);
 		}

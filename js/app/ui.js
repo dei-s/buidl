@@ -42,19 +42,30 @@
 		.module('app.ui')
 		.service('utilsService', ['constants.network', function (networkConstants) {
 			this.isTestnet = function () {
-				return networkConstants.NETWORK_NAME === 'devel' || networkConstants.NETWORK_NAME === 'testnet';
+				return networkConstants.NETWORK_NAME === 'testnet';
 			};
 
 			this.testnetSubstitutePair = function (pair) {
 				var realIds = {};
-				realIds[Currency.BTC.id] = '8LQW8f7P5d5PZM7GtZEBgaqRPGSzS3DfPuiXrURJ4AJS';
-				realIds[Currency.USD.id] = 'Ft8X1v1LTa1ABafufpaCWyVj8KkaxUWE6xBhW6sNFJck';
-				realIds[Currency.EUR.id] = 'Gtb1WRznfchDnTh37ezoDTJ4wcoKaRsKqKjJjy7nm2zU';
+				if (isMir()) {
+					realIds[Currency.LBR.id] = '55WhEqBaGb6Z9DK3bHJQkk4jEDwRejc1xJttyxiykMnL';
+				} else {
+					realIds[Currency.BTC.id] = '8LQW8f7P5d5PZM7GtZEBgaqRPGSzS3DfPuiXrURJ4AJS';
+					realIds[Currency.USD.id] = 'Ft8X1v1LTa1ABafufpaCWyVj8KkaxUWE6xBhW6sNFJck';
+					realIds[Currency.EUR.id] = 'Gtb1WRznfchDnTh37ezoDTJ4wcoKaRsKqKjJjy7nm2zU';
+				}
 
-				return {
-					amountAsset: {id: realIds[pair.amountAsset.id] || ''},
-					priceAsset: {id: realIds[pair.priceAsset.id] || realIds[Currency.BTC.id]}
-				};
+				if (isMir()) {
+					return {
+						amountAsset: {id: realIds[pair.amountAsset.id] || ''},
+						priceAsset: {id: realIds[pair.priceAsset.id] || realIds[Currency.LBR.id]}
+					};
+				} else {
+					return {
+						amountAsset: {id: realIds[pair.amountAsset.id] || ''},
+						priceAsset: {id: realIds[pair.priceAsset.id] || realIds[Currency.BTC.id]}
+					};
+				}
 			};
 		}]);
 })();
@@ -168,8 +179,7 @@
 		home.featureUnderDevelopment = featureUnderDevelopment;
 		home.logout = logout;
 
-		var titlePrefix = utilsService.isTestnet() ? 'TESTNET ' : '';
-		home.title = titlePrefix + 'Buidl';
+		home.title = utilsService.isTestnet() ? 'TESTNET ' : '';
 		home.version = applicationConstants.CLIENT_VERSION;
 
 		$scope.$on(events.SPLASH_COMPLETED, function () {

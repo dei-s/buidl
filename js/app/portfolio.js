@@ -452,6 +452,7 @@
 
 			if (reissue.fee.greaterThan(reissue.wavesBalance)) {
 				notificationService.error('Not enough funds for the reissue transaction fee');
+
 				return false;
 			}
 
@@ -790,7 +791,11 @@
 				mass.summary.totalFee.plus(mass.summary.totalAmount);
 
 			if (paymentCost.greaterThan(mass.wavesBalance)) {
-				notificationService.error('Not enough Waves to make mass payment');
+				if (isMir()) {
+					notificationService.error('Not enough Mir to make mass payment');
+				} else {
+					notificationService.error('Not enough Waves to make mass payment');
+				}
 
 				return false;
 			}
