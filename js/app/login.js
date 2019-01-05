@@ -99,7 +99,7 @@
 		});
 
 		$scope.$on(events.GENERATE_SEED, function () {
-			var seed = Account.generatePassPhrase();
+			var seed = AccountService.generatePassPhrase();
 			switchToMode(modes.REGISTER, seed);
 			dialogService.openNonCloseable('#login-wPop-new');
 		});
@@ -169,7 +169,7 @@
 (function () {
 	'use strict';
 
-	function AccountListController($scope, accountService, dialogService, loginContext) {
+	function AccountListController($scope, dialogService, loginContext) {
 		var list = this;
 		list.accounts = [];
 		list.removeCandidate = {};
@@ -180,7 +180,7 @@
 		list.signIn = signIn;
 		list.showRemoveWarning = showRemoveWarning;
 
-		accountService.getAccounts().then(function (accounts) {
+		AccountService.getAccounts().then(function (accounts) {
 			list.accounts = accounts;
 		});
 
@@ -190,11 +190,20 @@
 			dialogService.open('#account-remove-popup');
 		}
 
+		function reload() {
+			if (window.chrome && window.chrome.runtime && typeof window.chrome.runtime.reload === 'function') {
+				window.chrome.runtime.reload();
+			} else {
+				window.location.reload();
+			}
+		}
+
 		function removeAccount() {
 			if (list.removeCandidate) {
-				accountService.removeAccountByIndex(list.removeIndex).then(function () {
+				AccountService.removeAccountByIndex(list.removeIndex).then(function () {
 					list.removeCandidate = undefined;
 					list.removeIndex = undefined;
+					reload();
 				});
 			}
 		}
@@ -212,7 +221,7 @@
 		}
 	}
 
-	AccountListController.$inject = ['$scope', 'accountService', 'dialogService', 'loginContext'];
+	AccountListController.$inject = ['$scope', 'dialogService', 'loginContext'];
 
 	angular
 		.module('app.login')
@@ -224,7 +233,7 @@
 
 	var WALLET_NAME_MAXLENGTH = 16;
 
-	function AccountRegisterController($scope, accountService, cryptoService, loginContext) {
+	function AccountRegisterController($scope, cryptoService, loginContext) {
 		var ctrl = this;
 
 		ctrl.validationOptions = {
@@ -287,7 +296,7 @@
 				address: address
 			};
 
-			accountService.addAccount(account);
+			AccountService.addAccount(account);
 
 			loginContext.notifySignedIn($scope, address, seed, keys);
 
@@ -302,7 +311,7 @@
 		}
 	}
 
-	AccountRegisterController.$inject = ['$scope', 'accountService', 'cryptoService', 'loginContext'];
+	AccountRegisterController.$inject = ['$scope', 'cryptoService', 'loginContext'];
 
 	angular
 		.module('app.login')
@@ -364,7 +373,7 @@
 		}
 
 		function generateSeed() {
-			vm.seed = Account.generatePassPhrase();
+			vm.seed = AccountService.generatePassPhrase();
 			refreshAddress();
 		}
 

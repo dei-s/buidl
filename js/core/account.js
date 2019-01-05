@@ -1,4 +1,4 @@
-var Account = (function(){
+var AccountService = (function(){
 	'use strict';
 
 	var wordList = [
@@ -188,6 +188,17 @@ var Account = (function(){
 		'wrist', 'write', 'wrong', 'yard', 'year', 'yellow', 'you', 'young', 'youth', 'zebra', 'zero', 'zone', 'zoo'
 	];
 
+	var stateCache;
+
+	function addAccount(accountInfo) {
+		return getState()
+			.then(function (state) {
+				state.accounts.push(accountInfo);
+				return state;
+			})
+			.then(Storage.saveState);
+	}
+
 	function generatePassPhrase() {
 		var crypto = window.crypto || window.msCrypto;
 		var bits = 160;
@@ -213,77 +224,49 @@ var Account = (function(){
 		crypto.getRandomValues(random);
 
 		return passPhrase;
+	}
+
+	function getAccounts() {
+		return getState()
+			.then(function (state) {
+				return state.accounts;
+			});
+	}
+
+	function getState() {
+		if (angular.isUndefined(stateCache)) {
+			return Storage.loadState().then(function (state) {
+				state = state || {};
+				if (!state.accounts)
+					state.accounts = [];
+				stateCache = state;
+				return stateCache;
+			});
+		}
+		return new Promise(function(resolve, reject){
+			return resolve(stateCache);
+		});
+	}
+
+	function removeAccountByIndex(index) {
+		return getState()
+			.then(function (state) {
+				return removeByIndex(state, index);
+			})
+			.then(Storage.saveState);
 	};
 
-	return {
-		generatePassPhrase: generatePassPhrase
+	function removeByIndex(state, index) {
+		state.accounts.splice(index, 1);
+		return state;
 	}
-})();
 
-(function () {
-	'use strict';
-
-	angular
-		.module('waves.core.services')
-		.service('accountService', ['storageService', '$q', function (storageService, $q) {
-			var stateCache;
-
-			function removeByIndex(state, index) {
-				state.accounts.splice(index, 1);
-
-				return state;
-			}
-
-			function getState() {
-				if (angular.isUndefined(stateCache)) {
-					return storageService.loadState().then(function (state) {
-						state = state || {};
-						if (!state.accounts)
-							state.accounts = [];
-
-						stateCache = state;
-
-						return stateCache;
-					});
-				}
-
-				return $q.when(stateCache);
-			}
-
-			this.addAccount = function (accountInfo) {
-				return getState()
-					.then(function (state) {
-						state.accounts.push(accountInfo);
-
-						return state;
-					})
-					.then(storageService.saveState);
-			};
-
-			this.removeAccountByIndex = function (index) {
-				return getState()
-					.then(function (state) {
-						return removeByIndex(state, index);
-					})
-					.then(storageService.saveState);
-			};
-
-			this.removeAccount = function (account) {
-				return getState()
-					.then(function (state) {
-						var index = _.findIndex(state.accounts, {
-							address: account.address
-						});
-						return removeByIndex(state, index);
-					})
-					.then(storageService.saveState);
-			};
-
-			this.getAccounts = function () {
-				return getState()
-					.then(function (state) {
-						return state.accounts;
-					});
-			};
-		}]);
+	return {
+		addAccount: addAccount,
+		generatePassPhrase: generatePassPhrase,
+		getAccounts: getAccounts,
+		getState: getState,
+		removeAccountByIndex: removeAccountByIndex,
+		removeByIndex: removeByIndex
+	}
 })();
