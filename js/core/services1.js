@@ -1,85 +1,56 @@
-/******************************************************************************
- * Copyright © 2016 The Waves Developers.                                     *
- *                                                                            *
- * See the LICENSE files at                                                   *
- * the top-level directory of this distribution for the individual copyright  *
- * holder information and the developer policies on copyright and licensing.  *
- *                                                                            *
- * Unless otherwise agreed in a custom licensing agreement, no part of the    *
- * Waves software, including this file, may be copied, modified, propagated,  *
- * or distributed except according to the terms contained in the LICENSE      *
- * file.                                                                      *
- *                                                                            *
- * Removal or modification of this copyright notice is prohibited.            *
- *                                                                            *
- ******************************************************************************/
+var AssetService = (function(){
+	'use strict';
+
+	function buildCreateAssetTransferSignatureData(transfer, senderPublicKey) {
+		return [].concat(
+			SignService.getAssetTransferTxTypeBytes(),
+			SignService.getPublicKeyBytes(senderPublicKey),
+			SignService.getAssetIdBytes(transfer.amount.currency.id),
+			SignService.getFeeAssetIdBytes(transfer.fee.currency.id),
+			SignService.getTimestampBytes(transfer.time),
+			SignService.getAmountBytes(transfer.amount.toCoins()),
+			SignService.getFeeBytes(transfer.fee.toCoins()),
+			SignService.getRecipientBytes(transfer.recipient),
+			SignService.getAttachmentBytes(transfer.attachment)
+		);
+	}
+
+	function buildId(transactionBytes) {
+		var hash = CryptoService.blake(new Uint8Array(transactionBytes));
+		return Base58.encode(hash);
+	}
+
+	function validateAssetTransfer(transfer) {
+		if (angular.isUndefined(transfer.recipient)) {
+			throw new Error('Recipient account hasn\'t been set');
+		}
+
+		if (angular.isUndefined(transfer.fee)) {
+			throw new Error('Transaction fee hasn\'t been set');
+		}
+
+		if (angular.isUndefined(transfer.amount)) {
+			throw new Error('Transaction amount hasn\'t been set');
+		}
+	}
+
+	return {
+		buildCreateAssetTransferSignatureData: buildCreateAssetTransferSignatureData,
+		buildId: buildId,
+		validateAssetTransfer: validateAssetTransfer
+	}
+})();
 
 (function () {
 	'use strict';
 
-	function AssetService(signService, validateService, utilityService, cryptoService) {
+	function AssetService1(signService, validateService, utilityService, cryptoService) {
 		function buildId(transactionBytes) {
-			var hash = cryptoService.blake2b(new Uint8Array(transactionBytes));
-			return cryptoService.base58.encode(hash);
+			return AssetService.buildId(transactionBytes);
 		}
-
-		function buildCreateAssetSignatureData (asset, tokensQuantity, senderPublicKey) {
-			return [].concat(
-				signService.getAssetIssueTxTypeBytes(),
-				signService.getPublicKeyBytes(senderPublicKey),
-				signService.getAssetNameBytes(asset.name),
-				signService.getAssetDescriptionBytes(asset.description),
-				signService.getAssetQuantityBytes(tokensQuantity),
-				signService.getAssetDecimalPlacesBytes(asset.decimalPlaces),
-				signService.getAssetIsReissuableBytes(asset.reissuable),
-				signService.getFeeBytes(asset.fee.toCoins()),
-				signService.getTimestampBytes(asset.time)
-			);
-		}
-
-		this.createAssetIssueTransaction = function (asset, sender) {
-			validateService.validateAssetIssue(asset);
-			validateService.validateSender(sender);
-
-			asset.time = asset.time || utilityService.getTime();
-			asset.reissuable = angular.isDefined(asset.reissuable) ? asset.reissuable : false;
-			asset.description = asset.description || '';
-
-			var assetCurrency = Currency.create({
-				displayName: asset.name,
-				precision: asset.decimalPlaces
-			});
-
-			var tokens = new Money(asset.totalTokens, assetCurrency);
-			var signatureData = buildCreateAssetSignatureData(asset, tokens.toCoins(), sender.publicKey);
-			var signature = signService.buildSignature(signatureData, sender.privateKey);
-
-			return {
-				id: buildId(signatureData),
-				name: asset.name,
-				description: asset.description,
-				quantity: tokens.toCoins(),
-				decimals: Number(asset.decimalPlaces),
-				reissuable: asset.reissuable,
-				timestamp: asset.time,
-				fee: asset.fee.toCoins(),
-				senderPublicKey: sender.publicKey,
-				signature: signature
-			};
-		};
 
 		function buildCreateAssetTransferSignatureData(transfer, senderPublicKey) {
-			return [].concat(
-				signService.getAssetTransferTxTypeBytes(),
-				signService.getPublicKeyBytes(senderPublicKey),
-				signService.getAssetIdBytes(transfer.amount.currency.id),
-				signService.getFeeAssetIdBytes(transfer.fee.currency.id),
-				signService.getTimestampBytes(transfer.time),
-				signService.getAmountBytes(transfer.amount.toCoins()),
-				signService.getFeeBytes(transfer.fee.toCoins()),
-				signService.getRecipientBytes(transfer.recipient),
-				signService.getAttachmentBytes(transfer.attachment)
-			);
+			return AssetService.buildCreateAssetTransferSignatureData(transfer, senderPublicKey);
 		}
 
 		this.createAssetTransferTransaction = function (transfer, sender) {
@@ -142,12 +113,15 @@
 		};
 	}
 
-	AssetService.$inject = ['signService', 'validateService', 'utilityService', 'cryptoService'];
+	AssetService1.$inject = ['signService', 'validateService', 'utilityService', 'cryptoService'];
 
 	angular
 		.module('waves.core.services')
-		.service('assetService', AssetService);
+		.service('assetService', AssetService1);
 })();
+
+
+
 
 (function () {
 	'use strict';
