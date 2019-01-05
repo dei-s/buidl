@@ -1,19 +1,3 @@
-/******************************************************************************
- * Copyright © 2016 The Waves Developers.                                     *
- *                                                                            *
- * See the LICENSE files at                                                   *
- * the top-level directory of this distribution for the individual copyright  *
- * holder information and the developer policies on copyright and licensing.  *
- *                                                                            *
- * Unless otherwise agreed in a custom licensing agreement, no part of the    *
- * Waves software, including this file, may be copied, modified, propagated,  *
- * or distributed except according to the terms contained in the LICENSE      *
- * file.                                                                      *
- *                                                                            *
- * Removal or modification of this copyright notice is prohibited.            *
- *                                                                            *
- ******************************************************************************/
-
 (function() {
 	'use strict';
 
@@ -332,35 +316,6 @@
 					.then(function (state) {
 						return state.accounts;
 					});
-			};
-		}]);
-})();
-
-(function () {
-	'use strict';
-
-	angular
-		.module('waves.core.services')
-		.service('addressService', ['constants.address', function (constants) {
-			this.cleanupOptionalPrefix = function(displayAddress) {
-				if (displayAddress.length <= 30) {
-					// Don't change aliases
-					return displayAddress;
-				}
-
-				var address = displayAddress,
-					prefixLen = constants.ADDRESS_PREFIX.length;
-
-				if (address.length > constants.RAW_ADDRESS_LENGTH || address.startsWith(constants.ADDRESS_PREFIX)) {
-					address = address.substr(prefixLen, address.length - prefixLen);
-				}
-
-				return address;
-			};
-
-			this.validateAddress = function(address) {
-				var cleanAddress = this.cleanupOptionalPrefix(address);
-				return constants.MAINNET_ADDRESS_REGEXP.test(cleanAddress);
 			};
 		}]);
 })();
