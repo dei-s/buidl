@@ -1,23 +1,89 @@
-/******************************************************************************
- * Copyright © 2016 The Waves Developers.                                     *
- *                                                                            *
- * See the LICENSE files at                                                   *
- * the top-level directory of this distribution for the individual copyright  *
- * holder information and the developer policies on copyright and licensing.  *
- *                                                                            *
- * Unless otherwise agreed in a custom licensing agreement, no part of the    *
- * Waves software, including this file, may be copied, modified, propagated,  *
- * or distributed except according to the terms contained in the LICENSE      *
- * file.                                                                      *
- *                                                                            *
- * Removal or modification of this copyright notice is prohibited.            *
- *                                                                            *
- ******************************************************************************/
-
-(function () {
+var Utility = (function(){
 	'use strict';
 
 	var BASE58_REGEX = new RegExp('^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{0,}$');
+
+	function getNetworkIdByte() {
+		return Constants.NETWORK_CODE.charCodeAt(0) & 0xFF;
+	}
+
+	// long to big-endian bytes
+	function longToByteArray(value) {
+		var bytes = new Array(7);
+		for (var k = 7; k >= 0; k--) {
+			bytes[k] = value & (255);
+			value = value / 256;
+		}
+		return bytes;
+	}
+
+	// short to big-endian bytes
+	function shortToByteArray(value) {
+		return converters.int16ToBytes(value, true);
+	}
+
+	function base58StringToByteArray(base58String) {
+		var decoded = Base58.decode(base58String);
+		var result = [];
+		for (var i = 0; i < decoded.length; ++i) {
+			result.push(decoded[i] & 0xff);
+		}
+		return result;
+	}
+
+	function stringToByteArrayWithSize(string) {
+		var bytes = converters.stringToByteArray(string);
+		return byteArrayWithSize(bytes);
+	}
+
+	function byteArrayWithSize(byteArray) {
+		var result = shortToByteArray(byteArray.length);
+		return result.concat(byteArray);
+	}
+
+	function booleanToBytes(flag) {
+		return flag ? [1] : [0];
+	}
+
+	function endsWithWhitespace(value) {
+		return /\s+$/g.test(value);
+	}
+
+	function getTime() {
+		return Date.now();
+	}
+
+	function isValidBase58String(input) {
+		return Utility.BASE58_REGEX.test(input);
+	}
+
+	// Add a prefix in case of alias
+	function resolveAddressOrAlias(string) {
+		if (string.length <= 30) {
+			return 'alias:' + Constants.NETWORK_CODE + ':' + string;
+		} else {
+			return string;
+		}
+	}
+
+	return {
+		BASE58_REGEX: BASE58_REGEX,
+		getNetworkIdByte: getNetworkIdByte,
+		longToByteArray: longToByteArray,
+		shortToByteArray: shortToByteArray,
+		base58StringToByteArray: base58StringToByteArray,
+		stringToByteArrayWithSize: stringToByteArrayWithSize,
+		byteArrayWithSize: byteArrayWithSize,
+		booleanToBytes: booleanToBytes,
+		endsWithWhitespace: endsWithWhitespace,
+		getTime: getTime,
+		isValidBase58String: isValidBase58String,
+		resolveAddressOrAlias: resolveAddressOrAlias
+	}
+})();
+
+(function () {
+	'use strict';
 
 	angular
 		.module('waves.core.services')
@@ -25,68 +91,47 @@
 			var self = this;
 
 			self.getNetworkIdByte = function () {
-				return constants.NETWORK_CODE.charCodeAt(0) & 0xFF;
+				return Utility.getNetworkIdByte();
 			};
 
-			// long to big-endian bytes
 			self.longToByteArray = function (value) {
-				var bytes = new Array(7);
-				for (var k = 7; k >= 0; k--) {
-					bytes[k] = value & (255);
-					value = value / 256;
-				}
-
-				return bytes;
+				return Utility.longToByteArray(value);
 			};
 
-			// short to big-endian bytes
 			self.shortToByteArray = function (value) {
-				return converters.int16ToBytes(value, true);
+				return Utility.shortToByteArray(value);
 			};
 
 			self.base58StringToByteArray = function (base58String) {
-				var decoded = cryptoService.base58.decode(base58String);
-				var result = [];
-				for (var i = 0; i < decoded.length; ++i) {
-					result.push(decoded[i] & 0xff);
-				}
-
-				return result;
+				return Utility.base58StringToByteArray(base58String);
 			};
 
 			self.stringToByteArrayWithSize = function (string) {
-				var bytes = converters.stringToByteArray(string);
-				return self.byteArrayWithSize(bytes);
+				return Utility.stringToByteArrayWithSize(string);
 			};
 
 			self.byteArrayWithSize = function (byteArray) {
-				var result = self.shortToByteArray(byteArray.length);
-				return result.concat(byteArray);
+				return Utility.byteArrayWithSize(byteArray);
 			};
 
 			self.booleanToBytes = function (flag) {
-				return flag ? [1] : [0];
+				return Utility.booleanToBytes(flag);
 			};
 
 			self.endsWithWhitespace = function (value) {
-				return /\s+$/g.test(value);
+				return Utility.endsWithWhitespace(value);
 			};
 
 			self.getTime = function() {
-				return Date.now();
+				return Utility.getTime();
 			};
 
 			self.isValidBase58String = function (input) {
-				return BASE58_REGEX.test(input);
+				return Utility.isValidBase58String(input);
 			};
 
-			// Add a prefix in case of alias
 			self.resolveAddressOrAlias = function (string) {
-				if (string.length <= 30) {
-					return 'alias:' + constants.NETWORK_CODE + ':' + string;
-				} else {
-					return string;
-				}
+				return Utility.resolveAddressOrAlias(string);
 			};
 		}]);
 })();
