@@ -123,6 +123,17 @@ var Currency = (function () {
 		});
 	}
 
+	function Create(data) {
+		// if currency data.id is not set - it's a temporary instance
+		if (!_.has(data, 'id')) {
+			return new Currency(data);
+		}
+		if (!currencyCache[data.id]) {
+			currencyCache[data.id] = new Currency(data);
+		}
+		return currencyCache[data.id];
+	}
+
 	function isCached(assetId) {
 		return currencyCache.hasOwnProperty(assetId);
 	}
@@ -144,24 +155,22 @@ var Currency = (function () {
 		}
 	}
 
-	invalidateCache();
-
-	function Create(data) {
-		// if currency data.id is not set - it's a temporary instance
-		if (!_.has(data, 'id')) {
-			return new Currency(data);
-		}
-		if (!currencyCache[data.id]) {
-			currencyCache[data.id] = new Currency(data);
-		}
-		return currencyCache[data.id];
+	// Assets ID substitution for testnet
+	function patchCurrencyIdsForTestnet() {
+		Currency.EUR.id = '2xnE3EdpqXtFgCP156qt1AbyjpqdZ5jGjWo3CwTawcux';
+		Currency.USD.id = 'HyFJ3rrq5m7FxdkWtQXkZrDat1F7LjVVGfpSkUuEXQHj';
+		Currency.BTC.id = 'Fmg13HEHJHuZYbtJq8Da8wifJENq8uBxDuWoP9pVe2Qe';
+		invalidateCache();
 	}
+
+	invalidateCache();
 
 	if (isMir()) {
 		return {
 			create: Create,
 			invalidateCache: invalidateCache,
 			isCached: isCached,
+			patchCurrencyIdsForTestnet: patchCurrencyIdsForTestnet,
 			BASE: BASE,
 			LBR: LBR,
 			MIR: MIR
@@ -171,6 +180,7 @@ var Currency = (function () {
 			create: Create,
 			invalidateCache: invalidateCache,
 			isCached: isCached,
+			patchCurrencyIdsForTestnet: patchCurrencyIdsForTestnet,
 			BASE: BASE,
 			BTC: BTC,
 			USD: USD,

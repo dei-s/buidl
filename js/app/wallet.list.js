@@ -114,7 +114,7 @@
 		}
 
 		if (isMir()) {
-			ctrl.wallets = [
+			var defaultWallets = [
 				{
 					balance: new Money(0, Currency.MIR),
 					depositWith: Currency.LBR
@@ -125,7 +125,7 @@
 				}
 			];
 		} else {
-			ctrl.wallets = [
+			var defaultWallets = [
 				{
 					balance: new Money(0, Currency.WAVES),
 					depositWith: Currency.BTC
@@ -146,9 +146,6 @@
 		ctrl.withdraw = withdraw;
 		ctrl.deposit = deposit;
 		ctrl.depositFromCard = depositFromCard;
-
-		loadDataFromBackend();
-		patchCurrencyIdsForTestnet();
 
 		$scope.$on('$destroy', function () {
 			if (angular.isDefined(refreshPromise)) {
@@ -221,6 +218,14 @@
 			}, refreshDelay);
 		}
 
+		function refreshWalletList() {
+			ctrl.wallets = defaultWallets;
+			loadDataFromBackend();
+			if ($scope.isTestnet()) {
+				Currency.patchCurrencyIdsForTestnet();
+			}
+		}
+
 		function refreshWallets() {
 			apiService.address.balance(applicationContext.account.address)
 				.then(function (response) {
@@ -260,15 +265,7 @@
 				});
 		}
 
-		// Assets ID substitution for testnet
-		function patchCurrencyIdsForTestnet() {
-			if ($scope.isTestnet()) {
-				Currency.EUR.id = '2xnE3EdpqXtFgCP156qt1AbyjpqdZ5jGjWo3CwTawcux';
-				Currency.USD.id = 'HyFJ3rrq5m7FxdkWtQXkZrDat1F7LjVVGfpSkUuEXQHj';
-				Currency.BTC.id = 'Fmg13HEHJHuZYbtJq8Da8wifJENq8uBxDuWoP9pVe2Qe';
-				Currency.invalidateCache();
-			}
-		}
+		refreshWalletList();
 	}
 
 	WalletListController.$inject = ['$scope', '$interval', 'wallet.events', 'applicationContext', 'apiService', 'transactionLoadingService', 'dialogService'];
