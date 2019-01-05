@@ -571,24 +571,8 @@
 					</div>
 
 					<div class="noDisp">
-						<div id="digilira-dialog" waves-dialog ok-button-caption="CLOSE" cancel-button-visible="false">
-							<h2 class="sectionHeader">TURKISH LIRA</h2>
-							<p class="dialog-text">Please visit <a href="https://www.digilira.com/" target="_blank">Digilira</a> gateway.</p>
-							<p class="dialog-text">You can only use Turkish Lira gateway if you have Turkish citizenship.</p>
-						</div>
-					</div>
-
-					<div class="noDisp">
-						<div id="dei-dialog" waves-dialog ok-button-caption="CLOSE" cancel-button-visible="false">
-							<h2 class="sectionHeader">DEI</h2>
-							<p class="dialog-text">Please visit <a href="https://dei.su" target="_blank">Dei</a> gateway.</p>
-							<p class="dialog-text">You can only use Dei gateway.</p>
-						</div>
-					</div>
-
-					<div class="noDisp">
-						<div id="libre-dialog" waves-dialog ok-button-caption="CLOSE" cancel-button-visible="false">
-							<h2 class="sectionHeader">LIBRE</h2>
+						<div id="lbr-dialog" waves-dialog ok-button-caption="CLOSE" cancel-button-visible="false">
+							<h2 class="sectionHeader">LBR</h2>
 							<p class="dialog-text">Please visit <a href="https://libre.center" target="_blank">Libre</a> gateway.</p>
 							<p class="dialog-text">You can only use Libre gateway.</p>
 						</div>
@@ -643,9 +627,8 @@
 							on-withdraw="walletList.withdraw(w)"
 							on-deposit="walletList.deposit(w)"></wallet-box>
 					</div>
-					<waves-transaction-history heading="LATEST TRANSACTIONS"
-						transactions="walletList.transactions"
-						limit-to="10"></waves-transaction-history>
+
+					<waves-transaction-history heading="LATEST TRANSACTIONS" transactions="walletList.transactions" limit-to="10"></waves-transaction-history>
 				</div>
 				<!-- / WALLET TAB -->
 
