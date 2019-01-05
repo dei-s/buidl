@@ -254,7 +254,7 @@ var AccountService = (function(){
 				return removeByIndex(state, index);
 			})
 			.then(Storage.saveState);
-	};
+	}
 
 	function removeByIndex(state, index) {
 		state.accounts.splice(index, 1);
