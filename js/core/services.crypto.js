@@ -1,18 +1,219 @@
-/******************************************************************************
- * Copyright © 2016 The Waves Developers.                                     *
- *                                                                            *
- * See the LICENSE files at                                                   *
- * the top-level directory of this distribution for the individual copyright  *
- * holder information and the developer policies on copyright and licensing.  *
- *                                                                            *
- * Unless otherwise agreed in a custom licensing agreement, no part of the    *
- * Waves software, including this file, may be copied, modified, propagated,  *
- * or distributed except according to the terms contained in the LICENSE      *
- * file.                                                                      *
- *                                                                            *
- * Removal or modification of this copyright notice is prohibited.            *
- *                                                                            *
- ******************************************************************************/
+var CryptoService = (function(){
+	'use strict';
+
+	// private version of getNetworkId byte in order to avoid circular dependency
+	// between cryptoService and utilityService
+	function getNetworkIdByte() {
+		return Constants.NETWORK_CODE.charCodeAt(0) & 0xFF;
+	}
+
+	function appendUint8Arrays(array1, array2) {
+		var tmp = new Uint8Array(array1.length + array2.length);
+		tmp.set(array1, 0);
+		tmp.set(array2, array1.length);
+		return tmp;
+	}
+
+	function appendNonce(originalSeed) {
+		// change this is when nonce increment gets introduced
+		var nonce = new Uint8Array(converters.int32ToBytes(Constants.INITIAL_NONCE, true));
+		return appendUint8Arrays(nonce, originalSeed);
+	}
+
+	// sha256 accepts messageBytes as Uint8Array or Array
+	function sha256(message) {
+		var bytes;
+		if (typeof(message) == 'string')
+			bytes = converters.stringToByteArray(message);
+		else
+			bytes = message;
+
+		var wordArray = converters.byteArrayToWordArrayEx(new Uint8Array(bytes));
+		var resultWordArray = CryptoJS.SHA256(wordArray);
+
+		return converters.wordArrayToByteArrayEx(resultWordArray);
+	}
+
+	// blake2b 256 hash function
+	function blake(input) {
+		return blake2b(input, null, 32);
+	}
+
+	// keccak 256 hash algorithm
+	function keccak(messageBytes) {
+		// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+		return keccak_256.array(messageBytes);
+		// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+	}
+
+	//this.sha256 = sha256;
+
+	function hashChain(noncedSecretPhraseBytes) {
+		return keccak(blake(new Uint8Array(noncedSecretPhraseBytes)));
+	}
+
+	// Base68 encoding/decoding implementation
+	/*var base58 = {
+		encode: function (buffer) {
+			return Base58.encode(buffer);
+		},
+		decode: function (string) {
+			return Base58.decode(string);
+		}
+	}*/
+
+	function buildAccountSeedHash(seedBytes) {
+		var data = appendNonce(seedBytes);
+		var seedHash = hashChain(data);
+		return sha256(Array.prototype.slice.call(seedHash));
+	}
+
+	function buildKeyPair(seedBytes) {
+		var accountSeedHash = buildAccountSeedHash(seedBytes);
+		var p = axlsign.generateKeyPair(accountSeedHash);
+
+		return {
+			public: Base58.encode(p.public),
+			private: Base58.encode(p.private)
+		};
+	}
+
+	function buildPublicKey(seedBytes) {
+		return buildKeyPair(seedBytes).public;
+	}
+
+	function buildPrivateKey(seedBytes) {
+		return buildKeyPair(seedBytes).private;
+	}
+
+	function buildRawAddress(encodedPublicKey) {
+		var publicKey = Base58.decode(encodedPublicKey);
+		var publicKeyHash = hashChain(publicKey);
+
+		var prefix = new Uint8Array(2);
+		prefix[0] = Constants.ADDRESS_VERSION;
+		prefix[1] = getNetworkIdByte();
+
+		var unhashedAddress = appendUint8Arrays(prefix, publicKeyHash.slice(0, 20));
+		var addressHash = hashChain(unhashedAddress).slice(0, 4);
+
+		return Base58.encode(appendUint8Arrays(unhashedAddress, addressHash));
+	}
+
+	function buildRawAddressFromSeed(secretPhrase) {
+		var publicKey = getPublicKey(secretPhrase);
+		return buildRawAddress(publicKey);
+	}
+
+	// Returns publicKey built from string
+	function getPublicKey(secretPhrase) {
+		return buildPublicKey(converters.stringToByteArray(secretPhrase));
+	}
+
+	// Returns privateKey built from string
+	function getPrivateKey(secretPhrase) {
+		return buildPrivateKey(converters.stringToByteArray(secretPhrase));
+	}
+
+	// Returns key pair built from string
+	function getKeyPair(secretPhrase) {
+		return buildKeyPair(converters.stringToByteArray(secretPhrase));
+	}
+
+	// function accepts buffer with private key and an array with dataToSign
+	// returns buffer with signed data
+	// 64 randoms bytes are added to the signature
+	// method falls back to deterministic signatures if crypto object is not supported
+	function nonDeterministicSign(privateKey, dataToSign) {
+		var crypto = window.crypto || window.msCrypto;
+		var random;
+		if (crypto) {
+			random = new Uint8Array(64);
+			crypto.getRandomValues(random);
+		}
+		var signature = axlsign.sign(privateKey, new Uint8Array(dataToSign), random);
+		return Base58.encode(signature);
+	}
+
+	// function accepts buffer with private key and an array with dataToSign
+	// returns buffer with signed data
+	function deterministicSign(privateKey, dataToSign) {
+		var signature = axlsign.sign(privateKey, new Uint8Array(dataToSign));
+		return Base58.encode(signature);
+	}
+
+	function verify(senderPublicKey, dataToSign, signatureBytes) {
+		return axlsign.verify(senderPublicKey, dataToSign, signatureBytes);
+	}
+
+	// function returns base58 encoded shared key from base58 encoded a private
+	// and b public keys
+	function getSharedKey(aEncodedPrivateKey, bEncodedPublicKey) {
+		var aPrivateKey = Base58.decode(aEncodedPrivateKey);
+		var bPublicKey = Base58.decode(bEncodedPublicKey);
+		var sharedKey = axlsign.sharedKey(aPrivateKey, bPublicKey);
+		return Base58.encode(sharedKey);
+	}
+
+	function encryptWalletSeed(seed, key) {
+		var aesKey = prepareKey(key);
+		return CryptoJS.AES.encrypt(seed, aesKey);
+	}
+
+	function decryptWalletSeed(cipher, key, checksum) {
+		var aesKey = prepareKey(key);
+		var data = CryptoJS.AES.decrypt(cipher, aesKey);
+
+		var actualChecksum = seedChecksum(converters.hexStringToByteArray(data.toString()));
+		if (actualChecksum === checksum)
+			return converters.hexStringToString(data.toString());
+		else
+			return false;
+	}
+
+	// function can be used for sharedKey preparation, as recommended in: https://github.com/wavesplatform/curve25519-js
+	function prepareKey(key) {
+		var rounds = 1000;
+		var digest = key;
+		for (var i = 0; i < rounds; i++) {
+			digest = converters.byteArrayToHexString(sha256(digest));
+		}
+		return digest;
+	}
+
+	function seedChecksum(seed) {
+		return converters.byteArrayToHexString(sha256(seed));
+	}
+
+	return {
+		getNetworkIdByte: getNetworkIdByte,
+		appendUint8Arrays: appendUint8Arrays,
+		appendNonce: appendNonce,
+		sha256: sha256,
+		blake: blake,
+		keccak: keccak,
+		hashChain: hashChain,
+		//base58: base58,
+		buildAccountSeedHash: buildAccountSeedHash,
+		buildKeyPair: buildKeyPair,
+		buildPublicKey: buildPublicKey,
+		buildPrivateKey: buildPrivateKey,
+		buildRawAddress: buildRawAddress,
+		buildRawAddressFromSeed: buildRawAddressFromSeed,
+		getPublicKey: getPublicKey,
+		getPrivateKey: getPrivateKey,
+		getKeyPair: getKeyPair,
+		nonDeterministicSign: nonDeterministicSign,
+		deterministicSign: deterministicSign,
+		verify: verify,
+		getSharedKey: getSharedKey,
+		encryptWalletSeed: encryptWalletSeed,
+		decryptWalletSeed: decryptWalletSeed,
+		seedChecksum: seedChecksum,
+		prepareKey: prepareKey,
+		seedChecksum: seedChecksum
+	}
+})();
 
 /**
  * @requires {blake2b-256.js}
@@ -25,201 +226,108 @@
 		.module('waves.core.services')
 		.service('cryptoService', ['constants.network', '$window', function(constants, window) {
 
-			// private version of getNetworkId byte in order to avoid circular dependency
-			// between cryptoService and utilityService
 			var getNetworkIdByte = function() {
-				return constants.NETWORK_CODE.charCodeAt(0) & 0xFF;
+				return CryptoService.getNetworkIdByte();
 			};
 
 			var appendUint8Arrays = function(array1, array2) {
-				var tmp = new Uint8Array(array1.length + array2.length);
-				tmp.set(array1, 0);
-				tmp.set(array2, array1.length);
-				return tmp;
+				return CryptoService.appendUint8Arrays(array1, array2);
 			};
 
 			var appendNonce = function (originalSeed) {
-				// change this is when nonce increment gets introduced
-				var nonce = new Uint8Array(converters.int32ToBytes(constants.INITIAL_NONCE, true));
-
-				return appendUint8Arrays(nonce, originalSeed);
+				return CryptoService.appendNonce(originalSeed);
 			};
 
-			// sha256 accepts messageBytes as Uint8Array or Array
 			var sha256 = function (message) {
-				var bytes;
-				if (typeof(message) == 'string')
-					bytes = converters.stringToByteArray(message);
-				else
-					bytes = message;
-
-				var wordArray = converters.byteArrayToWordArrayEx(new Uint8Array(bytes));
-				var resultWordArray = CryptoJS.SHA256(wordArray);
-
-				return converters.wordArrayToByteArrayEx(resultWordArray);
+				return CryptoService.sha256(message);
 			};
 
 			var prepareKey = function (key) {
-				var rounds = 1000;
-				var digest = key;
-				for (var i = 0; i < rounds; i++) {
-					digest = converters.byteArrayToHexString(sha256(digest));
-				}
-
-				return digest;
+				return CryptoService.prepareKey(key);
 			};
 
-			// blake2b 256 hash function
 			this.blake2b = function (input) {
-				return blake2b(input, null, 32);
+				return CryptoService.blake(input);
 			};
 
-			// keccak 256 hash algorithm
 			this.keccak = function(messageBytes) {
-				// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-				return keccak_256.array(messageBytes);
-				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+				return CryptoService.keccak(messageBytes);
 			};
 
 			this.sha256 = sha256;
 
 			this.hashChain = function(noncedSecretPhraseBytes) {
-				return this.keccak(this.blake2b(new Uint8Array(noncedSecretPhraseBytes)));
+				return CryptoService.hashChain(noncedSecretPhraseBytes);
 			};
 
-			// Base68 encoding/decoding implementation
-			this.base58 = {
-				encode: function (buffer) {
-					return Base58.encode(buffer);
-				},
-				decode: function (string) {
-					return Base58.decode(string);
-				}
-			};
+			this.base58 = Base58;
 
 			this.buildAccountSeedHash = function(seedBytes) {
-				var data = appendNonce(seedBytes);
-				var seedHash = this.hashChain(data);
-
-				return sha256(Array.prototype.slice.call(seedHash));
+				return CryptoService.buildAccountSeedHash(seedBytes);
 			};
 
 			this.buildKeyPair = function(seedBytes) {
-				var accountSeedHash = this.buildAccountSeedHash(seedBytes);
-				var p = axlsign.generateKeyPair(accountSeedHash);
-
-				return {
-					public: this.base58.encode(p.public),
-					private: this.base58.encode(p.private)
-				};
+				return CryptoService.buildKeyPair(seedBytes);
 			};
 
 			this.buildPublicKey = function (seedBytes) {
-				return this.buildKeyPair(seedBytes).public;
+				return CryptoService.buildPublicKey(seedBytes);
 			};
 
 			this.buildPrivateKey = function (seedBytes) {
-				return this.buildKeyPair(seedBytes).private;
+				return CryptoService.buildPrivateKey(seedBytes);
 			};
 
 			this.buildRawAddress = function (encodedPublicKey) {
-				var publicKey = this.base58.decode(encodedPublicKey);
-				var publicKeyHash = this.hashChain(publicKey);
-
-				var prefix = new Uint8Array(2);
-				prefix[0] = constants.ADDRESS_VERSION;
-				prefix[1] = getNetworkIdByte();
-
-				var unhashedAddress = appendUint8Arrays(prefix, publicKeyHash.slice(0, 20));
-				var addressHash = this.hashChain(unhashedAddress).slice(0, 4);
-
-				return this.base58.encode(appendUint8Arrays(unhashedAddress, addressHash));
+				return CryptoService.buildRawAddress(encodedPublicKey);
 			};
 
 			this.buildRawAddressFromSeed = function (secretPhrase) {
-				var publicKey = this.getPublicKey(secretPhrase);
-
-				return this.buildRawAddress(publicKey);
+				return CryptoService.buildRawAddressFromSeed(secretPhrase);
 			};
 
-			//Returns publicKey built from string
 			this.getPublicKey = function(secretPhrase) {
-				return this.buildPublicKey(converters.stringToByteArray(secretPhrase));
+				return CryptoService.getPublicKey(secretPhrase);
 			};
 
-			//Returns privateKey built from string
 			this.getPrivateKey = function(secretPhrase) {
-				return this.buildPrivateKey(converters.stringToByteArray(secretPhrase));
+				return CryptoService.getPrivateKey(secretPhrase);
 			};
 
-			//Returns key pair built from string
 			this.getKeyPair = function (secretPhrase) {
-				return this.buildKeyPair(converters.stringToByteArray(secretPhrase));
+				return CryptoService.getKeyPair(secretPhrase);
 			};
 
-			// function accepts buffer with private key and an array with dataToSign
-			// returns buffer with signed data
-			// 64 randoms bytes are added to the signature
-			// method falls back to deterministic signatures if crypto object is not supported
 			this.nonDeterministicSign = function(privateKey, dataToSign) {
-				var crypto = window.crypto || window.msCrypto;
-				var random;
-				if (crypto) {
-					random = new Uint8Array(64);
-					crypto.getRandomValues(random);
-				}
-
-				var signature = axlsign.sign(privateKey, new Uint8Array(dataToSign), random);
-
-				return this.base58.encode(signature);
+				return CryptoService.nonDeterministicSign(privateKey, dataToSign);
 			};
 
-			// function accepts buffer with private key and an array with dataToSign
-			// returns buffer with signed data
 			this.deterministicSign = function(privateKey, dataToSign) {
-				var signature = axlsign.sign(privateKey, new Uint8Array(dataToSign));
-
-				return this.base58.encode(signature);
+				return CryptoService.deterministicSign(privateKey, dataToSign);
 			};
 
 			this.verify = function(senderPublicKey, dataToSign, signatureBytes) {
-				return axlsign.verify(senderPublicKey, dataToSign, signatureBytes);
+				return CryptoService.verify(senderPublicKey, dataToSign, signatureBytes);
 			};
 
-			// function returns base58 encoded shared key from base58 encoded a private
-			// and b public keys
 			this.getSharedKey = function (aEncodedPrivateKey, bEncodedPublicKey) {
-				var aPrivateKey = this.base58.decode(aEncodedPrivateKey);
-				var bPublicKey = this.base58.decode(bEncodedPublicKey);
-				var sharedKey = axlsign.sharedKey(aPrivateKey, bPublicKey);
-
-				return this.base58.encode(sharedKey);
+				return CryptoService.getSharedKey(aEncodedPrivateKey, bEncodedPublicKey);
 			};
 
-			// function can be used for sharedKey preparation, as recommended in: https://github.com/wavesplatform/curve25519-js
 			this.prepareKey = function (key) {
-				return prepareKey(key);
+				return CryptoService.prepareKey(key);
 			};
 
 			this.encryptWalletSeed = function (seed, key) {
-				var aesKey = prepareKey(key);
-
-				return CryptoJS.AES.encrypt(seed, aesKey);
+				return CryptoService.encryptWalletSeed(seed, key);
 			};
 
 			this.decryptWalletSeed = function (cipher, key, checksum) {
-				var aesKey = prepareKey(key);
-				var data = CryptoJS.AES.decrypt(cipher, aesKey);
-
-				var actualChecksum = this.seedChecksum(converters.hexStringToByteArray(data.toString()));
-				if (actualChecksum === checksum)
-					return converters.hexStringToString(data.toString());
-				else
-					return false;
+				return CryptoService.decryptWalletSeed(cipher, key, checksum);
 			};
 
 			this.seedChecksum = function (seed) {
-				return converters.byteArrayToHexString(sha256(seed));
+				return CryptoService.seedChecksum(seed);
 			};
 		}]);
 })();
