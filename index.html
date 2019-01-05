@@ -369,7 +369,7 @@
 			</div>
 		</section>
 
-		<section id="mainBody" class="wScroll">
+		<section id="mainBody">
 			<!-- BODY CONTENT -->
 			<section id="mBBody" class="fFade" ng-switch on="nav.currentTab">
 				<!-- WALLET TAB -->
@@ -650,10 +650,10 @@
 				<!-- / WALLET TAB -->
 
 				<!-- PORTFOLIO TAB -->
-				<div id="mBB-portfolio" class="mBB-content wScroll" ng-switch-when="portfolio">
+				<div id="mBB-portfolio" class="mBB-content" ng-switch-when="portfolio">
 					<div ng-controller="assetListController as assetList">
 						<h2 class="sectionHeader">PORTFOLIO</h2>
-						<table class="wavesTable wScroll">
+						<table class="wavesTable">
 							<thead>
 							<tr>
 								<td>ASSET NAME</td>
@@ -667,7 +667,7 @@
 							<tr ng-show="assetList.noData">
 								<td colspan="5">You do not own/have not created any assets.</td>
 							</tr>
-							<tr ng-show="!assetList.noData" ng-repeat="tx in assetList.assets | antiSpam:'id' | asset track by tx.id">
+							<tr ng-show="!assetList.noData" ng-repeat="tx in assetList.assets | asset track by tx.id"> <!-- tx in assetList.assets | antiSpam:'id' | asset track by tx.id -->
 								<td>
 									<span>{{tx.name}}</span>
 								</td>
@@ -678,7 +678,11 @@
 									<button class="wButton wButton-neg fade" ng-click="assetList.assetTransfer(tx.id)">TRANSFER</button><span class="divider-2"></span>
 									<button class="wButton wButton-neg fade" ng-disabled="!tx.formatted.canReissue" ng-click="assetList.assetReissue(tx.id)">REISSUE</button><span class="divider-2"></span>
 									<button class="wButton wButton-neg fade" ng-click="assetList.assetDetails(tx.id)">DETAILS</button><span class="divider-2"></span>
-									<!-- TODO: remove MASS PAY feature or re-engineer it using a centralized service
+									<button class="wButton wButton-neg fade" ng-click="assetList.assetAddToFavorit(tx.id, tx.name)" title="Add to favorit list">FAVORIT</button>
+									<span class="divider-2"></span>
+									<button class="wButton wButton-neg fade" ng-click="assetList.assetRemoveFromFavorit(tx.id)" title="Remove from favorit list">FAV.REMOVE</button>
+									<span id="portfolio-asset-favorite-flag">{{tx.isFavorit}}</span>
+									<!--
 									<button class="wButton wButton-neg fade" ng-click="assetList.assetMassPay(tx.id)">MASS PAY</button>
 									-->
 								</td>
@@ -899,7 +903,7 @@
 											<button class="wButton wButton-neg" ng-disabled="mass.loadingInProgress" ng-click="mass.processInputFile(massPaymentFilesForm)">LOAD</button>
 										</div>
 									</form>
-									<div class="massPayRecap wScroll" ng-switch-when="processing">
+									<div class="massPayRecap" ng-switch-when="processing">
 										<p>Please notice that only the first 10 transactions are shown below as a sample. Use the EXPORT functionality to export the full transaction details to clipboard.</p>
 										<p>Total transactions: {{mass.summary.totalTransactions}} | Total amount: {{mass.summary.totalAmount.toTokens()}} | Total fee: {{mass.summary.totalFee.toTokens()}}</p>
 
@@ -1172,6 +1176,7 @@ function isMir() {
 <script src="js/core/services.js"></script>
 <script src="js/core/account.js"></script>
 <script src="js/core/address.js"></script>
+<script src="js/core/favorit.js"></script>
 <script src="js/core/services.crypto.js"></script>
 <script src="js/core/asset.js"></script>
 <script src="js/core/services1.js"></script>
