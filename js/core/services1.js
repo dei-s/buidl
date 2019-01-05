@@ -63,7 +63,7 @@ var AssetService = (function(){
 (function () {
 	'use strict';
 
-	function AssetService1(signService, validateService, utilityService, cryptoService) {
+	function AssetService1(signService, utilityService, cryptoService) {
 		function buildId(transactionBytes) {
 			return AssetService.buildId(transactionBytes);
 		}
@@ -132,7 +132,7 @@ var AssetService = (function(){
 		};
 	}
 
-	AssetService1.$inject = ['signService', 'validateService', 'utilityService', 'cryptoService'];
+	AssetService1.$inject = ['signService', 'utilityService', 'cryptoService'];
 
 	angular
 		.module('waves.core.services')
@@ -145,7 +145,7 @@ var AssetService = (function(){
 (function () {
 	'use strict';
 
-	function AliasRequestService(signService, utilityService, validateService) {
+	function AliasRequestService(signService, utilityService) {
 		function buildCreateAliasSignatureData (alias, senderPublicKey) {
 			return [].concat(
 				signService.getCreateAliasTxTypeBytes(),
@@ -175,7 +175,7 @@ var AssetService = (function(){
 		};
 	}
 
-	AliasRequestService.$inject = ['signService', 'utilityService', 'validateService'];
+	AliasRequestService.$inject = ['signService', 'utilityService'];
 
 	angular
 		.module('waves.core.services')

@@ -16,7 +16,7 @@
 		return id ? id : BASE_ASSET_ID;
 	}
 
-	function MatcherApiService(rest, utilityService, cryptoService, validateService) {
+	function MatcherApiService(rest, utilityService, cryptoService) {
 		var apiRoot = rest.all('matcher');
 		var orderbookRoot = apiRoot.all('orderbook');
 
@@ -133,7 +133,7 @@
 		};
 	}
 
-	MatcherApiService.$inject = ['MatcherRestangular', 'utilityService', 'cryptoService', 'validateService'];
+	MatcherApiService.$inject = ['MatcherRestangular', 'utilityService', 'cryptoService'];
 
 	angular
 		.module('waves.core.services')
@@ -145,7 +145,7 @@
 
 	var SELL_ORDER_TYPE = 'sell';
 
-	function MatcherRequestService(signService, utilityService, validateService) {
+	function MatcherRequestService(signService, utilityService) {
 		function buildCreateOrderSignatureData(order, senderPublicKey) {
 			return [].concat(
 				signService.getPublicKeyBytes(senderPublicKey),
@@ -215,7 +215,7 @@
 		};
 	}
 
-	MatcherRequestService.$inject = ['signService', 'utilityService', 'validateService'];
+	MatcherRequestService.$inject = ['signService', 'utilityService'];
 
 	angular
 		.module('waves.core.services')
