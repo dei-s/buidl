@@ -125,9 +125,6 @@ body{font-family: Roboto;color: #464646;:-webkit-font-smoothing:antialiased!impo
 .fontBold{font-family:Sparta,Arial,sans-serif;font-size:14.4px;font-size:.9rem;color:#333}
 .sectionHeader{background-color:#fff;border:0 solid #f0f0f0;font-size:20px;font-size:1.25rem;color: #464646;text-transform: uppercase;padding-bottom:16px;padding-bottom:1rem;font-weight: 600;margin:0 auto;}
 .sectionHeader,.textCenter{text-align:center}
-.wScroll::-webkit-scrollbar-track,.wScroll::-webkit-scrollbar-track:horizontal{background-color:#fff}
-.wScroll::-webkit-scrollbar,.wScroll::-webkit-scrollbar:horizontal{width:5px;background-color:#fff}
-.wScroll::-webkit-scrollbar-thumb,.wScroll::-webkit-scrollbar-thumb:horizontal{background-color:#e6e6e6}
 #wrapper{
 	width:100%;
 	max-width:1920px;
@@ -137,7 +134,6 @@ body{font-family: Roboto;color: #464646;:-webkit-font-smoothing:antialiased!impo
 	min-height:320px;
 	margin:0 auto;
 }
-#mainBody{overflow-y:scroll}
 #mBBody{display:-ms-flexbox;display:flex;-ms-flex-line-pack:center;align-content:center;position:relative;width:100%!important;min-height:100%;padding-bottom:16px;padding-bottom:1rem;margin:0 auto}
 #LBmBB-community,#LBmBB-exchange,#LBmBB-history,#LBmBB-messages,#LBmBB-portfolio,#LBmBB-voting{display:none}
 .dialog-confirmation{text-align:center}
@@ -395,6 +391,10 @@ span.tabs-radio img.selected{opacity:1;pointer-events:none}
 #mBB-portfolio .wavesTable td:last-child{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}
 #portfolio .btn{border:none;width:128px;width:8rem;margin-bottom:8px;margin-bottom:.5rem;padding-left:8px;padding-left:.5rem;padding-right:8px;padding-right:.5rem;background:#9C27B0;font-family:Roboto;font-size:16px;font-size:1rem;line-height:36.8px;line-height:2.3rem;color:#fff;text-align:center;transition:all .2s ease}
 #portfolio .btn:hover{cursor:pointer;background:#5ac8d2}
+#portfolio-asset-favorite-flag{
+	font-weight:bold;
+	margin:0.2rem 1rem;
+}
 md-progress-linear .md-container{background-color:#f0f0f0}
 md-progress-linear .md-bar{background-color:#9C27B0}
 #mBB-history{width:100%;text-align:center}
