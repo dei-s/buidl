@@ -20,6 +20,24 @@ var AssetService = (function(){
 		return Base58.encode(hash);
 	}
 
+	function validateAssetReissue(reissue) {
+		if (reissue.totalTokens.currency === Currency.BASE) {
+			throw new Error('Reissuing is not allowed.');
+		}
+
+		if (angular.isUndefined(reissue.totalTokens)) {
+			throw new Error('Total tokens amount hasn\'t been set');
+		}
+
+		if (angular.isUndefined(reissue.fee)) {
+			throw new Error('Transaction fee hasn\'t been set');
+		}
+
+		if (reissue.fee.currency !== Currency.BASE) {
+			throw new Error('Transaction fee must be nominated in '+Currency.BASE.displayName);
+		}
+	}
+
 	function validateAssetTransfer(transfer) {
 		if (angular.isUndefined(transfer.recipient)) {
 			throw new Error('Recipient account hasn\'t been set');
@@ -37,6 +55,7 @@ var AssetService = (function(){
 	return {
 		buildCreateAssetTransferSignatureData: buildCreateAssetTransferSignatureData,
 		buildId: buildId,
+		validateAssetReissue: validateAssetReissue,
 		validateAssetTransfer: validateAssetTransfer
 	}
 })();
@@ -54,8 +73,8 @@ var AssetService = (function(){
 		}
 
 		this.createAssetTransferTransaction = function (transfer, sender) {
-			validateService.validateAssetTransfer(transfer);
-			validateService.validateSender(sender);
+			AssetService.validateAssetTransfer(transfer);
+			ValidateService.validateSender(sender);
 
 			transfer.time = transfer.time || utilityService.getTime();
 			transfer.attachment = transfer.attachment || [];
@@ -91,8 +110,8 @@ var AssetService = (function(){
 		}
 
 		this.createAssetReissueTransaction = function (reissue, sender) {
-			validateService.validateAssetReissue(reissue);
-			validateService.validateSender(sender);
+			AssetService.validateAssetReissue(reissue);
+			ValidateService.validateSender(sender);
 
 			reissue.reissuable = angular.isDefined(reissue.reissuable) ? reissue.reissuable : false;
 			reissue.time = reissue.time || utilityService.getTime();
@@ -138,7 +157,7 @@ var AssetService = (function(){
 		}
 
 		this.buildCreateAliasRequest = function (alias, sender) {
-			validateService.validateSender(sender);
+			ValidateService.validateSender(sender);
 
 			var currentTimeMillis = utilityService.getTime();
 			alias.time = alias.time || currentTimeMillis;
@@ -179,7 +198,7 @@ var AssetService = (function(){
 		}
 
 		this.buildStartLeasingRequest = function (startLeasing, sender) {
-			validateService.validateSender(sender);
+			ValidateService.validateSender(sender);
 
 			var currentTimeMillis = utilityService.getTime();
 			startLeasing.time = startLeasing.time || currentTimeMillis;
@@ -209,7 +228,7 @@ var AssetService = (function(){
 		}
 
 		this.buildCancelLeasingRequest = function (cancelLeasing, sender) {
-			validateService.validateSender(sender);
+			ValidateService.validateSender(sender);
 
 			var currentTimeMillis = utilityService.getTime();
 			cancelLeasing.time = cancelLeasing.time || currentTimeMillis;

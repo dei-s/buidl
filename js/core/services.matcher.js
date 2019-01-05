@@ -1,19 +1,3 @@
-/******************************************************************************
- * Copyright © 2016 The Waves Developers.                                     *
- *                                                                            *
- * See the LICENSE files at                                                   *
- * the top-level directory of this distribution for the individual copyright  *
- * holder information and the developer policies on copyright and licensing.  *
- *                                                                            *
- * Unless otherwise agreed in a custom licensing agreement, no part of the    *
- * Waves software, including this file, may be copied, modified, propagated,  *
- * or distributed except according to the terms contained in the LICENSE      *
- * file.                                                                      *
- *                                                                            *
- * Removal or modification of this copyright notice is prohibited.            *
- *                                                                            *
- ******************************************************************************/
-
 (function () {
 	'use strict';
 
@@ -78,7 +62,7 @@
 		};
 
 		function buildLoadUserOrdersSignature(timestamp, sender) {
-			validateService.validateSender(sender);
+			ValidateService.validateSender(sender);
 
 			var publicKeyBytes = utilityService.base58StringToByteArray(sender.publicKey),
 				timestampBytes = utilityService.longToByteArray(timestamp),
@@ -178,7 +162,7 @@
 		}
 
 		this.buildCreateOrderRequest = function (order, sender) {
-			validateService.validateSender(sender);
+			ValidateService.validateSender(sender);
 
 			var currentTimeMillis = utilityService.getTime();
 			order.time = order.time || currentTimeMillis;
@@ -214,7 +198,7 @@
 		}
 
 		this.buildCancelOrderRequest = function (orderId, sender) {
-			validateService.validateSender(sender);
+			ValidateService.validateSender(sender);
 
 			if (!orderId) {
 				throw new Error('orderId hasn\'t been set');
