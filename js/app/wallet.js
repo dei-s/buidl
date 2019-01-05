@@ -184,6 +184,8 @@
 			if (isMir()) {
 				if (id === Currency.BASE.id) {
 					type = 'crypto';
+				} else if (id === Currency.LBR.id) {
+					type = 'crypto';
 				} else {
 					throw new Error('Add an option here!');
 				}
