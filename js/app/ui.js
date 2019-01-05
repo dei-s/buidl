@@ -73,7 +73,7 @@
 (function () {
 	'use strict';
 
-	function ApplicationContextFactory(constants) {
+	function ApplicationContextFactory() {
 
 		var assets = {};
 
@@ -123,8 +123,6 @@
 		};
 	}
 
-	ApplicationContextFactory.$inject = ['constants.transactions'];
-
 	angular
 		.module('app.ui')
 		.factory('applicationContext', ApplicationContextFactory);
@@ -133,27 +131,27 @@
 (function () {
 	'use strict';
 
-	function CoinomatRestangularFactory(constants, rest) {
+	function CoinomatRestangularFactory(rest) {
 		return rest.withConfig(function(configurer) {
-			configurer.setBaseUrl(constants.COINOMAT_ADDRESS);
+			configurer.setBaseUrl(Constants.COINOMAT_ADDRESS);
 		});
 	}
 
-	function DatafeedRestangularFactory(constants, rest) {
+	function DatafeedRestangularFactory(rest) {
 		return rest.withConfig(function(configurer) {
-			configurer.setBaseUrl(constants.DATAFEED_ADDRESS);
+			configurer.setBaseUrl(Constants.DATAFEED_ADDRESS);
 		});
 	}
 
-	function MatcherRestangularFactory(constants, rest) {
+	function MatcherRestangularFactory(rest) {
 		return rest.withConfig(function(configurer) {
-			configurer.setBaseUrl(constants.MATCHER_ADDRESS);
+			configurer.setBaseUrl(Constants.MATCHER_ADDRESS);
 		});
 	}
 
-	CoinomatRestangularFactory.$inject = ['constants.application', 'Restangular'];
-	DatafeedRestangularFactory.$inject = ['constants.application', 'Restangular'];
-	MatcherRestangularFactory.$inject = ['constants.application', 'Restangular'];
+	CoinomatRestangularFactory.$inject = ['Restangular'];
+	DatafeedRestangularFactory.$inject = ['Restangular'];
+	MatcherRestangularFactory.$inject = ['Restangular'];
 
 	angular
 		.module('app.ui')
