@@ -1,158 +1,288 @@
-/******************************************************************************
- * Copyright © 2016 The Waves Developers.                                     *
- *                                                                            *
- * See the LICENSE files at                                                   *
- * the top-level directory of this distribution for the individual copyright  *
- * holder information and the developer policies on copyright and licensing.  *
- *                                                                            *
- * Unless otherwise agreed in a custom licensing agreement, no part of the    *
- * Waves software, including this file, may be copied, modified, propagated,  *
- * or distributed except according to the terms contained in the LICENSE      *
- * file.                                                                      *
- *                                                                            *
- * Removal or modification of this copyright notice is prohibited.            *
- *                                                                            *
- ******************************************************************************/
+var SignService = (function(){
+	'use strict';
+
+	// Transaction types
+
+	function getAssetIssueTxTypeBytes() {
+		return [Constants.ASSET_ISSUE_TRANSACTION_TYPE];
+	}
+
+	function getAssetReissueTxTypeBytes() {
+		return [Constants.ASSET_REISSUE_TRANSACTION_TYPE];
+	}
+
+	function getAssetTransferTxTypeBytes() {
+		return [Constants.ASSET_TRANSFER_TRANSACTION_TYPE];
+	}
+
+	function getStartLeasingTxTypeBytes() {
+		return [Constants.START_LEASING_TRANSACTION_TYPE];
+	}
+
+	function getCancelLeasingTxTypeBytes() {
+		return [Constants.CANCEL_LEASING_TRANSACTION_TYPE];
+	}
+
+	function getCreateAliasTxTypeBytes() {
+		return [Constants.CREATE_ALIAS_TRANSACTION_TYPE];
+	}
+
+	// Keys
+
+	function getPublicKeyBytes(publicKey) {
+		return Utility.base58StringToByteArray(publicKey);
+	}
+
+	function getPrivateKeyBytes(privateKey) {
+		return Base58.decode(privateKey);
+	}
+
+	// Data fields
+
+	function getNetworkBytes() {
+		return [Utility.getNetworkIdByte()];
+	}
+
+	function getTransactionIdBytes(tx) {
+		return Utility.base58StringToByteArray(tx);
+	}
+
+	function getRecipientBytes(recipient) {
+		if (recipient.slice(0, 6) === 'alias:') {
+			return [].concat(
+				[Constants.ALIAS_VERSION],
+				[Utility.getNetworkIdByte()],
+				Utility.stringToByteArrayWithSize(recipient.slice(8)) // Remove leading 'asset:W:'
+			);
+		} else {
+			return Utility.base58StringToByteArray(recipient);
+		}
+	}
+
+	function getAssetIdBytes(assetId, mandatory) {
+		if (mandatory) {
+			return Utility.base58StringToByteArray(assetId);
+		} else {
+			return assetId ? [1].concat(Utility.base58StringToByteArray(assetId)) : [0];
+		}
+	}
+
+	function getAssetNameBytes(assetName) {
+		return Utility.stringToByteArrayWithSize(assetName);
+	}
+
+	function getAssetDescriptionBytes(assetDescription) {
+		return Utility.stringToByteArrayWithSize(assetDescription);
+	}
+
+	function getAssetQuantityBytes(assetQuantity) {
+		return Utility.longToByteArray(assetQuantity);
+	}
+
+	function getAssetDecimalPlacesBytes(assetDecimalPlaces) {
+		return [assetDecimalPlaces];
+	}
+
+	function getAssetIsReissuableBytes(assetIsReissuable) {
+		return Utility.booleanToBytes(assetIsReissuable);
+	}
+
+	function getAmountBytes(amount) {
+		return Utility.longToByteArray(amount);
+	}
+
+	function getFeeAssetIdBytes(feeAssetId) {
+		return getAssetIdBytes(feeAssetId);
+	}
+
+	function getFeeBytes(fee) {
+		return Utility.longToByteArray(fee);
+	}
+
+	function getTimestampBytes(timestamp) {
+		return Utility.longToByteArray(timestamp);
+	}
+
+	function getAttachmentBytes(attachment) {
+		return Utility.byteArrayWithSize(attachment);
+	}
+
+	function getAliasBytes(alias) {
+		return Utility.byteArrayWithSize([].concat(
+			[Constants.ALIAS_VERSION],
+			[Utility.getNetworkIdByte()],
+			Utility.stringToByteArrayWithSize(alias)
+		));
+	}
+
+	function getOrderTypeBytes(orderType) {
+		return Utility.booleanToBytes(orderType);
+	}
+
+	function getOrderIdBytes(orderId) {
+		return Utility.base58StringToByteArray(orderId);
+	}
+
+	// Signatures
+
+	function buildSignature(bytes, privateKey) {
+		var privateKeyBytes = getPrivateKeyBytes(privateKey);
+		return CryptoService.nonDeterministicSign(privateKeyBytes, bytes);
+	}
+
+	return {
+		getAssetIssueTxTypeBytes: getAssetIssueTxTypeBytes,
+		getAssetReissueTxTypeBytes: getAssetReissueTxTypeBytes,
+		getAssetTransferTxTypeBytes: getAssetTransferTxTypeBytes,
+		getStartLeasingTxTypeBytes: getStartLeasingTxTypeBytes,
+		getCancelLeasingTxTypeBytes: getCancelLeasingTxTypeBytes,
+		getCreateAliasTxTypeBytes: getCreateAliasTxTypeBytes,
+		getPublicKeyBytes: getPublicKeyBytes,
+		getPrivateKeyBytes: getPrivateKeyBytes,
+		getNetworkBytes: getNetworkBytes,
+		getTransactionIdBytes: getTransactionIdBytes,
+		getRecipientBytes: getRecipientBytes,
+		getAssetIdBytes: getAssetIdBytes,
+		getAssetNameBytes: getAssetNameBytes,
+		getAssetDescriptionBytes: getAssetDescriptionBytes,
+		getAssetQuantityBytes: getAssetQuantityBytes,
+		getAssetDecimalPlacesBytes: getAssetDecimalPlacesBytes,
+		getAssetIsReissuableBytes: getAssetIsReissuableBytes,
+		getAmountBytes: getAmountBytes,
+		getFeeAssetIdBytes: getFeeAssetIdBytes,
+		getFeeBytes: getFeeBytes,
+		getTimestampBytes: getTimestampBytes,
+		getAttachmentBytes: getAttachmentBytes,
+		getAliasBytes: getAliasBytes,
+		getOrderTypeBytes: getOrderTypeBytes,
+		getOrderIdBytes: getOrderIdBytes,
+		buildSignature: buildSignature
+	}
+})();
+
 
 (function () {
 	'use strict';
 
-	function SignService(txConstants, featureConstants, cryptoService, utilityService) {
+	function SignService1(txConstants, featureConstants, cryptoService, utilityService) {
 		var self = this;
 
 		// Transaction types
 
 		self.getAssetIssueTxTypeBytes = function () {
-			return [txConstants.ASSET_ISSUE_TRANSACTION_TYPE];
+			return SignService.getAssetIssueTxTypeBytes();
 		};
 
 		self.getAssetReissueTxTypeBytes = function () {
-			return [txConstants.ASSET_REISSUE_TRANSACTION_TYPE];
+			return SignService.getAssetReissueTxTypeBytes();
 		};
 
 		self.getAssetTransferTxTypeBytes = function () {
-			return [txConstants.ASSET_TRANSFER_TRANSACTION_TYPE];
+			return SignService.getAssetTransferTxTypeBytes();
 		};
 
 		self.getStartLeasingTxTypeBytes = function () {
-			return [txConstants.START_LEASING_TRANSACTION_TYPE];
+			return SignService.getStartLeasingTxTypeBytes();
 		};
 
 		self.getCancelLeasingTxTypeBytes = function () {
-			return [txConstants.CANCEL_LEASING_TRANSACTION_TYPE];
+			return SignService.getCancelLeasingTxTypeBytes();
 		};
 
 		self.getCreateAliasTxTypeBytes = function () {
-			return [txConstants.CREATE_ALIAS_TRANSACTION_TYPE];
+			return SignService.getCreateAliasTxTypeBytes();
 		};
 
 		// Keys
 
 		self.getPublicKeyBytes = function (publicKey) {
-			return utilityService.base58StringToByteArray(publicKey);
+			return SignService.getPublicKeyBytes(publicKey);
 		};
 
 		self.getPrivateKeyBytes = function (privateKey) {
-			return cryptoService.base58.decode(privateKey);
+			return SignService.getPrivateKeyBytes(privateKey);
 		};
 
 		// Data fields
 
 		self.getNetworkBytes = function () {
-			return [utilityService.getNetworkIdByte()];
+			return SignService.getNetworkBytes();
 		};
 
 		self.getTransactionIdBytes = function (tx) {
-			return utilityService.base58StringToByteArray(tx);
+			return SignService.getTransactionIdBytes(tx);
 		};
 
 		self.getRecipientBytes = function (recipient) {
-			if (recipient.slice(0, 6) === 'alias:') {
-				return [].concat(
-					[featureConstants.ALIAS_VERSION],
-					[utilityService.getNetworkIdByte()],
-					utilityService.stringToByteArrayWithSize(recipient.slice(8)) // Remove leading 'asset:W:'
-				);
-			} else {
-				return utilityService.base58StringToByteArray(recipient);
-			}
+			return SignService.getRecipientBytes(recipient);
 		};
 
 		self.getAssetIdBytes = function (assetId, mandatory) {
-			if (mandatory) {
-				return utilityService.base58StringToByteArray(assetId);
-			} else {
-				return assetId ? [1].concat(utilityService.base58StringToByteArray(assetId)) : [0];
-			}
+			return SignService.getAssetIdBytes(assetId, mandatory);
 		};
 
 		self.getAssetNameBytes = function (assetName) {
-			return utilityService.stringToByteArrayWithSize(assetName);
+			return SignService.getAssetNameBytes(assetName);
 		};
 
 		self.getAssetDescriptionBytes = function (assetDescription) {
-			return utilityService.stringToByteArrayWithSize(assetDescription);
+			return SignService.getAssetDescriptionBytes(assetDescription);
 		};
 
 		self.getAssetQuantityBytes = function (assetQuantity) {
-			return utilityService.longToByteArray(assetQuantity);
+			return SignService.getAssetQuantityBytes(assetQuantity);
 		};
 
 		self.getAssetDecimalPlacesBytes = function (assetDecimalPlaces) {
-			return [assetDecimalPlaces];
+			return SignService.getAssetDecimalPlacesBytes(assetDecimalPlaces);
 		};
 
 		self.getAssetIsReissuableBytes = function (assetIsReissuable) {
-			return utilityService.booleanToBytes(assetIsReissuable);
+			return SignService.getAssetIsReissuableBytes(assetIsReissuable);
 		};
 
 		self.getAmountBytes = function (amount) {
-			return utilityService.longToByteArray(amount);
+			return SignService.getAmountBytes(amount);
 		};
 
 		self.getFeeAssetIdBytes = function (feeAssetId) {
-			return self.getAssetIdBytes(feeAssetId);
+			return SignService.getFeeAssetIdBytes(feeAssetId);
 		};
 
 		self.getFeeBytes = function (fee) {
-			return utilityService.longToByteArray(fee);
+			return SignService.getFeeBytes(fee);
 		};
 
 		self.getTimestampBytes = function (timestamp) {
-			return utilityService.longToByteArray(timestamp);
+			return SignService.getTimestampBytes(timestamp);
 		};
 
 		self.getAttachmentBytes = function (attachment) {
-			return utilityService.byteArrayWithSize(attachment);
+			return SignService.getAttachmentBytes(attachment);
 		};
 
 		self.getAliasBytes = function (alias) {
-			return utilityService.byteArrayWithSize([].concat(
-				[featureConstants.ALIAS_VERSION],
-				[utilityService.getNetworkIdByte()],
-				utilityService.stringToByteArrayWithSize(alias)
-			));
+			return SignService.getAliasBytes(alias);
 		};
 
 		self.getOrderTypeBytes = function (orderType) {
-			return utilityService.booleanToBytes(orderType);
+			return SignService.getOrderTypeBytes(orderType);
 		};
 
 		self.getOrderIdBytes = function (orderId) {
-			return utilityService.base58StringToByteArray(orderId);
+			return SignService.getOrderIdBytes(orderId);
 		};
 
 		// Signatures
 
 		self.buildSignature = function (bytes, privateKey) {
-			var privateKeyBytes = self.getPrivateKeyBytes(privateKey);
-			return cryptoService.nonDeterministicSign(privateKeyBytes, bytes);
+			return SignService.buildSignature(bytes, privateKey);
 		};
 	}
 
-	SignService.$inject = ['constants.transactions', 'constants.features', 'cryptoService', 'utilityService'];
+	SignService1.$inject = ['constants.transactions', 'constants.features', 'cryptoService', 'utilityService'];
 
 	angular
 		.module('waves.core.services')
-		.service('signService', SignService);
+		.service('signService', SignService1);
 })();
