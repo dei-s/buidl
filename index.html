@@ -374,6 +374,14 @@
 			<section id="mBBody" class="fFade" ng-switch on="nav.currentTab">
 				<!-- WALLET TAB -->
 				<div id="mBB-wallet" class="mBB-content" ng-switch-when="wallet" ng-controller="walletListController as walletList">
+					<div class="flex-container">
+						<wallet-box class="walletBox"
+							ng-repeat="w in walletList.wallets"
+							balance="w.balance"
+							on-send="walletList.send(w)"
+							on-withdraw="walletList.withdraw(w)"
+							on-deposit="walletList.deposit(w)"></wallet-box>
+					</div>
 
 					<div class="noDisp" ng-controller="walletSendController as send">
 						<div id="wB-butSend-WAV" waves-dialog ok-button-caption="SUBMIT" cancel-button-visible="false" on-dialog-ok="send.submitTransfer(send.form)">
@@ -617,15 +625,6 @@
 								<p>For making a payment from your card you will be redirected <br/> to the merchant's website.</p>
 							</div>
 						</div>
-					</div>
-
-					<div class="flex-container">
-						<wallet-box class="walletBox"
-							ng-repeat="w in walletList.wallets"
-							balance="w.balance"
-							on-send="walletList.send(w)"
-							on-withdraw="walletList.withdraw(w)"
-							on-deposit="walletList.deposit(w)"></wallet-box>
 					</div>
 
 					<waves-transaction-history heading="LATEST TRANSACTIONS" transactions="walletList.transactions" limit-to="10"></waves-transaction-history>
