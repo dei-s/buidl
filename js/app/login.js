@@ -88,7 +88,7 @@
 (function () {
 	'use strict';
 
-	function AccountsController($scope, modes, events, passPhraseService, dialogService, cryptoService, loginContext) {
+	function AccountsController($scope, modes, events, dialogService, cryptoService, loginContext) {
 		var accounts = this;
 
 		// by default start in list mode
@@ -99,7 +99,7 @@
 		});
 
 		$scope.$on(events.GENERATE_SEED, function () {
-			var seed = passPhraseService.generate();
+			var seed = Account.generatePassPhrase();
 			switchToMode(modes.REGISTER, seed);
 			dialogService.openNonCloseable('#login-wPop-new');
 		});
@@ -156,7 +156,6 @@
 		'$scope',
 		'ui.login.modes',
 		'ui.login.events',
-		'passPhraseService',
 		'dialogService',
 		'cryptoService',
 		'loginContext'
@@ -315,7 +314,7 @@
 
 	var SEED_MINIMUM_LENGTH = 25;
 
-	function AccountSeedController($scope, loginContext, utilityService, cryptoService, dialogService, passPhraseService) {
+	function AccountSeedController($scope, loginContext, utilityService, cryptoService, dialogService) {
 		var vm = this;
 
 		vm.validationOptions = {
@@ -365,7 +364,7 @@
 		}
 
 		function generateSeed() {
-			vm.seed = passPhraseService.generate();
+			vm.seed = Account.generatePassPhrase();
 			refreshAddress();
 		}
 
@@ -380,12 +379,7 @@
 		}
 	}
 
-	AccountSeedController.$inject = ['$scope',
-		'loginContext',
-		'utilityService',
-		'cryptoService',
-		'dialogService',
-		'passPhraseService'];
+	AccountSeedController.$inject = ['$scope', 'loginContext', 'utilityService', 'cryptoService', 'dialogService'];
 
 	angular
 		.module('app.login')
