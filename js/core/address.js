@@ -1,28 +1,29 @@
-(function () {
+var Address = (function(){
 	'use strict';
 
-	angular
-		.module('waves.core.services')
-		.service('addressService', ['constants.address', function (constants) {
-			this.cleanupOptionalPrefix = function(displayAddress) {
-				if (displayAddress.length <= 30) {
-					// Don't change aliases
-					return displayAddress;
-				}
+	function cleanupOptionalPrefix(displayAddress) {
+		if (displayAddress.length <= 30) {
+			// Don't change aliases
+			return displayAddress;
+		}
 
-				var address = displayAddress,
-					prefixLen = constants.ADDRESS_PREFIX.length;
+		var address = displayAddress;
+		var prefixLen = Constants.ADDRESS_PREFIX.length;
 
-				if (address.length > constants.RAW_ADDRESS_LENGTH || address.startsWith(constants.ADDRESS_PREFIX)) {
-					address = address.substr(prefixLen, address.length - prefixLen);
-				}
+		if (address.length > Constants.RAW_ADDRESS_LENGTH || address.startsWith(Constants.ADDRESS_PREFIX)) {
+			address = address.substr(prefixLen, address.length - prefixLen);
+		}
 
-				return address;
-			};
+		return address;
+	}
 
-			this.validateAddress = function(address) {
-				var cleanAddress = this.cleanupOptionalPrefix(address);
-				return constants.MAINNET_ADDRESS_REGEXP.test(cleanAddress);
-			};
-		}]);
+	function validateAddress(address) {
+		var cleanAddress = cleanupOptionalPrefix(address);
+		return Constants.MAINNET_ADDRESS_REGEXP.test(cleanAddress);
+	}
+
+	return {
+		cleanupOptionalPrefix: cleanupOptionalPrefix,
+		validateAddress: validateAddress
+	}
 })();

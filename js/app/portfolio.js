@@ -170,7 +170,7 @@
 
 	var FEE_CURRENCY = Currency.BASE;
 
-	function AssetTransferController($scope, $timeout, constants, events, autocomplete, applicationContext, assetService, apiService, dialogService, formattingService, notificationService, transactionBroadcast, addressService) {
+	function AssetTransferController($scope, $timeout, constants, events, autocomplete, applicationContext, assetService, apiService, dialogService, formattingService, notificationService, transactionBroadcast) {
 		var ctrl = this;
 		var minimumFee = new Money(constants.MINIMUM_TRANSACTION_FEE, FEE_CURRENCY);
 
@@ -283,7 +283,7 @@
 			}
 
 			var assetTransfer = {
-				recipient: addressService.cleanupOptionalPrefix(ctrl.recipient),
+				recipient: Address.cleanupOptionalPrefix(ctrl.recipient),
 				amount: transferAmount,
 				fee: transferFee
 			};
@@ -329,7 +329,7 @@
 
 	AssetTransferController.$inject = ['$scope', '$timeout', 'constants.ui', 'portfolio.events',
 		'autocomplete.fees', 'applicationContext', 'assetService', 'apiService', 'dialogService',
-		'formattingService', 'notificationService', 'transactionBroadcast', 'addressService'];
+		'formattingService', 'notificationService', 'transactionBroadcast'];
 
 	angular
 		.module('app.portfolio')
@@ -506,7 +506,7 @@
 (function () {
 	'use strict';
 
-	function AssetFilter(applicationContext, addressService) {
+	function AssetFilter(applicationContext) {
 		function transformAddress (rawAddress) {
 			var result = angular.isDefined(rawAddress) ? rawAddress : 'n/a';
 
@@ -534,7 +534,7 @@
 		};
 	}
 
-	AssetFilter.$inject = ['applicationContext', 'addressService'];
+	AssetFilter.$inject = ['applicationContext'];
 
 	angular
 		.module('app.portfolio')

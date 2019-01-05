@@ -298,7 +298,7 @@
 	var DEFAULT_FEE_AMOUNT = '0.001';
 	var FEE_CURRENCY = Currency.BASE;
 
-	function WalletSendController($scope, $timeout, constants, events, autocomplete, applicationContext, apiService, dialogService, transactionBroadcast, assetService, notificationService, formattingService, addressService) {
+	function WalletSendController($scope, $timeout, constants, events, autocomplete, applicationContext, apiService, dialogService, transactionBroadcast, assetService, notificationService, formattingService) {
 		var ctrl = this;
 		var minimumFee = new Money(constants.MINIMUM_TRANSACTION_FEE, FEE_CURRENCY);
 
@@ -410,7 +410,7 @@
 			}
 
 			var assetTransfer = {
-				recipient: addressService.cleanupOptionalPrefix(ctrl.recipient),
+				recipient: Address.cleanupOptionalPrefix(ctrl.recipient),
 				amount: amount,
 				fee: transferFee
 			};
@@ -456,7 +456,7 @@
 
 	WalletSendController.$inject = ['$scope', '$timeout', 'constants.ui', 'wallet.events', 'autocomplete.fees',
 		'applicationContext', 'apiService', 'dialogService', 'transactionBroadcast', 'assetService',
-		'notificationService', 'formattingService', 'addressService'];
+		'notificationService', 'formattingService'];
 
 	angular
 		.module('app.wallet')

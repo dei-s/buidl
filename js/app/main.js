@@ -165,7 +165,7 @@ function AngularApplicationConfig($provide, $compileProvider, $validatorProvider
 AngularApplicationConfig.$inject = ['$provide', '$compileProvider', '$validatorProvider', '$qProvider',
 	'$sceDelegateProvider', '$mdAriaProvider', 'constants.network', 'constants.application'];
 
-function AngularApplicationRun(rest, applicationConstants, notificationService, addressService) {
+function AngularApplicationRun(rest, applicationConstants, notificationService) {
 	'use strict';
 
 	// restangular configuration
@@ -180,11 +180,11 @@ function AngularApplicationRun(rest, applicationConstants, notificationService, 
 		notificationService.error(message);
 	};
 	__mockValidateAddress = function (address) {
-		return addressService.validateAddress(address.trim());
+		return Address.validateAddress(address.trim());
 	};
 }
 
-AngularApplicationRun.$inject = ['Restangular', 'constants.application', 'notificationService', 'addressService'];
+AngularApplicationRun.$inject = ['Restangular', 'constants.application', 'notificationService'];
 
 angular.module('app').run(['$templateCache', function($templateCache) {
 	'use strict';
