@@ -984,7 +984,7 @@
 							<div>
 								<label for="assetName">Короткое имя (shortName)</label>
 								<br/>
-								<input id="assetName" name="assetName" type="text" class="wInput form-control" focus-me="true" onblur="Tokens.AssetNameOnBlur();" ng-model="ctrl.asset.name" tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="This field defines the ShortName of your asset.<br/><br/>It can contain up to 16 alphanumeric characters."/>
+								<input id="assetName" name="assetName" type="text" class="wInput form-control" focus-me="true" onblur="Tokens.refreshAssetFee();" ng-model="ctrl.asset.name" tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="This field defines the ShortName of your asset.<br/><br/>It can contain up to 16 alphanumeric characters."/>
 								<br/>
 								<label>Наименование (displayName)</label>
 								<br/>
@@ -996,9 +996,9 @@
 								<br/>
 								Тип токенов
 								<br/>
-								<input type="radio" name="project-asset-type" value="pie" checked> Доли (ограниченный выпуск токенов)
+								<input id="project-asset-type-pie" type="radio" name="project-asset-type" value="pie" checked> Доли (ограниченный выпуск токенов)
 								<br/>
-								<input type="radio" name="project-asset-type" value="dep"> Учет вкладов (не граниченный выпуск токенов)
+								<input id="project-asset-type-dep" type="radio" name="project-asset-type" value="dep"> Учет вкладов (не граниченный выпуск токенов)
 								<br/>
 								<label for="assetTotalTokens">Всего токенов (долей/учетных единиц)</label>
 								<br/>
@@ -1028,11 +1028,24 @@
 							</div>
 						</form>
 
-						<div id="create-asset-confirmation" waves-dialog ok-button-caption="CONFIRM" ok-button-enabled="!ctrl.broadcast.pending" on-dialog-ok="ctrl.broadcastIssueTransaction()">
+						<div id="create-asset-confirmation" waves-dialog ok-button-caption="Подтверждаю" ok-button-enabled="!ctrl.broadcast.pending" on-dialog-ok="ctrl.broadcastIssueTransaction()">
 							<div class="dialog-confirmation">
 								<p class="dialog-text">You are creating a <span class="confirmation-value">{{ctrl.confirm.reissuable}}</span> asset named
 									<span class="confirmation-value">{{ctrl.confirm.name}}</span><br/> with
 									<span class="confirmation-value">{{ctrl.confirm.totalTokens}}</span> of total tokens amount
+								</p>
+								<p>
+									You are creating a
+									<span id="assetConfirmReissuable" class="confirmation-value"></span>
+									asset named
+									<span id="assetConfirmName" class="confirmation-value"></span>
+									<br/>
+									with
+									<span id="assetConfirmTotalTokens" class="confirmation-value"></span>
+									of total tokens amount.
+									<br/>
+									Fee:
+									<span id="assetConfirmFee" class="confirmation-value"></span>
 								</p>
 								<p class="dialog-text notice-alert" ng-if="!ctrl.asset.reissuable">Please note that flagging an asset as NON RE-ISSUABLE is permanent.<br/>
 									Assets created as RE-ISSUABLE can later be changed to NON RE-ISSUABLE.<br/>However, assets flagged as NON RE-ISSUABLE can never be made RE-ISSUABLE.</p>

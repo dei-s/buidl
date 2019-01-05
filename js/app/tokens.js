@@ -1,19 +1,3 @@
-/******************************************************************************
- * Copyright © 2016 The Waves Developers.                                     *
- *                                                                            *
- * See the LICENSE files at                                                   *
- * the top-level directory of this distribution for the individual copyright  *
- * holder information and the developer policies on copyright and licensing.  *
- *                                                                            *
- * Unless otherwise agreed in a custom licensing agreement, no part of the    *
- * Waves software, including this file, may be copied, modified, propagated,  *
- * or distributed except according to the terms contained in the LICENSE      *
- * file.                                                                      *
- *                                                                            *
- * Removal or modification of this copyright notice is prohibited.            *
- *                                                                            *
- ******************************************************************************/
-
 var Tokens = (function(){
 	'use strict';
 
@@ -22,9 +6,150 @@ var Tokens = (function(){
 	if (isMir()) { ASSET_NAME_MIN = 1; }
 	var ASSET_NAME_MAX = 16;
 	var TOKEN_DECIMALS_MAX = 8;
-	var FIXED_ISSUE_FEE = new Money(1, Currency.BASE);
 
-	function AssetNameOnBlur() {
+	function assetCreate(sender, notificationService) {
+		var baseBalance = $('#create-asset-baseBalance')[0].innerText;
+		var assetName = $('#assetName')[0].value;
+		var displayName = $('#assetDisplayName')[0].value;
+		var totalTokens = $('#assetTotalTokens')[0].value;
+		var description = $('#assetDescription')[0].value;
+		var checkedDep = $('#project-asset-type-dep')[0].checked;
+		var checkedPie = $('#project-asset-type-pie')[0].checked;
+		if (checkedDep && checkedPie) {
+			notificationService.error('Error 1001');
+			return;
+		}
+		if (!checkedDep && !checkedPie) {
+			notificationService.error('Error 1002');
+			return;
+		}
+
+		var assetFee = getCreateAssetFeeByLength(assetName.length);
+		if (assetFee > baseBalance) {
+			notificationService.error('Not enough funds for the issue transaction fee');
+			return;
+		}
+
+		var decimalPlaces = Number(8);
+		var maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
+		if (totalTokens > maxTokens) {
+			decimalPlaces = Number(5);
+			maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
+			if (totalTokens > maxTokens) {
+				decimalPlaces = Number(2);
+				maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
+				if (totalTokens > maxTokens) {
+					notificationService.error('Total issued tokens amount must be less than ' + maxTokens);
+					return;
+				}
+			}
+		}
+
+		if (displayName.length < 1) {
+			displayName = assetName;
+		}
+
+		var asset = {
+			name: assetName,
+			displayName: displayName,
+			description: description,
+			totalTokens: totalTokens,
+			decimalPlaces: decimalPlaces,
+			reissuable: checkedDep,
+			fee: new Money(assetFee, Currency.BASE)
+		};
+
+		$('#assetConfirmName')[0].innerText = assetName;
+		$('#assetConfirmTotalTokens')[0].innerText = totalTokens;
+		$('#assetConfirmReissuable')[0].innerText = checkedDep ? 'RE-ISSUABLE' : 'NON RE-ISSUABLE';
+		$('#assetConfirmFee')[0].innerText = asset.fee;
+
+		return Tokens.createAssetIssueTransaction(asset, sender);
+	}
+
+	function AssetTotalTokensOnKeyPress(){
+		var decimalPlaces = Number(8);
+		var totalTokens = Number($('#assetTotalTokens')[0].value);
+		var maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
+		if (totalTokens > maxTokens) {
+			decimalPlaces = Number(5);
+			maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
+			if (totalTokens > maxTokens) {
+				decimalPlaces = Number(2);
+				maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
+				if (totalTokens > maxTokens) {
+					$('#create-asset-hint3')[0].innerText = 'Total issued tokens amount must be less than ' + maxTokens;
+					return;
+				}
+			}
+		}
+		var s = '0'.repeat(decimalPlaces);
+		$('#create-asset-hint3')[0].innerText = 'MAX: '+maxTokens+'.'+s;
+	}
+
+	function buildCreateAssetSignatureData(asset, tokensQuantity, senderPublicKey) {
+		return [].concat(
+			SignService.getAssetIssueTxTypeBytes(),
+			SignService.getPublicKeyBytes(senderPublicKey),
+			SignService.getAssetNameBytes(asset.name),
+			SignService.getAssetDescriptionBytes(asset.description),
+			SignService.getAssetQuantityBytes(tokensQuantity),
+			SignService.getAssetDecimalPlacesBytes(asset.decimalPlaces),
+			SignService.getAssetIsReissuableBytes(asset.reissuable),
+			SignService.getFeeBytes(asset.fee.toCoins()),
+			SignService.getTimestampBytes(asset.time)
+		);
+	}
+
+	function createAssetIssueTransaction(asset, sender) {
+		validateAssetIssue(asset);
+		validateSender(sender);
+
+		asset.time = asset.time || Utility.getTime();
+		asset.reissuable = angular.isDefined(asset.reissuable) ? asset.reissuable : false;
+		asset.description = asset.description || '';
+
+		var assetCurrency = Currency.create({
+			displayName: asset.name,
+			precision: asset.decimalPlaces
+		});
+
+		var tokens = new Money(asset.totalTokens, assetCurrency);
+		var signatureData = buildCreateAssetSignatureData(asset, tokens.toCoins(), sender.publicKey);
+		var signature = SignService.buildSignature(signatureData, sender.privateKey);
+
+		return {
+			id: AssetService.buildId(signatureData),
+			name: asset.name,
+			description: asset.description,
+			quantity: tokens.toCoins(),
+			decimals: Number(asset.decimalPlaces),
+			reissuable: asset.reissuable,
+			timestamp: asset.time,
+			fee: asset.fee.toCoins(),
+			senderPublicKey: sender.publicKey,
+			signature: signature
+		};
+	}
+
+	function getCreateAssetFeeByLength(len){
+		if (len == 1) {
+			return 1000000;
+		} else if (len == 2) {
+			return 100000;
+		} else if (len == 3) {
+			return 10000;
+		} else if (len == 4) {
+			return 1000;
+		} else if (len == 5) {
+			return 100;
+		} else if (len == 6) {
+			return 10;
+		}
+		return 1;
+	}
+
+	function refreshAssetFee() {
 		var assetCreateFee = $('#assetCreateFee')[0];
 		var assetFeeValue = assetCreateFee.innerText;
 		var baseBalanceValue = $('#create-asset-baseBalance')[0].innerText;
@@ -67,24 +192,36 @@ var Tokens = (function(){
 		}
 	}
 
-	function AssetTotalTokensOnKeyPress(){
-		var decimalPlaces = Number(8);
-		var totalTokens = Number($('#assetTotalTokens')[0].value);
-		var maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
-		if (totalTokens > maxTokens) {
-			decimalPlaces = Number(5);
-			maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
-			if (totalTokens > maxTokens) {
-				decimalPlaces = Number(2);
-				maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
-				if (totalTokens > maxTokens) {
-					$('#create-asset-hint3')[0].innerText = 'Total issued tokens amount must be less than ' + maxTokens;
-					return;
-				}
-			}
+	function validateSender(sender) {
+		if (!sender) {
+			throw new Error('Sender hasn\'t been set');
 		}
-		var s = '0'.repeat(decimalPlaces);
-		$('#create-asset-hint3')[0].innerText = 'MAX: '+maxTokens+'.'+s; //Math.pow(10,decimalPlaces);
+
+		if (!sender.publicKey) {
+			throw new Error('Sender account public key hasn\'t been set');
+		}
+
+		if (!sender.privateKey) {
+			throw new Error('Sender account private key hasn\'t been set');
+		}
+	}
+
+	function validateAssetIssue(issue) {
+		if (angular.isUndefined(issue.name)) {
+			throw new Error('Asset name hasn\'t been set');
+		}
+
+		if (angular.isUndefined(issue.totalTokens)) {
+			throw new Error('Total tokens amount hasn\'t been set');
+		}
+
+		if (angular.isUndefined(issue.decimalPlaces)) {
+			throw new Error('Token decimal places amount hasn\'t been set');
+		}
+
+		if (issue.fee.currency !== Currency.BASE) {
+			throw new Error('Transaction fee must be nominated in '+Currency.BASE.displayName);
+		}
 	}
 
 	return {
@@ -92,9 +229,13 @@ var Tokens = (function(){
 		ASSET_NAME_MAX: ASSET_NAME_MAX,
 		ASSET_NAME_MIN: ASSET_NAME_MIN,
 		TOKEN_DECIMALS_MAX: TOKEN_DECIMALS_MAX,
-		FIXED_ISSUE_FEE: FIXED_ISSUE_FEE,
-		AssetNameOnBlur: AssetNameOnBlur,
-		AssetTotalTokensOnKeyPress: AssetTotalTokensOnKeyPress
+		assetCreate: assetCreate,
+		AssetTotalTokensOnKeyPress: AssetTotalTokensOnKeyPress,
+		createAssetIssueTransaction: createAssetIssueTransaction,
+		getCreateAssetFeeByLength: getCreateAssetFeeByLength,
+		refreshAssetFee: refreshAssetFee,
+		validateSender: validateSender,
+		validateAssetIssue: validateAssetIssue
 	};
 })();
 
@@ -162,7 +303,6 @@ var Tokens = (function(){
 			}
 		};
 		ctrl.asset = {
-			/*fee: Tokens.FIXED_ISSUE_FEE*/
 		};
 		ctrl.confirm = {};
 		ctrl.broadcast = new transactionBroadcast.instance(apiService.assets.issue,
@@ -185,56 +325,14 @@ var Tokens = (function(){
 
 		function assetIssueConfirmation(form, event) {
 			event.preventDefault();
-
-			if (!form.validate()) {
-				return;
-			}
-
-			/*
-			var ctrlAssetFee = $('#assetCreateFee')[0].innerText;
-			var ctrlBaseBalance = ctrl.baseBalance;
-			if (ctrlAssetFee > ctrl.baseBalance) {
-				notificationService.error('Not enough funds for the issue transaction fee');
-				return;
-			}
-			*/
-
-			var decimalPlaces = Number(8); //Number(ctrl.asset.decimalPlaces);
-			var totalTokens = ctrl.asset.totalTokens;
-			var maxTokens = Math.floor(constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
-			if (totalTokens > maxTokens) {
-				decimalPlaces = Number(5);
-				maxTokens = Math.floor(constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
-				if (totalTokens > maxTokens) {
-					decimalPlaces = Number(2);
-					maxTokens = Math.floor(constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
-					if (totalTokens > maxTokens) {
-						notificationService.error('Total issued tokens amount must be less than ' + maxTokens);
-						return;
-					}
-				}
-			}
-
-			var asset = {
-				name: ctrl.asset.name,
-				description: ctrl.asset.description,
-				totalTokens: ctrl.asset.totalTokens,
-				decimalPlaces: Number(ctrl.asset.decimalPlaces),
-				reissuable: ctrl.asset.reissuable/*,
-				fee: ctrl.asset.fee*/
-			};
-
+			if (!form.validate()) return;
 			var sender = {
 				publicKey: applicationContext.account.keyPair.public,
 				privateKey: applicationContext.account.keyPair.private
 			};
-
-			ctrl.confirm.name = ctrl.asset.name;
-			ctrl.confirm.totalTokens = ctrl.asset.totalTokens;
-			ctrl.confirm.reissuable = ctrl.asset.reissuable ? 'RE-ISSUABLE' : 'NON RE-ISSUABLE';
-
-			ctrl.broadcast.setTransaction(assetService.createAssetIssueTransaction(asset, sender));
-
+			var t = Tokens.assetCreate(sender, notificationService);
+			if (!t) return;
+			ctrl.broadcast.setTransaction(t);
 			dialogService.open('#create-asset-confirmation');
 		}
 
