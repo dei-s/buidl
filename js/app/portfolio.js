@@ -69,9 +69,7 @@
 				assetId: assetId,
 				displayName: assetName
 			}
-			console.log(favorit);
 			FavoritService.addFavorit(favorit).then(function(){
-				console.log('doRefresh');
 				refreshAssets();
 			});
 		}
