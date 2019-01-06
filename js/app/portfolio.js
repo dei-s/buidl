@@ -63,17 +63,23 @@
 		}
 
 		function assetAddToFavorit(assetId, assetName) {
+			if (FavoritService.isFavoritByAssetIdFromCashe(assetId, applicationContext.account.address)) return;
 			var favorit = {
 				accountAddress: applicationContext.account.address,
 				assetId: assetId,
 				displayName: assetName
 			}
 			console.log(favorit);
-			console.log(FavoritService.addFavorit(favorit));
+			FavoritService.addFavorit(favorit).then(function(){
+				console.log('doRefresh');
+				refreshAssets();
+			});
 		}
 
 		function assetRemoveFromFavorit(assetId) {
-			console.log(FavoritService.removeById(assetId));
+			FavoritService.removeById(assetId, applicationContext.account.address).then(function(){
+				refreshAssets();
+			});
 		}
 
 		function assetTransfer(assetId) {
@@ -136,7 +142,7 @@
 					var yourReissuableAsset = assetBalance.issueTransaction.sender === applicationContext.account.address;
 					if (assetBalance.balance !== 0 || yourReissuableAsset) {
 						loadAssetDataFromCache(asset);
-						asset.isFavorit = FavoritService.isFavoritByAssetIdFromCashe(asset.id);
+						asset.isFavorit = FavoritService.isFavoritByAssetIdFromCashe(asset.id, applicationContext.account.address) ? 'IsFavorit' : '';
 						assets.push(asset);
 					}
 				});

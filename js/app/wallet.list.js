@@ -18,43 +18,16 @@
 
 		var mapping = {};
 		if (isMir()) {
-			mapping[Currency.MIR.displayName] = {
-				image: 'wB-bg-MIR-purple.svg',
-				displayName: Currency.MIR.displayName
-			};
-			mapping[Currency.LBR.displayName] = {
-				image: 'wB-bg-LBR.svg',
-				displayName: Currency.LBR.displayName
-			};
+			mapping[Currency.MIR.displayName] = 'wB-bg-MIR-purple.svg';
+			mapping[Currency.LBR.displayName] = 'wB-bg-LBR.svg';
 		} else {
-			mapping[Currency.WAVES.displayName] = {
-				image: 'wB-bg-WAV.svg',
-				displayName: Currency.WAVES.displayName
-			};
-			mapping[Currency.BTC.displayName] = {
-				image: 'wB-bg-BTC.svg',
-				displayName: Currency.BTC.displayName
-			};
-			mapping[Currency.USD.displayName] = {
-				image: 'wB-bg-USD.svg',
-				displayName: Currency.USD.displayName
-			};
-			mapping[Currency.EUR.displayName] = {
-				image: 'wB-bg-EUR.svg',
-				displayName: Currency.EUR.displayName
-			};
-			mapping[Currency.DEIP.displayName] = {
-				image: 'wB-bg-DEIP.svg',
-				displayName: Currency.DEIP.displayName
-			};
-			mapping[Currency.LIBRE.displayName] = {
-				image: 'wB-bg-LIBRE.svg',
-				displayName: Currency.LIBRE.displayName
-			};
-			mapping[Currency.MIR.displayName] = {
-				image: 'wB-bg-MIR-blue.svg',
-				displayName: Currency.MIR.displayName
-			};
+			mapping[Currency.WAVES.displayName] = 'wB-bg-WAV.svg';
+			mapping[Currency.BTC.displayName] = 'wB-bg-BTC.svg';
+			mapping[Currency.USD.displayName] = 'wB-bg-USD.svg';
+			mapping[Currency.EUR.displayName] = 'wB-bg-EUR.svg';
+			mapping[Currency.DEIP.displayName] = 'wB-bg-DEIP.svg';
+			mapping[Currency.LIBRE.displayName] = 'wB-bg-LIBRE.svg';
+			mapping[Currency.MIR.displayName] = 'wB-bg-MIR-blue.svg';
 		}
 
 		ctrl.$onChanges = function (changesObject) {
@@ -65,8 +38,12 @@
 			}
 		};
 		ctrl.$onInit = function () {
-			ctrl.image = mapping[ctrl.balance.currency.displayName].image;
-			ctrl.displayName = mapping[ctrl.balance.currency.displayName].displayName;
+			if (mapping[ctrl.balance.currency.displayName]) {
+				ctrl.image = mapping[ctrl.balance.currency.displayName];
+			} else {
+				ctrl.image = 'wB-bg-TEST.svg';
+			}
+			ctrl.displayName = ctrl.balance.currency.displayName;
 		};
 	}
 
@@ -220,6 +197,42 @@
 
 		function refreshWalletList() {
 			ctrl.wallets = defaultWallets;
+			if (FavoritService) {
+				var favorits = FavoritService.getFavorits();
+				if (favorits) {
+					favorits.then(function(favorits){
+						favorits.forEach(function(f,i){
+							if (f.accountAddress == applicationContext.account.address) {
+								var asset = applicationContext.cache.assets[f.assetId];
+								/*
+								var s = 'displayName=' + asset.currency.displayName +
+									'creator=' + asset.sender +
+									'description' + asset.description +
+									isMyAddress(asset.sender)
+									'timestamp=' + asset.timestamp +
+									'totalTokens=' + asset.totalTokens.formatAmount() +
+									'reissuable=' + asset.reissuable ? 'Yes' : 'No';
+								*/
+								/*
+								var c = new Currency({
+									id: '',
+									displayName: f.displayName,
+									shortName: asset.currency.shortName,
+									precision: asset.currency.precition,
+									verified: true
+								});
+								*/
+								asset.balance.currency.displayNmae = f.displayName;
+								var w = {
+									balance: asset.balance,
+									depositWith: Currency.LBR
+								}
+								ctrl.wallets.push(w);
+							}
+						});
+					});
+				}
+			}
 			loadDataFromBackend();
 			if ($scope.isTestnet()) {
 				Currency.patchCurrencyIdsForTestnet();

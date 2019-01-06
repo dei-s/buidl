@@ -5,16 +5,12 @@ var FavoritService = (function(){
 	var favoritsCashe = [];
 
 	function addFavorit(favoritInfo) {
-		favoritsCashe.push(favoritInfo);
-		console.log('addFavorit()', favoritsCashe);
-		/*
 		return getState()
 			.then(function (state) {
 				state.favorits.push(favoritInfo);
 				return state;
 			})
 			.then(Storage.saveState);
-		*/
 	}
 
 	function getFavorits() {
@@ -39,8 +35,9 @@ var FavoritService = (function(){
 		});
 	}
 
-	function isFavoritByAssetIdFromCashe(assetId) {
-		return findByAssetId(assetId) >= 0 ? 'IsFavorit' : '';
+	function isFavoritByAssetIdFromCashe(assetId, accountAddr) {
+		var i = find(assetId, accountAddr);
+		return i >= 0 && favoritsCashe[i].accountAddress == accountAddr;
 	}
 
 	function refresh() {
@@ -52,11 +49,17 @@ var FavoritService = (function(){
 	function removeByIndex(index) {
 		return getState()
 			.then(function (state) {
-				console.log('removeByIndex', index);
 				if (index >= 0) state.favorits.splice(index, 1);
 				return state;
 			})
 			.then(Storage.saveState);
+	}
+
+	function find(assetId, accountAddr) {
+		for (var i = 0; i < favoritsCashe.length; i++) {
+			if (favoritsCashe[i].assetId == assetId && favoritsCashe[i].accountAddress == accountAddr) return i;
+		}
+		return -1;
 	}
 
 	function findByAssetId(assetId) {
@@ -66,8 +69,8 @@ var FavoritService = (function(){
 		return -1;
 	}
 
-	function removeById(assetId) {
-		removeByIndex(findByAssetId(assetId));
+	function removeById(assetId, accountAddr) {
+		return removeByIndex(find(assetId, accountAddr));
 	}
 
 	return {
