@@ -33,16 +33,8 @@ var Tokens = (function(){
 		var decimalPlaces = Number(8);
 		var maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
 		if (totalTokens > maxTokens) {
-			decimalPlaces = Number(5);
-			maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
-			if (totalTokens > maxTokens) {
-				decimalPlaces = Number(2);
-				maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
-				if (totalTokens > maxTokens) {
-					notificationService.error('Total issued tokens amount must be less than ' + maxTokens);
-					return;
-				}
-			}
+			notificationService.error('Total issued tokens amount must be less than ' + maxTokens);
+			return;
 		}
 
 		if (displayName.length < 1) {
@@ -64,7 +56,7 @@ var Tokens = (function(){
 		$('#assetConfirmReissuable')[0].innerText = checkedDep ? 'RE-ISSUABLE' : 'NON RE-ISSUABLE';
 		$('#assetConfirmFee')[0].innerText = asset.fee;
 
-		return Tokens.createAssetIssueTransaction(asset, sender);
+		return createAssetIssueTransaction(asset, sender);
 	}
 
 	function AssetTotalTokensOnKeyPress(){
@@ -72,16 +64,8 @@ var Tokens = (function(){
 		var totalTokens = Number($('#assetTotalTokens')[0].value);
 		var maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
 		if (totalTokens > maxTokens) {
-			decimalPlaces = Number(5);
-			maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
-			if (totalTokens > maxTokens) {
-				decimalPlaces = Number(2);
-				maxTokens = Math.floor(Constants.JAVA_MAX_LONG / Math.pow(10, decimalPlaces));
-				if (totalTokens > maxTokens) {
-					$('#create-asset-hint3')[0].innerText = 'Total issued tokens amount must be less than ' + maxTokens;
-					return;
-				}
-			}
+			$('#create-asset-hint3')[0].innerText = 'Total issued tokens amount must be less than ' + maxTokens;
+			return;
 		}
 		var s = '0'.repeat(decimalPlaces);
 		$('#create-asset-hint3')[0].innerText = 'MAX: '+maxTokens+'.'+s;
