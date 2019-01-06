@@ -33,6 +33,7 @@ var app = angular.module('app', [
 	'ngAnimate',
 	'ngMaterial',
 	'ngValidate',
+	'app.blocks',
 	'app.ui',
 	'app.shared',
 	'app.login',

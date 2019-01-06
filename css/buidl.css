@@ -431,6 +431,22 @@ md-progress-linear .md-bar{background-color:#9C27B0}
 #asset-mass-pay-dialog p{text-align:center;margin-bottom:8px;margin-bottom:.5rem;word-break:break-all;word-wrap:break-word}
 #massPaymentFilesForm input[type=file]{font-family:Roboto}
 
+
+/* BLOCKS */
+
+#mBB-blocks{
+	width:100%;
+	text-align:center;
+}
+#mBB-blocks>p{
+	text-align:center;
+	margin-bottom:1rem;
+	font-size:1.2rem;
+	color:#e1b47d;
+	font-weight:600;
+}
+
+
 /* TOKENS */
 
 #mBB-token{

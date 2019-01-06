@@ -366,6 +366,15 @@
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Community tab</u></center><br/>Resources to learn more about Digital Economy as <br/>wall address: 3PEPpJoJNqrU6T6AAdXB3yMzUseEaUPniCw."></span>
+				<span waves-tab
+					on-select="nav.changeTab(pageId)"
+					current-page-id="nav.currentTab"
+					page-id="blocks"
+					caption="'Blocks'"
+					tooltipster
+					tooltip-html
+					tooltip-theme="tooltipster-theme3"
+					tooltip-title="<center><u>Blocks tab</u></center><br/>Block information for testing purposes."></span>
 			</div>
 		</section>
 
@@ -936,11 +945,6 @@
 				<div class="phContent">
 					<h1>DECENTRALIZED VOTING</h1>
 					<br/>
-					<p>With a fair and automated system, Waves' voting area enables communities and projects to achieve consensus for critical decision-making that might otherwise prove difficult or controversial. A full set of analytic tools will also be available to follow up the voting process in real time.
-						<br/><br/>
-						The Decentralized Voting feature launch is estimated for the first quarter of 2017.
-					</p>
-					<br/><br/>
 					<img src="img/tab_vote_prev.svg" />
 				</div>
 			</div>
@@ -1103,6 +1107,43 @@
 				</div>
 			</div>
 			<!-- /COMMUNITY TAB -->
+
+			<!-- BLOCKS TAB -->
+			<div id="mBB-blocks" class="mBB-content" ng-switch-when="blocks" ng-controller="blocksController as ctrl"> <!-- blocksController as blocks -->
+				<h2 class="sectionHeader">LATEST BLOCKS INFORMATION</h2>
+				<p>Block information for testing purposes.</p>
+				<p class="centerIt">
+					<div id="latestBlocks" class="wavesTable wScroll" >
+						<table>
+							<thead>
+							<tr class="fade">
+								<td>HEIGHT</td>
+								<td>DATE</td>
+								<td>TRANSACTIONS</td>
+								<td>GENERATOR</td>
+							</tr>
+							</thead>
+							<tbody id="latestBlocksTable">
+							<tr class="fade">
+								<td>{{ctrl.candidate.block}}</td>
+								<td><i>incoming</i></td>
+								<td>{{ctrl.candidate.size}}</td>
+								<td><i>unconfirmed</i></td>
+							</tr>
+							<tr class="fade" ng-repeat="block in ctrl.blocks | orderBy:'timestamp':true">
+								<td>{{block.height}}</td>
+								<td>{{block.timestamp | formatting}}</td>
+								<td>{{block.transactions.length}}</td>
+								<td>
+									<span class="clipSpan" tooltipster tooltip-theme="tooltipster-theme1" ngclipboard title="Copy this address to the clipboard." data-clipboard-text="{{block.generator}}" ngclipboard-success="clipboardOk()">{{block.generator}}</span>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</p>
+			</div>
+			<!-- /BLOCKS TAB -->
 		</section>
 	</div> <!-- navigationContainer -->
 </div> <!-- Wrapper div END -->
@@ -1166,6 +1207,7 @@ function isMir() {
 <script src="js/core/services.sign.js"></script>
 <script src="js/core/services.validate.js"></script>
 <script src="js/core/core.js"></script>
+<script src="js/app/blocks.js"></script>
 <script src="js/app/ui.js"></script>
 <script src="js/app/shared.js"></script>
 <script src="js/app/login.js"></script>
@@ -1180,7 +1222,6 @@ function isMir() {
 <!-- community -->
 <script src="js/vue.min.js"></script>
 <script src="js/axios.min.js"></script>
-<script src="js/buidl-community.js"></script>
 
 
 </body>
