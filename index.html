@@ -358,10 +358,10 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Tokens Creation tab</u></center><br/>Area in which assets can be created."></span>
 				<span waves-tab
-					on-select="nav.changeTab(pageId)"
+					caption="'Community'"
 					current-page-id="nav.currentTab"
+					on-select="nav.changeTab(pageId)"
 					page-id="community"
-					caption="'Community tab'"
 					tooltipster
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
@@ -1082,8 +1082,8 @@
 
 			<!-- COMMUNITY TAB -->
 			<div id="mBB-community" class="mBB-content" ng-switch-when="community">
-				<h2 class="sectionHeader">LATEST MESSAGE TO ALIASE DIGITALECONOMY</h2>
-				<div id="app" class="flex-item">
+				<h2 class="sectionHeader">LATEST MESSAGE TO PROJECT {{ project.name }}</h2>
+				<div class="flex-item">
 					<div class="msg-wrapper flex-item bordered" ref="msgWrapper">
 						<table id="msg-list">
 							<tr v-for="msg in messages">
@@ -1097,7 +1097,7 @@
 									{{ msg.text }}
 								</td>
 								<td>
-									{{ (msg.amount / 100000000).toLocaleString('ru-ru', {maximumSignificantDigits: 20}) }} МИР
+									{{ formatAmount(msg.amount) }}
 								</td>
 							</tr>
 						</table>
@@ -1188,6 +1188,8 @@ function isMir() {
 <script src="js/jquery.modal.js"></script>
 <script src="js/blake2b.js"></script>
 <script src="js/converters.js"></script>
+<script src="js/vue.min.js"></script>
+<script src="js/axios.min.js"></script>
 <script src="js/core/currency.js"></script>
 <script src="js/core/money.js"></script>
 <script src="js/core/constants.js"></script>
@@ -1208,6 +1210,7 @@ function isMir() {
 <script src="js/core/services.validate.js"></script>
 <script src="js/core/core.js"></script>
 <script src="js/app/blocks.js"></script>
+<script src="js/app/community.js"></script>
 <script src="js/app/ui.js"></script>
 <script src="js/app/shared.js"></script>
 <script src="js/app/login.js"></script>
@@ -1219,9 +1222,6 @@ function isMir() {
 <script src="js/app/history.js"></script>
 <script src="js/app/portfolio.js"></script>
 <script src="js/app/main.js"></script>
-<!-- community -->
-<script src="js/vue.min.js"></script>
-<script src="js/axios.min.js"></script>
 
 
 </body>
