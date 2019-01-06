@@ -14,26 +14,6 @@
  *                                                                            *
  ******************************************************************************/
 
-(function ($, window) {
-	'use strict';
-
-	var $wrapW = $('#wrapper').width();
-	var $mbBodyH = $('#mainBody').height();
-
-	// GUI elements dynamic sizing and LeftBar visibility
-	$(window).on('load resize', function (e) {
-
-		var $wrapH = $('#wrapper').height(),
-			$headerH = $('header').height(),
-			$tabsH = $('#tabs').height(),
-			$mainBodyH = $wrapH - $headerH - $tabsH,
-			$mbBodyW = $wrapW;
-
-		$('#mainBody').css('height', $mainBodyH);
-		$('#mBBody').css('width', $mbBodyW);
-	});
-})(jQuery, window);
-
 /**
  * Setup of main AngularJS application, with Restangular being defined as a dependency.
  *
