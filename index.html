@@ -333,6 +333,15 @@
 				<span waves-tab
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
+					page-id="voting"
+					caption="'Voting'"
+					tooltipster
+					tooltip-html
+					tooltip-theme="tooltipster-theme3"
+					tooltip-title="<center><u>Voting</u></center><br/>"></span>
+				<span waves-tab
+					on-select="nav.changeTab(pageId)"
+					current-page-id="nav.currentTab"
 					page-id="exchange"
 					caption="'Exchange tab'"
 					tooltipster
@@ -942,11 +951,21 @@
 
 			<!-- VOTING TAB -->
 			<div id="mBB-voting" class="mBB-content" ng-switch-when="voting">
-				<div class="phContent">
-					<h1>DECENTRALIZED VOTING</h1>
-					<br/>
-					<img src="img/tab_vote_prev.svg" />
-				</div>
+				<h1>DECENTRALIZED VOTING</h1>
+				<br/>
+				<table id="voting-table">
+					<thead>
+						<tr>
+							<td>TEST</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+						</tr>
+					</tbody>
+				</table>
+				<img src="img/tab_vote_prev.svg" />
 			</div>
 			<!-- / VOTING TAB -->
 
@@ -1221,6 +1240,7 @@ function isMir() {
 <script src="js/app/dex.js"></script>
 <script src="js/app/history.js"></script>
 <script src="js/app/portfolio.js"></script>
+<script src="js/app/voting.js"></script>
 <script src="js/app/main.js"></script>
 
 
