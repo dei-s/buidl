@@ -147,7 +147,11 @@ p{
 @font-face{font-family:Lekton;src:url(../fonts/lekton.eot?) format("eot"),url(../fonts/lekton.woff) format("woff"),url(../fonts/lekton.ttf) format("truetype")}
 *,:after,:before{box-sizing:border-box;margin: 0px;padding: 0px;outline:none;}
 :after:focus,:before:focus,:focus{outline:none}
-body{font-family: Roboto;color: #464646;:-webkit-font-smoothing:antialiased!important;-webkit-user-select:initial;-moz-user-select:initial;-ms-user-select:initial;user-select:auto;}
+body{
+	font-family: Roboto;
+	color: #464646;
+	user-select: auto;
+}
 .s-fade{transition:all .4s ease}
 .fFade{transition:all .2s ease}
 .centerIt{position:absolute;top:50%;left:50%;margin:0 -50% 0 0;transform:translate(-50%,-50%)}
@@ -209,7 +213,6 @@ body{font-family: Roboto;color: #464646;:-webkit-font-smoothing:antialiased!impo
 .wavesTable-hover tbody tr:hover{background:hsla(33,63%,69%,.5);cursor:pointer}
 .wavesTable tbody tr:not(#mBB-token .wavesTable-hover tbody tr){color:#333;font-family:Roboto}
 .paymentForm input[type=search],.wavesTable input[type=search]{font-family:Roboto;font-size:16px;font-size:1rem;padding:4.8px;padding:.3rem}
-#mBB-portfolio .wavesTable tbody tr{color:#333;font-family:Roboto}
 #latestBlocksTable .clipSpan:after{background:url(../img/wIcon_clip_txOut.svg) no-repeat;opacity:.6}
 @keyframes a{
 	0%{opacity:.35}
@@ -399,6 +402,9 @@ md-autocomplete.fee-autocomplete button:hover md-icon path{fill:#fff}
 #errorPasswordLogin{margin:16px;margin:1rem;padding:16px;padding:1rem;color:red}
 .loginAccountDiv{display:block;height:inherit}
 #mBBody,#mBLeftBar,#tabs,header{padding:10px}
+
+/* HEADER */
+
 header{position:relative;width:100%;height:50px;background: #ffffff00;z-index:101;}
 #topLogoH{display:none;top:8px;top:.5rem;left:16px;left:1rem;width:192px;width:12rem}
 #logoNversion2,#topLogoH{position:absolute;z-index:99}
@@ -459,9 +465,9 @@ span.tabs-radio img.selected{opacity:1;pointer-events:none}
 .paymentForm tbody td{padding:4px;padding:.25rem}
 .paymentForm tbody tr{width:100%}
 .form-control{width:100%;padding:4.8px;padding:.3rem;font-family:Roboto;font-size:16px;font-size:1rem}
-#mBB-portfolio #paymentForm{text-align:center}
-#mBB-portfolio .paymentForm thead tr{line-height:24px;line-height:1.5rem}
-#mBB-portfolio .paymentForm table{padding-bottom:16px;padding-bottom:1rem}
+
+/* WALLET */
+
 #asset-details-dialog .wavesTable tr:nth-child(4){word-break:break-all;word-wrap:break-word}
 .balanceAmt{
 	color:#999;
@@ -480,6 +486,7 @@ span.tabs-radio img.selected{opacity:1;pointer-events:none}
 .custom-combobox-input,.ui-menu.ui-autocomplete{font-family:Roboto;font-style:italic;color:#999}
 .md-select-menu-container,.md-virtual-repeat-container.md-autocomplete-suggestions-container,.popup-autocomplete{z-index:160}
 .md-whiteframe-z1{border:1px solid #d7d7d7;box-shadow:none}
+
 #mBB-wallet{width:100%;-ms-flex-wrap:wrap;flex-wrap:wrap}
 #mBB-wallet h2{padding:8px;padding:.5rem}
 .flex-container{display:-ms-flexbox;display:flex;width:100%;height:auto;-ms-flex-pack:center;justify-content:center;-ms-flex-line-pack:center;align-content:center;-ms-flex-wrap:wrap;flex-wrap:wrap}
@@ -536,6 +543,13 @@ span.tabs-radio img.selected{opacity:1;pointer-events:none}
 .wB-butSend{border-radius: 2px 2px 2px 2px;}
 .wB-butRec{border-radius:2px 2px 2px 2px}
 .wB-butTrade{border-radius: 2px 2px 2px 2px;}
+
+/* PORTFOLIO */
+
+#mBB-portfolio .wavesTable tbody tr{color:#333;font-family:Roboto}
+#mBB-portfolio #paymentForm{text-align:center}
+#mBB-portfolio .paymentForm thead tr{line-height:24px;line-height:1.5rem}
+#mBB-portfolio .paymentForm table{padding-bottom:16px;padding-bottom:1rem}
 #mBB-portfolio{width:100%;text-align:center}
 #mBB-portfolio table{width:100%;margin-bottom:60px}
 #mBB-portfolio .wavesTable tbody{overflow-y:scroll}
@@ -550,6 +564,9 @@ span.tabs-radio img.selected{opacity:1;pointer-events:none}
 }
 md-progress-linear .md-container{background-color:#f0f0f0}
 md-progress-linear .md-bar{background-color:#9C27B0}
+
+/* HISTORY */
+
 #mBB-history{width:100%;text-align:center}
 .wavesDD{display:inline-block;height:90%;padding:6.4px;padding:.4rem}
 .wavesDD select{font-family:Roboto;font-size:18.4px;font-size:1.15rem;padding:1.6px;padding:.1rem}
@@ -605,9 +622,11 @@ md-progress-linear .md-bar{background-color:#9C27B0}
 	margin:0.4rem;
 }
 
+/* COMMUNITY */
 
 #mBB-community{width:100%;text-align:center}
 #mBB-community>p{text-align:center;margin-bottom:16px;margin-bottom:1rem;font-size:19.2px;font-size:1.2rem;color:#e1b47d;font-weight:600}
+
 @media only screen and (max-width:1024px){
 	#logoNversion2{display:none}
 	#mBBody{
