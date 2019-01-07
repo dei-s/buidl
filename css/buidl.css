@@ -145,8 +145,10 @@ p{
 @font-face{font-family:Engo;src:url(../fonts/engo.eot?) format("eot"),url(../fonts/engo.woff) format("woff"),url(../fonts/engo.ttf) format("truetype")}
 @font-face{font-family:Sparta;src:url(../fonts/sparta.eot?) format("eot"),url(../fonts/sparta.woff) format("woff"),url(../fonts/sparta.ttf) format("truetype")}
 @font-face{font-family:Lekton;src:url(../fonts/lekton.eot?) format("eot"),url(../fonts/lekton.woff) format("woff"),url(../fonts/lekton.ttf) format("truetype")}
+/*
 *,:after,:before{box-sizing:border-box;margin: 0px;padding: 0px;outline:none;}
 :after:focus,:before:focus,:focus{outline:none}
+*/
 body{
 	font-family: Roboto;
 	color: #464646;
@@ -177,14 +179,11 @@ body{
 	margin:0 auto;
 }
 #mBBody{
-	display:-ms-flexbox;
-	display:flex;
-	-ms-flex-line-pack:center;
 	align-content:center;
+	margin:0 auto;
+	min-height:100%;
 	position:relative;
 	width:100%!important;
-	min-height:100%;
-	margin:0 auto;
 }
 .dialog-confirmation{text-align:center}
 #asset-details-dialog{max-width: 680px;}
