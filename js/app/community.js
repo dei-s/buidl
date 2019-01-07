@@ -74,7 +74,7 @@ var communityApp = new Vue({
 				let data = await this.loadPosts(10000);
 				this.messages = [];
 				await data[0].forEach(item => {
-					if (item.attachment && item.amount >= this.minAmount /*&& item.assetId == MSG_ASSET_ID*/) {
+					if (item.attachment && item.amount >= this.minAmount && (Constants.IS_MIR || item.assetId == MSG_ASSET_ID)) {
 						let msg = this.decode(item.attachment);
 
 						this.messages.unshift({
