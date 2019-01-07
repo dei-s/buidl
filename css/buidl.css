@@ -31,7 +31,9 @@ html {
 md-menu-item > .md-button {
 	color: #464646;
 }
-
+p{
+	margin: 0;
+}
 
 #growls{z-index:50000;position:fixed}
 #growls.default{top:16px;top:1rem;right:16px;right:1rem}
@@ -60,13 +62,13 @@ md-menu-item > .md-button {
 .blocker.behind{background-color:transparent}
 .modal{display:inline-block;vertical-align:middle;position:relative;z-index:160;width:auto;max-width:90vw;background:#fff;padding:15px 30px;border-radius:8px;-o-box-shadow:0 0 10px #000;-ms-box-shadow:0 0 10px #000;box-shadow:0 0 10px #000;text-align:left;}
 .modal a.close-modal{
-	position:absolute;
-	top:-8.5px;
-	right:-8.5px;
-	display:block;
-	width:25px;
-	height:25px;
-	text-indent:-9999px;
+	display: block;
+	height: 25px;
+	position: absolute;
+	right: .1rem;
+	text-indent: -9999px;
+	top: .1rem;
+	width: 25px;
 	background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5Ljg4OCIgaGVpZ2h0PSI5Ljg4OCIgdmlld0JveD0iMCAwIDEyMCAxMjAiPjxkZWZzPjxzdHlsZT48IVtDREFUQVsgLnN0cjAge3N0cm9rZTojZmZmO3N0cm9rZS13aWR0aDozLjV9LmZpbDAge2ZpbGw6d2hpdGU7fS5maWwxIHtmaWxsOiM4ODh9XV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9IkxheWVyX3gwMDIwXzEiPjxwYXRoIGNsYXNzPSJmaWwwIHN0cjAiIGQ9Ik02MCAyYzE2IDAgMzEgNiA0MSAxNyAxMSAxMCAxNyAyNSAxNyA0MXMtNiAzMS0xNyA0MWMtMTAgMTEtMjUgMTctNDEgMTdzLTMxLTYtNDEtMTdDOCA5MSAyIDc2IDIgNjBzNi0zMSAxNy00MUMyOSA4IDQ0IDIgNjAgMnoiLz48cGF0aCBjbGFzcz0iZmlsMSIgZD0iTTk2IDI0Qzg3IDE1IDc0IDkgNjAgOXMtMjcgNi0zNiAxNVM5IDQ2IDkgNjBzNiAyNyAxNSAzNiAyMiAxNSAzNiAxNSAyNy02IDM2LTE1IDE1LTIyIDE1LTM2LTYtMjctMTUtMzZ6TTg2IDQxTDcwIDU3Yy0xIDItMSA0IDAgNmwxNiAxNmMyIDIgMiA1IDAgN3MtNSAyLTcgMEw2MyA3MGMtMi0xLTQtMS02IDBMNDEgODZjLTIgMi01IDItNyAwcy0yLTUgMC03bDE2LTE2YzEtMiAxLTQgMC02TDM0IDQxYy0yLTItMi01IDAtN3M1LTIgNyAwbDE2IDE2YzIgMSA0IDEgNiAwbDE2LTE2YzItMiA1LTIgNyAwczIgNSAwIDd6Ii8+PC9nPjwvc3ZnPg==) no-repeat 0 0;background-size:100% 100%
 }
 .modal-spinner{
@@ -85,15 +87,16 @@ md-menu-item > .md-button {
 }
 .basePop{
 	display:none;
-	top:50%;
+	height:fit-content;
 	left:50%;
 	margin:0;
+	max-width:1920px;
+	min-width:400px;
+	top:50%;
 	padding:0;
 	position:absolute;
-	margin-right:-50%;
 	transform:translate(-50%,-50%);
-	min-width:400px;
-	max-width:1920px;
+	width:fit-content;
 }
 .wPop-header{margin:0;padding:0;width:100%;margin-top:1.6px;margin-top:.1rem;margin-bottom:8px;margin-bottom:.5rem}
 .wPop-content{padding:16px;padding:1rem}
@@ -184,22 +187,17 @@ body{font-family: Roboto;color: #464646;:-webkit-font-smoothing:antialiased!impo
 .dialog-text{padding-bottom:16px;padding-bottom:1rem}
 .dialog-text>*{vertical-align:bottom}
 .basePop-content{
-	padding-left:32px!important;
 	padding-left:2rem!important;
-	padding-right:32px!important;
 	padding-right:2rem!important;
-	padding-bottom:16px!important;
 	padding-bottom:1rem!important;
 }
 .basePop-content-buttons{
-	padding-bottom:16px;
 	padding-bottom:1rem;
 }
 #send-confirm{width:auto}
 .confirmation-value{font-family:Sparta,Arial,sans-serif;font-size:14.4px;font-size:.9rem}
 .button-row{text-align:center}
 .basePop-content .button-row{
-	padding-bottom:16px;
 	padding-bottom:1rem;
 }
 .wavesTable table{border-collapse:collapse;border-spacing:0;width:100%;height:auto;padding:0;margin-bottom:32px;margin-bottom:2rem}
@@ -445,8 +443,14 @@ span.tabs-radio img{opacity:.4}
 span.tabs-radio img:not(.selected){transform:scale(.94)}
 span.tabs-radio:hover img{opacity:.3}
 span.tabs-radio img.selected{opacity:1;pointer-events:none}
-.paymentForm{min-width:550px;height:auto;padding-bottom:16px;padding-bottom:1rem}
-.paymentForm div:nth-child(2){margin-right:32px;margin-right:2rem}
+.paymentForm{
+	min-width:550px;
+	height:auto;
+	padding-bottom:1rem;
+}
+.paymentForm div:nth-child(2){
+	margin-right:2rem;
+}
 .wPop-content{margin-top:-24px;margin-top:-1.5rem}
 .paymentForm table,.paymentForm table tr{width: 100%;}
 .paymentForm td:first-child{width:35%}
@@ -459,7 +463,14 @@ span.tabs-radio img.selected{opacity:1;pointer-events:none}
 #mBB-portfolio .paymentForm thead tr{line-height:24px;line-height:1.5rem}
 #mBB-portfolio .paymentForm table{padding-bottom:16px;padding-bottom:1rem}
 #asset-details-dialog .wavesTable tr:nth-child(4){word-break:break-all;word-wrap:break-word}
-.balanceAmt{color:#999;font-style:italic;text-align:right;margin-right:4px;margin-right:.25rem;line-height:20px;line-height:1.25rem;padding-bottom:3.2px;padding-bottom:.2rem}
+.balanceAmt{
+	color:#999;
+	font-style:italic;
+	line-height:1.25rem;
+	margin-right:.25rem;
+	padding-bottom:.2rem;
+	text-align:right;
+}
 .balanceAmt p{display:inline}.paymentFormFee{background-color:#f0f0f0;font-style:italic;color:#999}
 .paymentFormFee p{text-align:right;padding-right:8px;padding-right:.5rem}
 .custom-combobox{position:relative;display:inline-block}
@@ -746,8 +757,7 @@ transaction-history .transactions-table table tbody tr:nth-child(2n){
 transaction-history .transactions-table table td{
 	vertical-align:middle;
 	text-align:center;
-	font-size:.8rem;
-	padding:.5rem;
+	padding:.4rem;
 }
 
 
