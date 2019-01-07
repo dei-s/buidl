@@ -4631,9 +4631,8 @@
 	'use strict';
 
 	var FEE_CURRENCY = Currency.BASE;
-	var DEFAULT_ERROR_MESSAGE = 'The Internet connection is lost';
 
-	function WavesTransactionHistoryController() {
+	function TransactionHistoryController() {
 		var ctrl = this;
 		var minimumFee = new Money(Constants.MINIMUM_TRANSACTION_FEE, FEE_CURRENCY);
 
@@ -4644,8 +4643,8 @@
 
 	angular
 		.module('app.shared')
-		.component('wavesTransactionHistory', {
-			controller: WavesTransactionHistoryController,
+		.component('transactionHistory', {
+			controller: TransactionHistoryController,
 			bindings: {
 				heading: '@',
 				transactions: '<',

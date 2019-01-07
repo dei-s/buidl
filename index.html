@@ -644,7 +644,7 @@
 					</div>
 				</div>
 
-				<waves-transaction-history heading="LATEST TRANSACTIONS" transactions="walletList.transactions" limit-to="10"></waves-transaction-history>
+				<transaction-history heading="LATEST TRANSACTIONS" transactions="walletList.transactions" limit-to="10"></transaction-history>
 			</div>
 			<!-- / WALLET TAB -->
 
@@ -971,9 +971,7 @@
 
 			<!-- HISTORY TAB -->
 			<div id="mBB-history" class="mBB-content" ng-switch-when="history" ng-controller="historyController as history">
-				<waves-transaction-history heading="LATEST TRANSACTIONS"
-					transactions="history.transactions"
-					limit-to="50"></waves-transaction-history>
+				<transaction-history heading="LATEST TRANSACTIONS" transactions="history.transactions" limit-to="50"></transaction-history>
 			</div>
 			<!-- / HISTORY TAB -->
 

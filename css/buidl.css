@@ -182,7 +182,7 @@ body{font-family: Roboto;color: #464646;:-webkit-font-smoothing:antialiased!impo
 	0%{opacity:.35}
 	to{opacity:1}
 }
-#full-transaction-history tbody,#latestBlocksTable,#latestBlocksUnconfirmed,#wallet-transaction-history tbody{font-family:Roboto}
+#latestBlocksTable,#latestBlocksUnconfirmed{font-family:Roboto}
 .form-table tbody td.padded{padding-top:20px}
 table.bitcoin-requisites{margin:0 auto 15px}
 #nprogress{pointer-events:none}
@@ -423,7 +423,6 @@ span.tabs-radio img.selected{opacity:1;pointer-events:none}
 md-progress-linear .md-container{background-color:#f0f0f0}
 md-progress-linear .md-bar{background-color:#9C27B0}
 #mBB-history{width:100%;text-align:center}
-#full-transaction-history table{overflow-y:scroll}
 .wavesDD{display:inline-block;height:90%;padding:6.4px;padding:.4rem}
 .wavesDD select{font-family:Roboto;font-size:18.4px;font-size:1.15rem;padding:1.6px;padding:.1rem}
 #hResults{height:auto;padding-bottom:16px;padding-bottom:1rem}
@@ -581,18 +580,60 @@ waves-support-link.in-header{position:absolute;top:60px;right:20px;margin:0}
 @media (max-width:880px){
 	waves-support-link.in-header{display:none}
 }
-waves-transaction-history{display:block}
-waves-transaction-history .transactions-table{width:100%;padding-bottom:16px;padding-bottom:1rem}
-waves-transaction-history .transactions-table table{border-collapse:collapse;border-spacing:0;width:100%;height:auto;padding:0;margin-bottom:32px;margin-bottom:2rem;overflow-y:scroll}
-waves-transaction-history .transactions-table table thead{background-color: #333333;border:0 solid #f0f0f0;text-align:center;font-size:17.92px;font-size:1.12rem;color:#fff;}
-waves-transaction-history .transactions-table table tbody{font-family:Roboto}
-waves-transaction-history .transactions-table table tbody tr{transition:all .2s ease}
-waves-transaction-history .transactions-table table tbody tr.tx-in{color: #464646!important;}
-waves-transaction-history .transactions-table table tbody tr.tx-out{color:#555!important}
-waves-transaction-history .transactions-table table tbody tr.tx-unc{animation:a 1s infinite alternate ease-in-out}
-waves-transaction-history .transactions-table table tbody tr:nth-child(odd){background-color:#f0f0f0}
-waves-transaction-history .transactions-table table tbody tr:nth-child(2n){background-color:#fff}
-waves-transaction-history .transactions-table table td{vertical-align:middle;text-align:center;font-size:17.6px;font-size: .8rem;padding:8px;padding:.5rem;}
+
+
+transaction-history{
+	display:block;
+}
+transaction-history .transactions-table{
+	width:100%;
+	padding-bottom:1rem;
+}
+transaction-history .transactions-table table{
+	border-collapse:collapse;
+	border-spacing:0;
+	width:100%;
+	height:auto;
+	padding:0;
+	margin-bottom:2rem;
+	overflow-y:scroll;
+}
+transaction-history .transactions-table table thead{
+	background-color: #333333;
+	border:0 solid #f0f0f0;
+	text-align:center;
+	font-size:1.12rem;
+	color:#fff;
+}
+transaction-history .transactions-table table tbody{
+	font-family:Roboto;
+}
+transaction-history .transactions-table table tbody tr{
+	transition:all .2s ease;
+}
+transaction-history .transactions-table table tbody tr.tx-in{
+	color: #464646!important;
+}
+transaction-history .transactions-table table tbody tr.tx-out{
+	color:#555!important;
+}
+transaction-history .transactions-table table tbody tr.tx-unc{
+	animation:a 1s infinite alternate ease-in-out;
+}
+transaction-history .transactions-table table tbody tr:nth-child(odd){
+	background-color:#f0f0f0;
+}
+transaction-history .transactions-table table tbody tr:nth-child(2n){
+	background-color:#fff;
+}
+transaction-history .transactions-table table td{
+	vertical-align:middle;
+	text-align:center;
+	font-size:.8rem;
+	padding:.5rem;
+}
+
+
 waves-dex{display:-ms-flexbox;display:flex;width:100%;min-height:100%}
 waves-dex>.exchange{width: 81%;padding:20px 50px 60px 30px;}
 waves-dex>.exchange>.choice{display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:center;align-items:center;padding-top:5px;margin-bottom:25px}
