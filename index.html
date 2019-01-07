@@ -27,10 +27,14 @@
 	<table id="lockscreenTable">
 
 		<thead>
+		<tr>
+		<td>
 		<div id="logoNversion">
 			<img src="img/topleftlogo.svg" />
 			<p ng-class='{testnet: isTestnet()}'>{{::home.title}} <span class="wlcversion">{{::home.version}}</span></p>
 		</div>
+		</td>
+		</tr>
 		</thead>
 
 		<tbody>
@@ -41,19 +45,19 @@
 					<h2 id="AccHeader">{{accounts.caption}}</h2>
 					<div class="wavesAccounts" ng-controller="accountListController as list" ng-show="accounts.mode === 'list'">
 						<p class="loginAccountDiv" ng-repeat="account in list.accounts track by $index">
-							<span class="loginAccount fade" tooltipster tooltip-theme="tooltipster-theme1" title="Log into this account." ng-click="list.signIn(account)">
+							<span class="loginAccount s-fade" tooltipster tooltip-theme="tooltipster-theme1" title="Log into this account." ng-click="list.signIn(account)">
 								<b>{{::account.name}}</b> <span class="divider-1"></span> <small>{{::account.address}}</small>
 							</span>
 							<span class="clipSpan" tooltipster tooltip-theme="tooltipster-theme1" ngclipboard title="Copy this address to the clipboard." data-clipboard-text="{{::account.address}}" ngclipboard-success="clipboardOk()"></span>
 							<span class="divider-1"></span>
-							<button class="removeAccount wButtonAlt fade" tooltipster tooltip-theme="tooltipster-theme1" title="Remove this account from the list." ng-click="list.showRemoveWarning($index)">
+							<button class="removeAccount wButtonAlt s-fade" tooltipster tooltip-theme="tooltipster-theme1" title="Remove this account from the list." ng-click="list.showRemoveWarning($index)">
 								<span class="wButton-icon"><img src="img/wIcon_x.svg"></span>REMOVE
 							</button>
 						</p>
 
-						<button id="import_account" class="wButton fade" tooltipster tooltip-theme="tooltipster-theme1" title="Click here to import an existing account." ng-click="list.importAccount()">IMPORT ACCOUNT</button>
+						<button id="import_account" class="wButton s-fade" tooltipster tooltip-theme="tooltipster-theme1" title="Click here to import an existing account." ng-click="list.importAccount()">IMPORT ACCOUNT</button>
 						<span class="divider-1"></span>
-						<button id="create_account" class="wButton fade" tooltipster tooltip-theme="tooltipster-theme1" title="Click here to create a brand new account." ng-click="list.createAccount()">NEW ACCOUNT</button>
+						<button id="create_account" class="wButton s-fade" tooltipster tooltip-theme="tooltipster-theme1" title="Click here to create a brand new account." ng-click="list.createAccount()">NEW ACCOUNT</button>
 						<br/>
 
 						<!-- Remove Account popup -->
@@ -70,7 +74,7 @@
 					<div id="create-seed" ng-controller="accountSeedController as vm" ng-show="accounts.mode === 'create-seed'">
 						<form id="account-seed-form" name="accountSeedForm" ng-submit="vm.checkSeedAndRegister(accountSeedForm)" novalidate ng-validate="vm.validationOptions">
 
-							<button id="generateRandomSeed" class="wButton fade" ng-click="vm.generateSeed()" type="button">GENERATE NEW SEED</button>
+							<button id="generateRandomSeed" class="wButton s-fade" ng-click="vm.generateSeed()" type="button">GENERATE NEW SEED</button>
 							<br/><br/>
 							<div class="form-field">
 								<label for="walletSeed">WALLET SEED</label>
@@ -87,9 +91,9 @@
 									<span>{{vm.displayAddress}}</span>
 								</div>
 							</div>
-							<button class="wButton fade" type="submit">REGISTER ACCOUNT</button>
+							<button class="wButton s-fade" type="submit">REGISTER ACCOUNT</button>
 							<span class="divider-2"></span>
-							<button class="wButton fade" type="reset" ng-click="vm.back()">BACK</button>
+							<button class="wButton s-fade" type="reset" ng-click="vm.back()">BACK</button>
 
 							<div id="seed-whitespace-popup" waves-dialog on-dialog-ok="vm.registerAccount()" closeable="false" ok-button-caption="PROCEED">
 								<h2 class="sectionHeader">SEED NOTICE</h2>
@@ -163,9 +167,9 @@
 								</div>
 								<br/>
 
-								<button class="wButton fade" type="submit">REGISTER</button>
+								<button class="wButton s-fade" type="submit">REGISTER</button>
 								<span class="divider-2"></span>
-								<button class="wButton fade" type="reset" ng-click="vm.cancel()">CANCEL</button>
+								<button class="wButton s-fade" type="reset" ng-click="vm.cancel()">CANCEL</button>
 							</div>
 						</form>
 					</div>
@@ -184,9 +188,9 @@
 							<input type="password" id="accountPassword" class="wInput" ng-model="vm.password" focus-me="accounts.mode === 'login'"/>
 							<br/><br/>
 
-							<button class="wButton fade" ng-click="vm.signIn()">LOG IN</button>
+							<button class="wButton s-fade" ng-click="vm.signIn()">LOG IN</button>
 							<span class="divider-2"></span>
-							<button class="wButton fade" ng-click="vm.cancel()">CANCEL</button>
+							<button class="wButton s-fade" ng-click="vm.cancel()">CANCEL</button>
 						</form>
 					</div>
 				</div>
@@ -234,7 +238,7 @@
 
 		<div id="header-Iconset">
 			<a ng-click="menu.showBackupDialog()">
-				<img class="header-Icon fade" tooltipster tooltip-theme="tooltipster-theme2" src="img/uiTB-iconset-backup.svg" alt="Backup" title="Backup"/>
+				<img class="header-Icon s-fade" tooltipster tooltip-theme="tooltipster-theme2" src="img/uiTB-iconset-backup.svg" alt="Backup" title="Backup"/>
 			</a>
 			<div id="header-wPop-backup" waves-dialog global="true" on-dialog-ok="menu.backup()" ok-button-caption="COPY" cancel-button-caption="CLOSE">
 				<h2 class="sectionHeader">ACCOUNT INFO BACKUP</h2>
@@ -260,7 +264,7 @@
 				</form>
 			</div>
 			<a ng-click="menu.showProfileDialog()">
-				<img class="header-Icon fade" tooltipster tooltip-theme="tooltipster-theme2" src="img/uiTB-iconset-profile.svg" alt="User profile" title="User profile"/>
+				<img class="header-Icon s-fade" tooltipster tooltip-theme="tooltipster-theme2" src="img/uiTB-iconset-profile.svg" alt="User profile" title="User profile"/>
 			</a>
 			<div class="noDisp" ng-controller="createAliasController as create">
 				<div id="create-alias-dialog" waves-dialog global="true" ok-button-caption="CREATE" on-dialog-ok="create.confirmCreateAlias(create.form)">
@@ -301,7 +305,7 @@
 				</div>
 			</div>
 			<a ng-click="home.logout()">
-				<img class="header-Icon fade" tooltipster tooltip-theme="tooltipster-theme2" src="img/uiTB-iconset-logout.svg" alt="Log out" title="Log out" />
+				<img class="header-Icon s-fade" tooltipster tooltip-theme="tooltipster-theme2" src="img/uiTB-iconset-logout.svg" alt="Log out" title="Log out" />
 			</a>
 		</div>
 		<waves-support-link class="in-header light"></waves-support-link>
@@ -312,7 +316,7 @@
 		<!-- APPLICATION TAB SELECTORS -->
 		<section id="tabs" class="fFade noSelect">
 			<div id="tabs-Iconset" class="centerIt">
-				<span waves-tab
+				<span waves-tab id="walletTabIcon"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="wallet"
@@ -321,7 +325,7 @@
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Wallet</u></center><br/>Area containing the main wallets."></span>
-				<span waves-tab
+				<span waves-tab id="portfolioTabIcon"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="portfolio"
@@ -330,7 +334,8 @@
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Portfolio</u></center><br/>Display all your assets, both digital and physical,<br/>as well as allowing transfers."></span>
-				<span waves-tab
+				<span waves-tab id="votingTabIcon"
+					onclick="votingApp.upd();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="voting"
@@ -339,7 +344,7 @@
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Voting</u></center><br/>"></span>
-				<span waves-tab
+				<span waves-tab id="exchangeTabIcon"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="exchange"
@@ -348,7 +353,7 @@
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Waves Decentralized Exchange</u></center><br/>Access to Waves markets where you can<br/>conveniently buy, sell and trade tokens."></span>
-				<span waves-tab
+				<span waves-tab id="historyTabIcon"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="history"
@@ -357,7 +362,7 @@
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>History</u></center><br/>Access all your transaction records."></span>
-				<span waves-tab
+				<span waves-tab id="tokensTabIcon"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="tokens"
@@ -366,16 +371,17 @@
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Tokens Creation tab</u></center><br/>Area in which assets can be created."></span>
-				<span waves-tab
+				<span waves-tab id="communityTabIcon"
 					caption="'Community'"
 					current-page-id="nav.currentTab"
+					onclick="communityApp.start();"
 					on-select="nav.changeTab(pageId)"
 					page-id="community"
 					tooltipster
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Community tab</u></center><br/>Resources to learn more about Digital Economy as <br/>wall address: 3PEPpJoJNqrU6T6AAdXB3yMzUseEaUPniCw."></span>
-				<span waves-tab
+				<span waves-tab id="blocksTabIcon"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="blocks"
@@ -674,15 +680,15 @@
 							<td>{{tx.reissuable}}</td>
 							<td>{{tx.balance | moneyShort}}</td>
 							<td>
-								<button class="wButton wButton-neg fade" ng-click="assetList.assetTransfer(tx.id)">TRANSFER</button><span class="divider-2"></span>
-								<button class="wButton wButton-neg fade" ng-disabled="!tx.formatted.canReissue" ng-click="assetList.assetReissue(tx.id)">REISSUE</button><span class="divider-2"></span>
-								<button class="wButton wButton-neg fade" ng-click="assetList.assetDetails(tx.id)">DETAILS</button><span class="divider-2"></span>
-								<button class="wButton wButton-neg fade" ng-click="assetList.assetAddToFavorit(tx.id, tx.name)" title="Add to favorit list">FAVORIT</button>
+								<button class="wButton wButton-neg s-fade" ng-click="assetList.assetTransfer(tx.id)">TRANSFER</button><span class="divider-2"></span>
+								<button class="wButton wButton-neg s-fade" ng-disabled="!tx.formatted.canReissue" ng-click="assetList.assetReissue(tx.id)">REISSUE</button><span class="divider-2"></span>
+								<button class="wButton wButton-neg s-fade" ng-click="assetList.assetDetails(tx.id)">DETAILS</button><span class="divider-2"></span>
+								<button class="wButton wButton-neg s-fade" ng-click="assetList.assetAddToFavorit(tx.id, tx.name)" title="Add to favorit list">FAVORIT</button>
 								<span class="divider-2"></span>
-								<button class="wButton wButton-neg fade" ng-click="assetList.assetRemoveFromFavorit(tx.id)" title="Remove from favorit list">FAV.REMOVE</button>
+								<button class="wButton wButton-neg s-fade" ng-click="assetList.assetRemoveFromFavorit(tx.id)" title="Remove from favorit list">FAV.REMOVE</button>
 								<span id="portfolio-asset-favorite-flag">{{tx.isFavorit}}</span>
 								<!--
-								<button class="wButton wButton-neg fade" ng-click="assetList.assetMassPay(tx.id)">MASS PAY</button>
+								<button class="wButton wButton-neg s-fade" ng-click="assetList.assetMassPay(tx.id)">MASS PAY</button>
 								-->
 							</td>
 						</tr>
@@ -922,9 +928,9 @@
 									</table>
 									<br/>
 									<div class="button-row">
-										<button class="wButton wButton-neg fade" ngclipboard ngclipboard-text-provider="mass.transactionsToClipboard()" ngclipboard-success="mass.dataCopied()">EXPORT</button><span class="divider-2"></span>
-										<button class="wButton wButton-neg fade" ng-click="mass.submitPayment()">SEND</button><span class="divider-2"></span>
-										<button class="wButton wButton-neg fade" ng-click="mass.cancel()">CANCEL</button>
+										<button class="wButton wButton-neg s-fade" ngclipboard ngclipboard-text-provider="mass.transactionsToClipboard()" ngclipboard-success="mass.dataCopied()">EXPORT</button><span class="divider-2"></span>
+										<button class="wButton wButton-neg s-fade" ng-click="mass.submitPayment()">SEND</button><span class="divider-2"></span>
+										<button class="wButton wButton-neg s-fade" ng-click="mass.cancel()">CANCEL</button>
 									</div>
 								</div>
 							</ng-switch>
@@ -953,19 +959,25 @@
 			<div id="mBB-voting" class="mBB-content" ng-switch-when="voting">
 				<h1>DECENTRALIZED VOTING</h1>
 				<br/>
-				<table id="voting-table">
-					<thead>
-						<tr>
-							<td>TEST</td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>1</td>
-						</tr>
-					</tbody>
-				</table>
-				<img src="img/tab_vote_prev.svg" />
+				<div class="row content-voting-row">
+					<div class="col-md-2">
+						<table id="voting-table">
+							<thead>
+								<tr>
+									<td>TEST</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>1</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-2">
+						<img src="img/tab_vote_prev.svg" />
+					</div>
+				</div>
 			</div>
 			<!-- / VOTING TAB -->
 
@@ -1030,7 +1042,7 @@
 							<span id="assetCreateFee" tooltipster tooltip-theme="tooltipster-theme1" tooltip-html title="The FEE you will be charged<br/>for this process."></span>
 						</div>
 						<div id="create-asset-buttons">
-							<button class="wButton wButton-neg fade" type="submit">OK</button>
+							<button class="wButton wButton-neg s-fade" type="submit">OK</button>
 						</div>
 					</form>
 
@@ -1090,7 +1102,7 @@
 						<input type="email" id="contactemail" placeholder="" class="wInput" />
 
 						<br/><br/>
-						<button id="addContactSubmit" class="wButton fade">ADD CONTACT</button>
+						<button id="addContactSubmit" class="wButton s-fade">ADD CONTACT</button>
 					</form>
 				</div>
 				-->
@@ -1133,7 +1145,7 @@
 					<div id="latestBlocks" class="wavesTable wScroll" >
 						<table>
 							<thead>
-							<tr class="fade">
+							<tr class="s-fade">
 								<td>HEIGHT</td>
 								<td>DATE</td>
 								<td>TRANSACTIONS</td>
@@ -1141,13 +1153,13 @@
 							</tr>
 							</thead>
 							<tbody id="latestBlocksTable">
-							<tr class="fade">
+							<tr class="s-fade">
 								<td>{{ctrl.candidate.block}}</td>
 								<td><i>incoming</i></td>
 								<td>{{ctrl.candidate.size}}</td>
 								<td><i>unconfirmed</i></td>
 							</tr>
-							<tr class="fade" ng-repeat="block in ctrl.blocks | orderBy:'timestamp':true">
+							<tr class="s-fade" ng-repeat="block in ctrl.blocks | orderBy:'timestamp':true">
 								<td>{{block.height}}</td>
 								<td>{{block.timestamp | formatting}}</td>
 								<td>{{block.transactions.length}}</td>
