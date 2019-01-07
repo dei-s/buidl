@@ -4548,7 +4548,7 @@
 (function () {
 	'use strict';
 
-	var url = DEI_SUPPORT_LINK;
+	var url = Constants.SUPPORT_LINK;
 
 	function SupportLinkController() {}
 

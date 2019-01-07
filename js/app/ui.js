@@ -40,9 +40,9 @@
 
 	angular
 		.module('app.ui')
-		.service('utilsService', ['constants.network', function (networkConstants) {
+		.service('utilsService', [function () {
 			this.isTestnet = function () {
-				return networkConstants.NETWORK_NAME === 'testnet';
+				return Constants.NETWORK_NAME === 'testnet';
 			};
 
 			this.testnetSubstitutePair = function (pair) {

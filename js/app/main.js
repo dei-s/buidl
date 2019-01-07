@@ -45,20 +45,15 @@ var app = angular.module('app', [
 	'app.portfolio'
 ]).config(AngularApplicationConfig).run(AngularApplicationRun);
 
-function AngularApplicationConfig($provide, $compileProvider, $validatorProvider, $qProvider, $sceDelegateProvider, $mdAriaProvider, networkConstants, applicationSettings) {
+function AngularApplicationConfig($provide, $compileProvider, $validatorProvider, $qProvider, $sceDelegateProvider, $mdAriaProvider, applicationSettings) {
 	'use strict';
 
-	$provide.constant(networkConstants,
-		angular.extend(networkConstants, {
-			NETWORK_NAME: DEI_NETWORK_NAME,
-			NETWORK_CODE: DEI_NETWORK_CODE
-		}));
 	$provide.constant(applicationSettings,
 		angular.extend(applicationSettings, {
-			CLIENT_VERSION: DEI_VERSION,
-			NODE_ADDRESS: DEI_NODE_ADDRESS,
+			CLIENT_VERSION: Constants.VERSION,
+			NODE_ADDRESS: Constants.NODE_ADDRESS,
 			COINOMAT_ADDRESS: 'https://coinomat.com',
-			MATCHER_ADDRESS: DEI_MATCHER_ADDRESS,
+			MATCHER_ADDRESS: Constants.MATCHER_ADDRESS,
 			DATAFEED_ADDRESS: 'https://marketdata.wavesplatform.com'
 		}));
 
@@ -144,7 +139,7 @@ function AngularApplicationConfig($provide, $compileProvider, $validatorProvider
 }
 
 AngularApplicationConfig.$inject = ['$provide', '$compileProvider', '$validatorProvider', '$qProvider',
-	'$sceDelegateProvider', '$mdAriaProvider', 'constants.network', 'constants.application'];
+	'$sceDelegateProvider', '$mdAriaProvider', 'constants.application'];
 
 function AngularApplicationRun(rest, applicationConstants, notificationService) {
 	'use strict';

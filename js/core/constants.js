@@ -1,31 +1,21 @@
-/******************************************************************************
- * Copyright © 2016 The Waves Developers.                                     *
- *                                                                            *
- * See the LICENSE files at                                                   *
- * the top-level directory of this distribution for the individual copyright  *
- * holder information and the developer policies on copyright and licensing.  *
- *                                                                            *
- * Unless otherwise agreed in a custom licensing agreement, no part of the    *
- * Waves software, including this file, may be copied, modified, propagated,  *
- * or distributed except according to the terms contained in the LICENSE      *
- * file.                                                                      *
- *                                                                            *
- * Removal or modification of this copyright notice is prohibited.            *
- *                                                                            *
- ******************************************************************************/
-
 var Constants = (function(){
 	'use strict';
 	return {
+		IS_MIR: true,
+		VERSION: '0.1.0',
+		NODE_ADDRESS: 'https://node.mir.dei.su',
+		MATCHER_ADDRESS: 'https://m.mir.dei.su',
+		SUPPORT_LINK: 'dei.su',
+
 		/* network */
 		ADDRESS_VERSION: 1,
-		NETWORK_CODE: DEI_NETWORK_CODE,
-		NETWORK_NAME: DEI_NETWORK_NAME,
+		NETWORK_CODE: 'S',
+		NETWORK_NAME: 'mirnet',
 		INITIAL_NONCE: 0,
 
 		/* address */
 		RAW_ADDRESS_LENGTH : 35,
-		ADDRESS_PREFIX: '1W',
+		ADDRESS_PREFIX: '1S', // '1W',
 		MAINNET_ADDRESS_REGEXP: /^[a-zA-Z0-9]{35}$/,
 
 		/* features */
@@ -52,20 +42,15 @@ var Constants = (function(){
 	}
 })();
 
+function isMir() {
+	return Constants.IS_MIR;
+}
+
 (function() {
 	'use strict';
 
 	angular
 		.module('waves.core.constants', [])
-		.constant('constants.network', {
-			ADDRESS_VERSION: Constants.ADDRESS_VERSION,
-			NETWORK_CODE: Constants.NETWORK_CODE,
-			NETWORK_NAME: Constants.NETWORK_NAME,
-			INITIAL_NONCE: Constants.INITIAL_NONCE
-		});
-
-	angular
-		.module('waves.core.constants')
 		.constant('constants.address', {
 			RAW_ADDRESS_LENGTH: Constants.RAW_ADDRESS_LENGTH,
 			ADDRESS_PREFIX: Constants.ADDRESS_PREFIX,

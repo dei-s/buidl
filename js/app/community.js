@@ -1,5 +1,4 @@
-var MSG_NODE_ADDRESS = DEI_NODE_ADDRESS;
-if (isMir()) {
+if (Constants.IS_MIR) {
 	var MSG_BASE_ID = 'MIR';
 	var MSG_AMOUNT_MIN = 100000; // 100000 = 0.001, 100000000 = 1
 	var MSG_ASSET_ID = '';
@@ -21,7 +20,7 @@ var communityApp = new Vue({
 		pinnedMessage: {},
 		messages: [],
 		wall: MSG_WALLET_ADDR,
-		node: MSG_NODE_ADDRESS,
+		node: Constants.NODE_ADDRESS,
 		amount: '0.001',
 		fee: '0.001',
 		minAmount: MSG_AMOUNT_MIN,

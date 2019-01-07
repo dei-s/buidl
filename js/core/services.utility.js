@@ -87,7 +87,7 @@ var Utility = (function(){
 
 	angular
 		.module('waves.core.services')
-		.service('utilityService', ['constants.network', 'cryptoService', function (constants, cryptoService) {
+		.service('utilityService', [function () {
 			var self = this;
 
 			self.getNetworkIdByte = function () {

@@ -224,7 +224,7 @@ var CryptoService = (function(){
 
 	angular
 		.module('waves.core.services')
-		.service('cryptoService', ['constants.network', '$window', function(constants, window) {
+		.service('cryptoService', [function() {
 
 			var getNetworkIdByte = function() {
 				return CryptoService.getNetworkIdByte();
