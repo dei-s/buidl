@@ -232,7 +232,7 @@ var Tokens = (function(){
 (function () {
 	'use strict';
 
-	function TokenCreateController($scope, $interval, constants, applicationContext, assetService, dialogService, apiService, notificationService, formattingService, transactionBroadcast) {
+	function TokenCreateController($scope, $interval, applicationContext, assetService, dialogService, apiService, notificationService, formattingService, transactionBroadcast) {
 		var refreshPromise;
 		var refreshDelay = 15 * 1000;
 		var transaction;
@@ -350,7 +350,7 @@ var Tokens = (function(){
 		}
 	}
 
-	TokenCreateController.$inject = ['$scope', '$interval', 'constants.ui', 'applicationContext',
+	TokenCreateController.$inject = ['$scope', '$interval', 'applicationContext',
 			'assetService', 'dialogService', 'apiService', 'notificationService',
 			'formattingService', 'transactionBroadcast'];
 

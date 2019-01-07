@@ -3928,7 +3928,7 @@
 (function () {
 	'use strict';
 
-	function WavesTransactionLoadingService($q, constants, apiService) {
+	function WavesTransactionLoadingService($q, apiService) {
 		var self = this;
 
 		// returns promise that loads and merges unconfirmed and confirmed transactions
@@ -4000,7 +4000,7 @@
 		this.mergeTransactions = function (account, unconfirmed, confirmed) {
 			var rawAddress = account.address;
 			unconfirmed = _.filter(unconfirmed, function (transaction) {
-				if (transaction.type === constants.EXCHANGE_TRANSACTION_TYPE) {
+				if (transaction.type === Constants.EXCHANGE_TRANSACTION_TYPE) {
 					return transaction.order1.senderPublicKey === account.keyPair.public ||
 						transaction.order2.senderPublicKey === account.keyPair.public ||
 						transaction.sender === rawAddress;
@@ -4024,7 +4024,7 @@
 		};
 	}
 
-	WavesTransactionLoadingService.$inject = ['$q', 'constants.transactions', 'apiService'];
+	WavesTransactionLoadingService.$inject = ['$q', 'apiService'];
 
 	angular
 		.module('app.shared')
@@ -4034,41 +4034,41 @@
 (function () {
 	'use strict';
 
-	function TransactionFilter(constants, applicationContext, formattingService) {
+	function TransactionFilter(applicationContext, formattingService) {
 		var TRANSACTION_SPEC = {};
-		TRANSACTION_SPEC[constants.PAYMENT_TRANSACTION_TYPE] = {
+		TRANSACTION_SPEC[Constants.PAYMENT_TRANSACTION_TYPE] = {
 			type: 'Payment',
 			processor: processPaymentTransaction
 		};
-		TRANSACTION_SPEC[constants.ASSET_ISSUE_TRANSACTION_TYPE] = {
+		TRANSACTION_SPEC[Constants.ASSET_ISSUE_TRANSACTION_TYPE] = {
 			type: 'Asset Issue',
 			processor: processAssetIssueTransaction
 		};
-		TRANSACTION_SPEC[constants.ASSET_TRANSFER_TRANSACTION_TYPE] = {
+		TRANSACTION_SPEC[Constants.ASSET_TRANSFER_TRANSACTION_TYPE] = {
 			type: 'Transfer',
 			processor: processAssetTransferTransaction
 		};
-		TRANSACTION_SPEC[constants.ASSET_REISSUE_TRANSACTION_TYPE] = {
+		TRANSACTION_SPEC[Constants.ASSET_REISSUE_TRANSACTION_TYPE] = {
 			type: 'Asset Reissue',
 			processor: processAssetReissueTransaction
 		};
-		TRANSACTION_SPEC[constants.START_LEASING_TRANSACTION_TYPE] = {
+		TRANSACTION_SPEC[Constants.START_LEASING_TRANSACTION_TYPE] = {
 			type: 'Start Leasing',
 			processor: processStartLeasingTransaction
 		};
-		TRANSACTION_SPEC[constants.CANCEL_LEASING_TRANSACTION_TYPE] = {
+		TRANSACTION_SPEC[Constants.CANCEL_LEASING_TRANSACTION_TYPE] = {
 			type: 'Cancel Leasing',
 			processor: processCancelLeasingTransaction
 		};
-		TRANSACTION_SPEC[constants.CREATE_ALIAS_TRANSACTION_TYPE] = {
+		TRANSACTION_SPEC[Constants.CREATE_ALIAS_TRANSACTION_TYPE] = {
 			type: 'Create Alias',
 			processor: processCreateAliasTransaction
 		};
-		TRANSACTION_SPEC[constants.EXCHANGE_TRANSACTION_TYPE] = {
+		TRANSACTION_SPEC[Constants.EXCHANGE_TRANSACTION_TYPE] = {
 			type: '',
 			processor: processExchangeTransaction
 		};
-		TRANSACTION_SPEC[constants.MASS_PAYMENT_TRANSACTION_TYPE] = {
+		TRANSACTION_SPEC[Constants.MASS_PAYMENT_TRANSACTION_TYPE] = {
 			type: 'Mass Payment',
 			processor: processMassPaymentTransaction
 		};
@@ -4258,7 +4258,7 @@
 		};
 	}
 
-	TransactionFilter.$inject = ['constants.transactions', 'applicationContext', 'formattingService'];
+	TransactionFilter.$inject = ['applicationContext', 'formattingService'];
 
 	angular
 		.module('app.shared')
@@ -4565,7 +4565,7 @@
 
 	var ADDRESS_STUB = 'n/a';
 
-	function TransactionMenuController($scope, constants, events, notificationService) {
+	function TransactionMenuController($scope, events, notificationService) {
 		var ctrl = this;
 
 		ctrl.idCopied = idCopied;
@@ -4592,7 +4592,7 @@
 		}
 
 		function isLeasing () {
-			return ctrl.transaction.type === constants.START_LEASING_TRANSACTION_TYPE;
+			return ctrl.transaction.type === Constants.START_LEASING_TRANSACTION_TYPE;
 		}
 
 		function fullTransactionData () {
@@ -4614,7 +4614,7 @@
 		}
 	}
 
-	TransactionMenuController.$inject = ['$scope', 'constants.transactions', 'ui.events', 'notificationService'];
+	TransactionMenuController.$inject = ['$scope', 'ui.events', 'notificationService'];
 
 	angular
 		.module('app.shared')

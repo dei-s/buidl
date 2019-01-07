@@ -4,9 +4,9 @@
 	var DEFAULT_FEE_AMOUNT = '0.001';
 	var FEE_CURRENCY = Currency.BASE;
 
-	function WalletSendController($scope, $timeout, constants, events, autocomplete, applicationContext, apiService, dialogService, transactionBroadcast, assetService, notificationService, formattingService) {
+	function WalletSendController($scope, $timeout, events, autocomplete, applicationContext, apiService, dialogService, transactionBroadcast, assetService, notificationService, formattingService) {
 		var ctrl = this;
-		var minimumFee = new Money(constants.MINIMUM_TRANSACTION_FEE, FEE_CURRENCY);
+		var minimumFee = new Money(Constants.MINIMUM_TRANSACTION_FEE, FEE_CURRENCY);
 
 		ctrl.autocomplete = autocomplete;
 
@@ -35,7 +35,7 @@
 					required: true,
 					decimal: 8, // stub value updated on validation
 					min: 0,     // stub value updated on validation
-					max: constants.JAVA_MAX_LONG // stub value updated on validation
+					max: Constants.JAVA_MAX_LONG // stub value updated on validation
 				},
 				sendFee: {
 					required: true,
@@ -43,7 +43,7 @@
 					min: minimumFee.toTokens()
 				},
 				sendAttachment: {
-					maxbytelength: constants.MAXIMUM_ATTACHMENT_BYTE_SIZE
+					maxbytelength: Constants.MAXIMUM_ATTACHMENT_BYTE_SIZE
 				}
 			},
 			messages: {
@@ -160,7 +160,7 @@
 		}
 	}
 
-	WalletSendController.$inject = ['$scope', '$timeout', 'constants.ui', 'wallet.events', 'autocomplete.fees',
+	WalletSendController.$inject = ['$scope', '$timeout', 'wallet.events', 'autocomplete.fees',
 		'applicationContext', 'apiService', 'dialogService', 'transactionBroadcast', 'assetService',
 		'notificationService', 'formattingService'];
 
@@ -175,12 +175,12 @@
 	var DEFAULT_FEE_AMOUNT = '0.001',
 		DEFAULT_ERROR_MESSAGE = 'Connection is lost';
 
-	function WalletWithdrawController($scope, constants, events, autocomplete, dialogService, $element, coinomatService, transactionBroadcast, notificationService, apiService, formattingService, assetService, applicationContext) {
+	function WalletWithdrawController($scope, events, autocomplete, dialogService, $element, coinomatService, transactionBroadcast, notificationService, apiService, formattingService, assetService, applicationContext) {
 
 		var ctrl = this;
 		var type = $element.data('type');
 
-		var minimumFee = new Money(constants.MINIMUM_TRANSACTION_FEE, Currency.BASE);
+		var minimumFee = new Money(Constants.MINIMUM_TRANSACTION_FEE, Currency.BASE);
 		var notPermittedBitcoinAddresses = {};
 
 		ctrl.broadcast = new transactionBroadcast.instance(apiService.assets.transfer,
@@ -208,7 +208,7 @@
 					required: true,
 					decimal: 8,
 					min: 0,
-					max: constants.JAVA_MAX_LONG
+					max: Constants.JAVA_MAX_LONG
 				},
 				withdrawFee: {
 					required: true,
@@ -219,7 +219,7 @@
 					required: true,
 					decimal: 8,
 					min: 0,
-					max: constants.JAVA_MAX_LONG
+					max: Constants.JAVA_MAX_LONG
 				}
 			},
 			messages: {
@@ -458,7 +458,7 @@
 	}
 
 	WalletWithdrawController.$inject = [
-		'$scope', 'constants.ui', 'wallet.events', 'autocomplete.fees', 'dialogService', '$element',
+		'$scope', 'wallet.events', 'autocomplete.fees', 'dialogService', '$element',
 		'coinomatService', 'transactionBroadcast', 'notificationService',
 		'apiService', 'formattingService', 'assetService', 'applicationContext'
 	];

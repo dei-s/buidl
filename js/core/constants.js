@@ -1,5 +1,6 @@
 var Constants = (function(){
 	'use strict';
+
 	return {
 		IS_MIR: true,
 		VERSION: '0.1.0',
@@ -42,49 +43,7 @@ var Constants = (function(){
 	}
 })();
 
+// TODO: Change to Constants.IS_MIR
 function isMir() {
 	return Constants.IS_MIR;
 }
-
-(function() {
-	'use strict';
-
-	angular
-		.module('waves.core.constants', [])
-		.constant('constants.address', {
-			RAW_ADDRESS_LENGTH: Constants.RAW_ADDRESS_LENGTH,
-			ADDRESS_PREFIX: Constants.ADDRESS_PREFIX,
-			MAINNET_ADDRESS_REGEXP: Constants.MAINNET_ADDRESS_REGEXP
-		});
-
-	angular
-		.module('waves.core.constants')
-		.constant('constants.features', {
-			ALIAS_VERSION: Constants.ALIAS_VERSION
-		});
-
-	angular
-		.module('waves.core.constants')
-		.constant('constants.ui', {
-			MINIMUM_PAYMENT_AMOUNT: Constants.MINIMUM_PAYMENT_AMOUNT,
-			MINIMUM_TRANSACTION_FEE: Constants.MINIMUM_TRANSACTION_FEE,
-			AMOUNT_DECIMAL_PLACES: Constants.AMOUNT_DECIMAL_PLACES,
-			JAVA_MAX_LONG: Constants.JAVA_MAX_LONG,
-			MAXIMUM_ATTACHMENT_BYTE_SIZE: Constants.MAXIMUM_ATTACHMENT_BYTE_SIZE
-		});
-
-	angular
-		.module('waves.core.constants')
-		.constant('constants.transactions', {
-			PAYMENT_TRANSACTION_TYPE: Constants.PAYMENT_TRANSACTION_TYPE,
-			ASSET_ISSUE_TRANSACTION_TYPE: Constants.ASSET_ISSUE_TRANSACTION_TYPE,
-			ASSET_TRANSFER_TRANSACTION_TYPE: Constants.ASSET_TRANSFER_TRANSACTION_TYPE,
-			ASSET_REISSUE_TRANSACTION_TYPE: Constants.ASSET_REISSUE_TRANSACTION_TYPE,
-			ASSET_BURN_TRANSACTION_TYPE: Constants.ASSET_BURN_TRANSACTION_TYPE,
-			EXCHANGE_TRANSACTION_TYPE: Constants.EXCHANGE_TRANSACTION_TYPE,
-			START_LEASING_TRANSACTION_TYPE: Constants.START_LEASING_TRANSACTION_TYPE,
-			CANCEL_LEASING_TRANSACTION_TYPE: Constants.CANCEL_LEASING_TRANSACTION_TYPE,
-			CREATE_ALIAS_TRANSACTION_TYPE: Constants.CREATE_ALIAS_TRANSACTION_TYPE,
-			MASS_PAYMENT_TRANSACTION_TYPE: Constants.MASS_PAYMENT_TRANSACTION_TYPE
-		});
-})();

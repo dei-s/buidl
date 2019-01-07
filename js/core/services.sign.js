@@ -164,7 +164,7 @@ var SignService = (function(){
 (function () {
 	'use strict';
 
-	function SignService1(txConstants, featureConstants, cryptoService, utilityService) {
+	function SignService1() {
 		var self = this;
 
 		// Transaction types
@@ -279,8 +279,6 @@ var SignService = (function(){
 			return SignService.buildSignature(bytes, privateKey);
 		};
 	}
-
-	SignService1.$inject = ['constants.transactions', 'constants.features', 'cryptoService', 'utilityService'];
 
 	angular
 		.module('waves.core.services')
