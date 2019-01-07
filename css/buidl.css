@@ -1,3 +1,32 @@
+@charset "UTF-8";
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak],
+.ng-cloak, .x-ng-cloak,
+.ng-hide:not(.ng-hide-animate) {
+	display: none !important;
+}
+
+ng\:form {
+	display: block;
+}
+
+.ng-animate-shim {
+	visibility:hidden;
+}
+
+.ng-anchor {
+	position:absolute;
+}
+
+
+html, body {
+	background-color: white;
+}
+md-menu-item > .md-button {
+	color: #464646;
+}
+
+
 #growls{z-index:50000;position:fixed}
 #growls.default{top:16px;top:1rem;right:16px;right:1rem}
 #growls.tl{top:10px;left:10px}
@@ -356,8 +385,16 @@ span #wavesAccountAddressQr{margin-left:20px;padding-left:5px;cursor:pointer;col
 span #wavesAccountAddressQr:hover{opacity:1}
 #tabs{position:relative;width:100%;height:65px;background: transparent;box-shadow: 0 12px 12px -13px rgba(0,0,0,.25);x:100;}
 #tabs-Iconset{display:-ms-flexbox;display:flex;height:90%;width:92.5%;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center}
-#tabs-Iconset span{height:100%;}
-#tabs-Iconset img{margin-top:0;margin-left:8px;margin-left:.5rem;margin-right:8px;margin-right:.5rem;height:90%}
+#tabs-Iconset span{
+	height:100%;
+	transition:all .2s ease; /*transition-delay:1s;*/
+}
+#tabs-Iconset img{
+	margin-top:0;
+	margin-left:.5rem;
+	margin-right:.5rem;
+	height:90%;
+}
 #tabs-Iconset img:focus{outline:none}
 #tabs-Iconset img:hover{cursor:pointer;transform:scale(.88)}
 span.tabs-radio img{opacity:.4}
