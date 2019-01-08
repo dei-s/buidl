@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" ng-app="app" ng-csp>
+<html lang="ru">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,7 +11,9 @@
 <title>Buidl | Mir Blockchain</title>
 </head>
 
-<body ng-controller="homeController as home" ng-switch on="home.screen">
+<body>
+
+<div ng-app="app" ng-csp ng-controller="homeController as home" ng-switch on="home.screen">
 
 <!-- LOADER -->
 <div ng-controller="splashController as splash" id="bg-spin" class="noSelect" ng-show="home.screen === 'splash-screen'">
@@ -318,6 +320,7 @@
 		<section id="tabs" class="fFade noSelect">
 			<div id="tabs-Iconset" class="centerIt">
 				<span waves-tab id="walletTabIcon"
+					onclick="votingApp.hide();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="wallet"
@@ -327,6 +330,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Wallet</u></center><br/>Area containing the main wallets."></span>
 				<span waves-tab id="portfolioTabIcon"
+					onclick="votingApp.hide();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="portfolio"
@@ -336,7 +340,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Portfolio</u></center><br/>Display all your assets, both digital and physical,<br/>as well as allowing transfers."></span>
 				<span waves-tab id="votingTabIcon"
-					onclick="votingApp.upd();"
+					onclick="votingApp.show();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="voting"
@@ -346,6 +350,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Voting</u></center><br/>"></span>
 				<span waves-tab id="exchangeTabIcon"
+					onclick="votingApp.hide();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="exchange"
@@ -355,6 +360,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Waves Decentralized Exchange</u></center><br/>Access to Waves markets where you can<br/>conveniently buy, sell and trade tokens."></span>
 				<span waves-tab id="historyTabIcon"
+					onclick="votingApp.hide();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="history"
@@ -364,6 +370,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>History</u></center><br/>Access all your transaction records."></span>
 				<span waves-tab id="tokensTabIcon"
+					onclick="votingApp.hide();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="tokens"
@@ -373,9 +380,9 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Tokens Creation tab</u></center><br/>Area in which assets can be created."></span>
 				<span waves-tab id="communityTabIcon"
+					onclick="votingApp.hide();communityApp.start();"
 					caption="'Community'"
 					current-page-id="nav.currentTab"
-					onclick="communityApp.start();"
 					on-select="nav.changeTab(pageId)"
 					page-id="community"
 					tooltipster
@@ -383,6 +390,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Community tab</u></center><br/>Resources to learn more about Digital Economy as <br/>wall address: 3PEPpJoJNqrU6T6AAdXB3yMzUseEaUPniCw."></span>
 				<span waves-tab id="blocksTabIcon"
+					onclick="votingApp.hide();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="blocks"
@@ -958,73 +966,6 @@
 
 			<!-- VOTING TAB -->
 			<div id="mBB-voting" class="mBB-content container-fluid" ng-switch-when="voting">
-				<h1>DECENTRALIZED VOTING</h1>
-				<br/>
-				<div class="row content-voting-row">
-					<div class="col-md-6">
-						<table id="voting-table" class="table table-bordered table-striped table-hover">
-							<thead>
-								<tr>
-									<th>Id</th>
-									<th>Sender</th>
-									<th>Name</th>
-									<th>Create date</th>
-									<th>Expiration date</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr onclick="console.log(111);">
-									<td>1</td>
-									<td>prof1983</td>
-									<td>Создание нового проекта Platform</td>
-									<td>07.01.2019</td>
-									<td>01.02.2019</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="col-md-6">
-						<form>
-							<div class="form-group">
-								<div class="form-check">
-									<input type="radio" class="form-check-input" name="vote" id="vote1" value="yes" checked>
-									Yes
-								</div>
-								<div class="form-check">
-									<input type="radio" class="form-check-input" name="vote" id="vote2" value="no" checked>No
-								</div>
-								<div class="form-check">
-									<input type="radio" class="form-check-input" name="vote" id="vote3" value="abstain" checked>Abstain
-								</div>
-							</div>
-							<div class="form-group">
-								<input id="vote-form-in1" type="text"/>
-							</div>
-							<div class="form-group">
-								<label for="vote-exampleTextarea">Ваш комментарий</label>
-								<textarea class="form-control" id="vote-exampleTextarea" rows="3"></textarea>
-							</div>
-							<div class="form-check disabled">
-								<label class="form-check-label">
-									<input type="checkbox" class="form-check-input" disabled>
-									Зашифровать
-								</label>
-							</div>
-							<div class="form-group">
-								<button type="submit">Подписать и отправить</button>
-							</div>
-						</form>
-						<!--table id="voting-table" class="table table-bordered table-striped">
-							<thead>
-								<tr>Выберите один из варинтов</tr>
-							</thead>
-							<tbody>
-								<tr>2</tr>
-							</tbody>
-						</table-->
-						<img src="img/tab_vote_prev.svg" />
-					</div>
-				</div>
 			</div>
 			<!-- / VOTING TAB -->
 
@@ -1238,6 +1179,96 @@
 		</section>
 	</div> <!-- navigationContainer -->
 </div> <!-- Wrapper div END -->
+
+</div> <!-- homeController -->
+
+
+
+
+<div id="voting" class="mBB-content container-fluid" hidden style="width:100%;">
+	<h1>DECENTRALIZED VOTING</h1>
+	<br/>
+	<div class="row content-voting-row">
+		<div class="col-lg-6">
+			<table id="voting-table" class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Sender</th>
+						<th>Name</th>
+						<th>Create date</th>
+						<th>Expiration date</th>
+						<th>...</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr onclick="console.log(111);">
+						<td>1</td>
+						<td>prof1983</td>
+						<td>Создание нового проекта Platform</td>
+						<td>07.01.2019</td>
+						<td>01.02.2019</td>
+						<td><button class="btn btn-sm btn-info" onclick="votingApp.showVoteForm();">Посмотреть</button></td>
+					</tr>
+					<tr v-for="vot in votings">
+						<td>{{vot.id}}</td>
+						<td>{{vot.sender.name}}</td>
+						<td>{{vot.name}}</td>
+						<td>{{vot.createdDate}}</td>
+						<td>{{vot.expirationDate}}</td>
+						<td><button class="btn btn-sm btn-info" onclick="console.log('123');">Посмотреть</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-lg-6">
+			<div class="col-md-10" style="text-align:center;">
+				<button class="btn btn-lg" onclick="votingApp.showVotingForm();">Создать новое голосование</button>
+			</div>
+			<form id="voting-form" class="col-md-12" hidden>
+				<div class="form-group">
+					<label>Наименование</label>
+					<input id="voting-form-name" class="input-lg">
+				</div>
+				<div>
+					<button id="voting-form-button-ok" class="btn btn-lg btn-warning" type="submit">Подписать и отправить</button>
+				</div>
+			</form>
+			<form id="vote-form" class="col-md-12" hidden>
+				<div class="form-group">
+					<div class="form-check">
+						<input type="radio" class="form-check-input" name="vote" id="vote1" value="yes" checked>
+						Yes
+					</div>
+					<div class="form-check">
+						<input type="radio" class="form-check-input" name="vote" id="vote2" value="no" checked>No
+					</div>
+					<div class="form-check">
+						<input type="radio" class="form-check-input" name="vote" id="vote3" value="abstain" checked>Abstain
+					</div>
+				</div>
+				<div class="form-group">
+					<input id="vote-form-in1" type="text"/>
+				</div>
+				<div class="form-group">
+					<label for="vote-exampleTextarea">Ваш комментарий</label>
+					<textarea class="form-control" id="vote-exampleTextarea" rows="3"></textarea>
+				</div>
+				<div class="form-check disabled">
+					<label class="form-check-label">
+						<input type="checkbox" class="form-check-input" disabled>
+						Зашифровать
+					</label>
+				</div>
+				<div class="form-group">
+					<button class="btn btn-lg btn-warning" type="submit">Подписать и отправить</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div> <!-- voting -->
+
+
 
 
 <script src="js/jquery.js"></script>
