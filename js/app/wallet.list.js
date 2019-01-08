@@ -10,6 +10,7 @@
 		});
 })();
 
+// use app.ui (ApplicationContext)
 (function () {
 	'use strict';
 
@@ -202,8 +203,8 @@
 				if (favorits) {
 					favorits.then(function(favorits){
 						favorits.forEach(function(f,i){
-							if (f.accountAddress == applicationContext.account.address) {
-								var asset = applicationContext.cache.assets[f.assetId];
+							if (f.accountAddress == ApplicationContext.account.address) {
+								var asset = ApplicationContext.cache.assets[f.assetId];
 								/*
 								var s = 'displayName=' + asset.currency.displayName +
 									'creator=' + asset.sender +
@@ -240,24 +241,24 @@
 		}
 
 		function refreshWallets() {
-			apiService.address.balance(applicationContext.account.address)
+			apiService.address.balance(ApplicationContext.account.address)
 				.then(function (response) {
 					var baseWallet = findWalletByCurrency(Currency.BASE);
 					baseWallet.balance = Money.fromCoins(response.balance, Currency.BASE);
 				});
 
-			apiService.assets.balance(applicationContext.account.address).then(function (response) {
+			apiService.assets.balance(ApplicationContext.account.address).then(function (response) {
 				_.forEach(response.balances, function (assetBalance) {
 					var id = assetBalance.assetId;
 
 					// adding asset details to cache
-					applicationContext.cache.putAsset(assetBalance.issueTransaction);
-					applicationContext.cache.updateAsset(id, assetBalance.balance,
+					ApplicationContext.cache.putAsset(assetBalance.issueTransaction);
+					ApplicationContext.cache.updateAsset(id, assetBalance.balance,
 						assetBalance.reissuable, assetBalance.quantity);
 				});
 
 				_.forEach(ctrl.wallets, function (wallet) {
-					var asset = applicationContext.cache.assets[wallet.balance.currency.id];
+					var asset = ApplicationContext.cache.assets[wallet.balance.currency.id];
 					if (asset) {
 						wallet.balance = asset.balance;
 					}
@@ -267,11 +268,11 @@
 
 		function refreshTransactions() {
 			var txArray;
-			transactionLoadingService.loadTransactions(applicationContext.account, TRANSACTIONS_TO_LOAD)
+			transactionLoadingService.loadTransactions(ApplicationContext.account, TRANSACTIONS_TO_LOAD)
 				.then(function (transactions) {
 					txArray = transactions;
 
-					return transactionLoadingService.refreshAssetCache(applicationContext.cache, transactions);
+					return transactionLoadingService.refreshAssetCache(ApplicationContext.cache, transactions);
 				})
 				.then(function () {
 					ctrl.transactions = txArray;

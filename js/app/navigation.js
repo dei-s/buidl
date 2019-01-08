@@ -40,14 +40,14 @@
 		var delayRefresh = 10 * 1000;
 
 		ctrl.blockHeight = 0;
-		ctrl.address = applicationContext.account.address;
+		ctrl.address = ApplicationContext.account.address;
 		ctrl.addressQr = 'waves://' + ctrl.address;
 
 		function initializeBackupFields() {
-			ctrl.seed = applicationContext.account.seed;
+			ctrl.seed = ApplicationContext.account.seed;
 			ctrl.encodedSeed = cryptoService.base58.encode(converters.stringToByteArray(ctrl.seed));
-			ctrl.publicKey = applicationContext.account.keyPair.public;
-			ctrl.privateKey = applicationContext.account.keyPair.private;
+			ctrl.publicKey = ApplicationContext.account.keyPair.public;
+			ctrl.privateKey = ApplicationContext.account.keyPair.private;
 		}
 
 		function buildBackupClipboardText() {
@@ -167,7 +167,7 @@
 
 		function getExistingAliases() {
 			apiService.alias
-				.getByAddress(applicationContext.account.address)
+				.getByAddress(ApplicationContext.account.address)
 				.then(function (aliasList) {
 					ctrl.aliasList = aliasList;
 				});
@@ -188,8 +188,8 @@
 			};
 
 			var sender = {
-				publicKey: applicationContext.account.keyPair.public,
-				privateKey: applicationContext.account.keyPair.private
+				publicKey: ApplicationContext.account.keyPair.public,
+				privateKey: ApplicationContext.account.keyPair.private
 			};
 
 			// Create the transaction and waiting for confirmation

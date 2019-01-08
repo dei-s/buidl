@@ -63,9 +63,9 @@
 		}
 
 		function assetAddToFavorit(assetId, assetName) {
-			if (FavoritService.isFavoritByAssetIdFromCashe(assetId, applicationContext.account.address)) return;
+			if (FavoritService.isFavoritByAssetIdFromCashe(assetId, ApplicationContext.account.address)) return;
 			var favorit = {
-				accountAddress: applicationContext.account.address,
+				accountAddress: ApplicationContext.account.address,
 				assetId: assetId,
 				displayName: assetName
 			}
@@ -75,7 +75,7 @@
 		}
 
 		function assetRemoveFromFavorit(assetId) {
-			FavoritService.removeById(assetId, applicationContext.account.address).then(function(){
+			FavoritService.removeById(assetId, ApplicationContext.account.address).then(function(){
 				refreshAssets();
 			});
 		}
@@ -106,7 +106,7 @@
 		}
 
 		function loadAssetDataFromCache(asset) {
-			var cached = applicationContext.cache.assets[asset.id];
+			var cached = ApplicationContext.cache.assets[asset.id];
 			asset.balance = cached.balance;
 			asset.name = cached.currency.displayName;
 			asset.total = cached.totalTokens.formatAmount();
@@ -116,7 +116,7 @@
 		}
 
 		function refreshBalance() {
-			apiService.address.balance(applicationContext.account.address)
+			apiService.address.balance(ApplicationContext.account.address)
 				.then(function (response) {
 					ctrl.baseBalance = Money.fromCoins(response.balance, Currency.BASE);
 				});
@@ -124,7 +124,7 @@
 
 		function refreshAssets() {
 			var assets = [];
-			apiService.assets.balance(applicationContext.account.address).then(function (response) {
+			apiService.assets.balance(ApplicationContext.account.address).then(function (response) {
 				_.forEach(response.balances, function (assetBalance) {
 					var id = assetBalance.assetId;
 					var asset = {
@@ -133,14 +133,14 @@
 					};
 
 					// adding asset details to cache
-					applicationContext.cache.putAsset(assetBalance.issueTransaction);
-					applicationContext.cache.updateAsset(id, assetBalance.balance,
+					ApplicationContext.cache.putAsset(assetBalance.issueTransaction);
+					ApplicationContext.cache.updateAsset(id, assetBalance.balance,
 						assetBalance.reissuable, assetBalance.quantity);
 
-					var yourReissuableAsset = assetBalance.issueTransaction.sender === applicationContext.account.address;
+					var yourReissuableAsset = assetBalance.issueTransaction.sender === ApplicationContext.account.address;
 					if (assetBalance.balance !== 0 || yourReissuableAsset) {
 						loadAssetDataFromCache(asset);
-						asset.isFavorit = FavoritService.isFavoritByAssetIdFromCashe(asset.id, applicationContext.account.address) ? 'IsFavorit' : '';
+						asset.isFavorit = FavoritService.isFavoritByAssetIdFromCashe(asset.id, ApplicationContext.account.address) ? 'IsFavorit' : '';
 						assets.push(asset);
 					}
 				});
@@ -260,7 +260,7 @@
 		resetPaymentForm();
 
 		$scope.$on(events.ASSET_TRANSFER, function (event, eventData) {
-			var asset = applicationContext.cache.assets[eventData.assetId];
+			var asset = ApplicationContext.cache.assets[eventData.assetId];
 			ctrl.availableBalance = asset.balance;
 			ctrl.feeAssetBalance = eventData.baseBalance;
 			ctrl.asset = asset;
@@ -312,8 +312,8 @@
 			}
 
 			var sender = {
-				publicKey: applicationContext.account.keyPair.public,
-				privateKey: applicationContext.account.keyPair.private
+				publicKey: ApplicationContext.account.keyPair.public,
+				privateKey: ApplicationContext.account.keyPair.private
 			};
 
 			// Create a transaction and wait for confirmation
@@ -366,11 +366,11 @@
 		}
 
 		function isMyAddress(address) {
-			return address === applicationContext.account.address;
+			return address === ApplicationContext.account.address;
 		}
 
 		$scope.$on(events.ASSET_DETAILS, function (event, assetId) {
-			var asset = applicationContext.cache.assets[assetId];
+			var asset = ApplicationContext.cache.assets[assetId];
 			if (angular.isUndefined(asset)) {
 				throw new Error('Failed to find asset details by id ' + assetId);
 			}
@@ -434,7 +434,7 @@
 		resetReissueForm();
 
 		$scope.$on(events.ASSET_REISSUE, function (event, eventData) {
-			var asset = applicationContext.cache.assets[eventData.assetId];
+			var asset = ApplicationContext.cache.assets[eventData.assetId];
 			if (!asset)
 				throw new Error('Failed to find asset data by id ' + eventData.assetId);
 
@@ -481,8 +481,8 @@
 			};
 
 			var sender = {
-				publicKey: applicationContext.account.keyPair.public,
-				privateKey: applicationContext.account.keyPair.private
+				publicKey: ApplicationContext.account.keyPair.public,
+				privateKey: ApplicationContext.account.keyPair.private
 			};
 			// creating the transaction and waiting for confirmation
 			reissue.broadcast.setTransaction(assetService.createAssetReissueTransaction(assetReissue, sender));
@@ -535,7 +535,7 @@
 		}
 
 		function isMyAddress(address) {
-			return address === applicationContext.account.address;
+			return address === ApplicationContext.account.address;
 		}
 
 		function formatAsset (transaction) {
@@ -631,7 +631,7 @@
 			mass.baseBalance = eventData.baseBalance;
 			mass.assetBalance = eventData.baseBalance;
 			if (eventData.assetId) {
-				mass.assetBalance = applicationContext.cache.assets[eventData.assetId].balance;
+				mass.assetBalance = ApplicationContext.cache.assets[eventData.assetId].balance;
 			}
 
 			mass.sendingWaves = mass.assetBalance.currency === Currency.BASE;
@@ -711,8 +711,8 @@
 
 		function loadTransactionsFromFile() {
 			var sender = {
-				publicKey: applicationContext.account.keyPair.public,
-				privateKey: applicationContext.account.keyPair.private
+				publicKey: ApplicationContext.account.keyPair.public,
+				privateKey: ApplicationContext.account.keyPair.private
 			};
 
 			try {

@@ -45,11 +45,11 @@
 
 		function refreshTransactions() {
 			var txArray;
-			transactionLoadingService.loadTransactions(applicationContext.account, TRANSACTIONS_TO_LOAD)
+			transactionLoadingService.loadTransactions(ApplicationContext.account, TRANSACTIONS_TO_LOAD)
 				.then(function (transactions) {
 					txArray = transactions;
 
-					return transactionLoadingService.refreshAssetCache(applicationContext.cache, transactions);
+					return transactionLoadingService.refreshAssetCache(ApplicationContext.cache, transactions);
 				})
 				.then(function () {
 					history.transactions = txArray;

@@ -293,7 +293,7 @@ var Tokens = (function(){
 			function (transaction, response) {
 				resetForm();
 
-				applicationContext.cache.putAsset(response);
+				ApplicationContext.cache.putAsset(response);
 
 				var displayMessage = 'Asset ' + ctrl.confirm.name + ' has been issued!<br/>' +
 					'Total tokens amount: ' + ctrl.confirm.totalTokens + '<br/>' +
@@ -311,8 +311,8 @@ var Tokens = (function(){
 			event.preventDefault();
 			if (!form.validate()) return;
 			var sender = {
-				publicKey: applicationContext.account.keyPair.public,
-				privateKey: applicationContext.account.keyPair.private
+				publicKey: ApplicationContext.account.keyPair.public,
+				privateKey: ApplicationContext.account.keyPair.private
 			};
 			var t = Tokens.assetCreate(sender, notificationService);
 			if (!t) return;
@@ -341,7 +341,7 @@ var Tokens = (function(){
 		}
 
 		function refreshBalance() {
-			apiService.address.balance(applicationContext.account.address)
+			apiService.address.balance(ApplicationContext.account.address)
 				.then(function (response) {
 					ctrl.baseBalance = Money.fromCoins(response.balance, Currency.BASE);
 					$('#create-asset-baseBalance')[0].innerText = ctrl.baseBalance.formatAmount(true, false);

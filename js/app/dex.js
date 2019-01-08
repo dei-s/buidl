@@ -30,11 +30,11 @@
 		var ctrl = this,
 			intervalPromise,
 
-			assetStore = assetStoreFactory.createStore(applicationContext.account.address),
+			assetStore = assetStoreFactory.createStore(ApplicationContext.account.address),
 
 			sender = {
-				publicKey: applicationContext.account.keyPair.public,
-				privateKey: applicationContext.account.keyPair.private
+				publicKey: ApplicationContext.account.keyPair.public,
+				privateKey: ApplicationContext.account.keyPair.private
 			};
 
 		ctrl.assetsList = [];
@@ -779,7 +779,7 @@
 				priceAsset = ctrl.pair.priceAsset;
 
 			matcherApiService
-				.getTradableBalance(amountAsset.id, priceAsset.id, applicationContext.account.address)
+				.getTradableBalance(amountAsset.id, priceAsset.id, ApplicationContext.account.address)
 				.then(function (data) {
 					ctrl.amountAssetBalance = Money.fromCoins(data[amountAsset.id], amountAsset);
 					ctrl.priceAssetBalance = Money.fromCoins(data[priceAsset.id], priceAsset);
@@ -860,8 +860,8 @@
 		this.getOrders = function (pair) {
 			return matcherApiService
 				.loadUserOrders(pair.amountAsset.id, pair.priceAsset.id, {
-					publicKey: applicationContext.account.keyPair.public,
-					privateKey: applicationContext.account.keyPair.private
+					publicKey: ApplicationContext.account.keyPair.public,
+					privateKey: ApplicationContext.account.keyPair.private
 				})
 				.then(function (response) {
 					return response.map(function (o) {

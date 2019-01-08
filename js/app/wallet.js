@@ -126,8 +126,8 @@
 			}
 
 			var sender = {
-				publicKey: applicationContext.account.keyPair.public,
-				privateKey: applicationContext.account.keyPair.private
+				publicKey: ApplicationContext.account.keyPair.public,
+				privateKey: ApplicationContext.account.keyPair.private
 			};
 
 			// Create a transaction and wait for confirmation
@@ -325,19 +325,19 @@
 			}).then(function () {
 				if (isMir()) {
 					return coinomatService.getDepositDetails(Currency.LBR, Currency.LBR,
-						applicationContext.account.address);
+						ApplicationContext.account.address);
 				} else {
 					return coinomatService.getDepositDetails(Currency.BTC, Currency.BTC,
-						applicationContext.account.address);
+						ApplicationContext.account.address);
 				}
 			}).then(function (depositDetails) {
 				notPermittedBitcoinAddresses[depositDetails.address] = 1;
 				if (isMir()) {
 					return coinomatService.getDepositDetails(Currency.BTC, Currency.WAVES,
-						applicationContext.account.address);
+						ApplicationContext.account.address);
 				} else {
 					return coinomatService.getDepositDetails(Currency.BTC, Currency.WAVES,
-						applicationContext.account.address);
+						ApplicationContext.account.address);
 				}
 			}).then(function (depositDetails) {
 				notPermittedBitcoinAddresses[depositDetails.address] = 1;
@@ -417,8 +417,8 @@
 						attachment: converters.stringToByteArray(withdrawDetails.attachment)
 					};
 					var sender = {
-						publicKey: applicationContext.account.keyPair.public,
-						privateKey: applicationContext.account.keyPair.private
+						publicKey: ApplicationContext.account.keyPair.public,
+						privateKey: ApplicationContext.account.keyPair.private
 					};
 					// creating the transaction and waiting for confirmation
 					ctrl.broadcast.setTransaction(assetService.createAssetTransferTransaction(assetTransfer, sender));
@@ -494,7 +494,7 @@
 		}
 
 		ctrl.fiat = {
-			verificationLink: 'https://go.idnow.de/coinomat/userdata/' + applicationContext.account.address,
+			verificationLink: 'https://go.idnow.de/coinomat/userdata/' + ApplicationContext.account.address,
 			email: 'support@coinomat.com'
 		};
 
@@ -553,7 +553,7 @@
 
 		function depositBTC() {
 			coinomatService.getDepositDetails(ctrl.depositWith, ctrl.assetBalance.currency,
-				applicationContext.account.address)
+				ApplicationContext.account.address)
 				.then(function (depositDetails) {
 					dialogService.open('#deposit-btc-dialog');
 					ctrl.btc.bitcoinAddress = depositDetails.address;
@@ -564,7 +564,7 @@
 
 		function depositLbr() {
 			coinomatService.getDepositDetails(ctrl.depositWith, ctrl.assetBalance.currency,
-				applicationContext.account.address)
+				ApplicationContext.account.address)
 				.then(function (depositDetails) {
 					dialogService.open('#deposit-lbr-dialog');
 					ctrl.lbr.lbrAddress = depositDetails.address;
@@ -634,7 +634,7 @@
 		}
 
 		function updateLimitsAndReceiveAmount() {
-			fiatService.getLimits(applicationContext.account.address, ctrl.payCurrency.code, ctrl.crypto)
+			fiatService.getLimits(ApplicationContext.account.address, ctrl.payCurrency.code, ctrl.crypto)
 				.then(function (response) {
 					ctrl.limits = {
 						min: Number(response.min),
@@ -691,7 +691,7 @@
 				}
 			});
 
-			fiatService.getRate(applicationContext.account.address, ctrl.payAmount, ctrl.payCurrency.code, ctrl.crypto)
+			fiatService.getRate(ApplicationContext.account.address, ctrl.payAmount, ctrl.payCurrency.code, ctrl.crypto)
 				.then(deferred.resolve).catch(deferred.reject);
 		}
 
@@ -699,7 +699,7 @@
 			try {
 				validateAmountToPay();
 
-				var url = fiatService.getMerchantUrl(applicationContext.account.address,
+				var url = fiatService.getMerchantUrl(ApplicationContext.account.address,
 					ctrl.payAmount, ctrl.payCurrency.code, ctrl.crypto);
 				$window.open(url, '_blank');
 

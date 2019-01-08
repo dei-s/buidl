@@ -4082,7 +4082,7 @@
 		function transformAddress(rawAddress) {
 			var result = angular.isDefined(rawAddress) ? rawAddress : 'n/a';
 
-			if (result === applicationContext.account.address) {
+			if (result === ApplicationContext.account.address) {
 				result = 'You';
 			}
 
@@ -4120,7 +4120,7 @@
 		function processAssetTransferTransaction(transaction) {
 			var currency;
 			if (transaction.assetId) {
-				var asset = applicationContext.cache.assets[transaction.assetId];
+				var asset = ApplicationContext.cache.assets[transaction.assetId];
 				if (asset) {
 					currency = asset.currency;
 				}
@@ -4137,7 +4137,7 @@
 		}
 
 		function processAssetReissueTransaction(transaction) {
-			var asset = applicationContext.cache.assets[transaction.assetId];
+			var asset = ApplicationContext.cache.assets[transaction.assetId];
 			if (angular.isUndefined(asset)) {
 				return;
 			}
@@ -4159,7 +4159,7 @@
 			var currency = Currency.BASE;
 			var assetId = transaction.assetId;
 			if (assetId) {
-				var asset = applicationContext.cache.assets[assetId];
+				var asset = ApplicationContext.cache.assets[assetId];
 				if (asset) {
 					currency = asset.currency;
 				}
@@ -4175,13 +4175,13 @@
 			var buyOrder = transaction.order1;
 			var assetId = buyOrder.assetPair.amountAsset;
 			var totalFee = 0;
-			if (buyOrder.senderPublicKey === applicationContext.account.keyPair.public) {
+			if (buyOrder.senderPublicKey === ApplicationContext.account.keyPair.public) {
 				type = type + ' ' + 'Buy';
 				totalFee += transaction.buyMatcherFee;
 			}
 
 			var sellOrder = transaction.order2;
-			if (sellOrder.senderPublicKey === applicationContext.account.keyPair.public) {
+			if (sellOrder.senderPublicKey === ApplicationContext.account.keyPair.public) {
 				type = type + ' ' + 'Sell';
 				totalFee += transaction.sellMatcherFee;
 			}
@@ -4191,7 +4191,7 @@
 
 			var currency;
 			if (assetId) {
-				var asset = applicationContext.cache.assets[assetId];
+				var asset = ApplicationContext.cache.assets[assetId];
 				if (asset) {
 					currency = asset.currency;
 				}
@@ -4209,7 +4209,7 @@
 			var currency = Currency.BASE;
 			var assetId = transaction.feeAsset;
 			if (assetId) {
-				var asset = applicationContext.cache.assets[assetId];
+				var asset = ApplicationContext.cache.assets[assetId];
 				if (asset) {
 					currency = asset.currency;
 				}
@@ -4222,7 +4222,7 @@
 			var currency = Currency.BASE;
 			var assetId = transaction.feeAsset;
 			if (assetId) {
-				var asset = applicationContext.cache.assets[assetId];
+				var asset = ApplicationContext.cache.assets[assetId];
 				if (asset) {
 					currency = asset.currency;
 				}
@@ -4233,7 +4233,7 @@
 
 		function formatTransaction(transaction) {
 			// in the future currency should be a part of transaction itself
-			var currentAddress = applicationContext.account.address;
+			var currentAddress = ApplicationContext.account.address;
 			var type = transaction.sender === currentAddress ? 'Outgoing' : 'Incoming';
 
 			transaction.formatted = {
