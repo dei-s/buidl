@@ -34,6 +34,9 @@ md-menu-item > .md-button {
 p{
 	margin: 0;
 }
+.table-hover > tbody > tr:hover {
+  background-color: #e5e5e5;
+}
 
 #growls{z-index:50000;position:fixed}
 #growls.default{top:16px;top:1rem;right:16px;right:1rem}

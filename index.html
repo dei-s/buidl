@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="shortcut icon" type="image/png" href="img/favicon.png">
 <link rel="stylesheet" href="css/material.css">
+<link rel="stylesheet" href="css/bootstrap.css">
 <link rel="stylesheet" href="css/buidl.css">
 <link rel="stylesheet" href="css/community.css">
 <title>Buidl | Mir Blockchain</title>
@@ -956,25 +957,71 @@
 			<!-- / DEX TAB -->
 
 			<!-- VOTING TAB -->
-			<div id="mBB-voting" class="mBB-content" ng-switch-when="voting">
+			<div id="mBB-voting" class="mBB-content container-fluid" ng-switch-when="voting">
 				<h1>DECENTRALIZED VOTING</h1>
 				<br/>
 				<div class="row content-voting-row">
-					<div class="col-md-2">
-						<table id="voting-table">
+					<div class="col-md-6">
+						<table id="voting-table" class="table table-bordered table-striped table-hover">
 							<thead>
 								<tr>
-									<td>TEST</td>
+									<th>Id</th>
+									<th>Sender</th>
+									<th>Name</th>
+									<th>Create date</th>
+									<th>Expiration date</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
+								<tr onclick="console.log(111);">
 									<td>1</td>
+									<td>prof1983</td>
+									<td>Создание нового проекта Platform</td>
+									<td>07.01.2019</td>
+									<td>01.02.2019</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-6">
+						<form>
+							<div class="form-group">
+								<div class="form-check">
+									<input type="radio" class="form-check-input" name="vote" id="vote1" value="yes" checked>
+									Yes
+								</div>
+								<div class="form-check">
+									<input type="radio" class="form-check-input" name="vote" id="vote2" value="no" checked>No
+								</div>
+								<div class="form-check">
+									<input type="radio" class="form-check-input" name="vote" id="vote3" value="abstain" checked>Abstain
+								</div>
+							</div>
+							<div class="form-group">
+								<input id="vote-form-in1" type="text"/>
+							</div>
+							<div class="form-group">
+								<label for="vote-exampleTextarea">Ваш комментарий</label>
+								<textarea class="form-control" id="vote-exampleTextarea" rows="3"></textarea>
+							</div>
+							<div class="form-check disabled">
+								<label class="form-check-label">
+									<input type="checkbox" class="form-check-input" disabled>
+									Зашифровать
+								</label>
+							</div>
+							<div class="form-group">
+								<button type="submit">Подписать и отправить</button>
+							</div>
+						</form>
+						<!--table id="voting-table" class="table table-bordered table-striped">
+							<thead>
+								<tr>Выберите один из варинтов</tr>
+							</thead>
+							<tbody>
+								<tr>2</tr>
+							</tbody>
+						</table-->
 						<img src="img/tab_vote_prev.svg" />
 					</div>
 				</div>
@@ -1110,11 +1157,11 @@
 			<!-- / MESSAGES TAB -->
 
 			<!-- COMMUNITY TAB -->
-			<div id="mBB-community" class="mBB-content" ng-switch-when="community">
+			<div id="mBB-community" class="mBB-content container-fluid" ng-switch-when="community">
 				<h2 class="sectionHeader">LATEST MESSAGE TO PROJECT {{ project.name }}</h2>
-				<div class="flex-item">
-					<div class="msg-wrapper flex-item bordered" ref="msgWrapper">
-						<table id="msg-list">
+				<div class="row">
+					<div class="col-md-12" ref="msgWrapper">
+						<table id="msg-list" class="table table-bordered table-striped">
 							<tr v-for="msg in messages">
 								<td>
 									{{ formatTime(msg.time)}}
@@ -1131,6 +1178,21 @@
 							</tr>
 						</table>
 					</div>
+					<!--
+					<div class="col-md-6">
+						<h3>INFO</h3>
+						<table class="table">
+							<tr>
+								<td>Date</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>Sender</td>
+								<td></td>
+							</tr>
+						</table>
+					</div>
+					-->
 				</div>
 				<div class="flex-row info bordered">
 				</div>
