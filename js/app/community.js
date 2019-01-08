@@ -13,19 +13,21 @@ if (Constants.IS_MIR) {
 var communityApp = new Vue({
 	el: '#mBB-community',
 	data: {
+		counter: 0, // test
 		project: {
 			name: ""
 		},
 		message: '',
 		pinnedMessage: {},
 		messages: [],
-		wall: MSG_WALLET_ADDR,
 		node: Constants.NODE_ADDRESS,
 		amount: '0.001',
 		fee: '0.001',
 		minAmount: MSG_AMOUNT_MIN,
 		pinAmount: 1000000,
-		last: 0
+		last: 0,
+		timer: false,
+		wall: MSG_WALLET_ADDR
 	},
 	created: function() {
 		this.update();
@@ -35,7 +37,9 @@ var communityApp = new Vue({
 			this.start();
 		},
 		start: function() {
-			setInterval(this.update, 10000);
+			if (!this.timer) {
+				this.timer = setInterval(this.update, 10000);
+			}
 		},
 		formatAmount: function(amount) {
 			return (amount / 100000000).toLocaleString('ru-ru', {maximumSignificantDigits: 20}) + 'МИР';
