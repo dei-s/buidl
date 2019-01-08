@@ -624,10 +624,6 @@ md-progress-linear .md-bar{background-color:#9C27B0}
 	margin:0.4rem;
 }
 
-/* COMMUNITY */
-
-#mBB-community{width:100%;text-align:center}
-#mBB-community>p{text-align:center;margin-bottom:16px;margin-bottom:1rem;font-size:19.2px;font-size:1.2rem;color:#e1b47d;font-weight:600}
 
 @media only screen and (max-width:1024px){
 	#logoNversion2{display:none}
@@ -649,7 +645,6 @@ md-progress-linear .md-bar{background-color:#9C27B0}
 	#lockscreenTable{padding:0;margin:0 auto;min-width:220px}
 	.loginAccountDiv .divider-1:first-child,.loginAccountDiv .divider-1:nth-child(2),.loginAccountDiv .divider-1:nth-child(3),.loginAccountDiv>.clipSpan{display:none}
 	.loginAccount,.removeAccount{display:block;margin:0 auto}
-	#mBB-community>p{font-size:1rem}
 }
 @media only screen and (max-width:640px){
 	#tabs-Iconset{height:80%}

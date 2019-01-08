@@ -11,11 +11,11 @@ if (Constants.IS_MIR) {
 }
 
 var communityApp = new Vue({
-	el: '#mBB-community',
+	el: '#community',
 	data: {
-		counter: 0, // test
 		project: {
-			name: ""
+			id: '',
+			name: ''
 		},
 		message: '',
 		pinnedMessage: {},
@@ -30,16 +30,33 @@ var communityApp = new Vue({
 		wall: MSG_WALLET_ADDR
 	},
 	created: function() {
-		this.update();
 	},
 	methods: {
-		run: function() {
-			this.start();
+		checkKeeper: function() {
+			return typeof window.Waves !== 'undefined';
 		},
-		start: function() {
-			if (!this.timer) {
-				this.timer = setInterval(this.update, 10000);
+		decode: function(text) {
+			let bytes = Base58.decode(text);
+			let str = '';
+			for (let i = 0; i < bytes.length; i++) {
+				str += String.fromCharCode(bytes[i]);
 			}
+			return decodeURIComponent(escape(str));
+		},
+		hide: function () {
+			this.stop();
+			$('#community').hide();
+		},
+		findByKey: function(array, id) {
+			let element = array.find(element => {
+				return element.key == id ? element : false;
+			});
+			return element;
+		},
+		findMax: function(arr) {
+			return arr.reduce(function(prev, curr){
+				return prev.amount >= curr.amount ? prev : curr;
+			});
 		},
 		formatAmount: function(amount) {
 			return (amount / 100000000).toLocaleString('ru-ru', {maximumSignificantDigits: 20}) + 'МИР';
@@ -51,16 +68,6 @@ var communityApp = new Vue({
 			let time = new Date(timestamp);
 			return time.toLocaleString();
 		},
-		loadPosts: async function(limit) {
-			let response = await axios.get(this.node + '/transactions/address/' + this.wall + '/limit/' + limit);
-			return response.data;
-		},
-		findByKey: function(array, id) {
-			let element = array.find(element => {
-				return element.key == id ? element : false;
-			});
-			return element;
-		},
 		getName: async function(sender) {
 			try {
 				let response = await axios.get(this.node + '/addresses/data/' + sender + '/waves-wall-name');
@@ -70,45 +77,9 @@ var communityApp = new Vue({
 				return '';
 			}
 		},
-		update: async function() {
-			let lastTx = await this.loadPosts(1);
-			let lastTime = lastTx[0][0].timestamp;
-			if (lastTime != this.last) {
-				this.last = lastTime.valueOf();
-				let data = await this.loadPosts(10000);
-				this.messages = [];
-				await data[0].forEach(item => {
-					if (item.attachment && item.amount >= this.minAmount && (Constants.IS_MIR || item.assetId == MSG_ASSET_ID)) {
-						let msg = this.decode(item.attachment);
-
-						this.messages.unshift({
-							sender: item.sender,
-							text: msg,
-							time: item.timestamp,
-							amount: item.amount,
-							id: item.id
-						});
-						let pinned = this.messages.find(element => {
-							return element.amount > this.pinAmount ? element : false;
-						});
-						this.pinnedMessage = pinned ? pinned : '';
-					}
-				});
-				this.$refs.msgWrapper.scrollTop = this.$refs.msgWrapper.scrollHeight;
-			}
-		},
-		findMax: function(arr) {
-			return arr.reduce(function(prev, curr){
-				return prev.amount >= curr.amount ? prev : curr;
-			});
-		},
-		decode: function(text) {
-			let bytes = Base58.decode(text);
-			let str = '';
-			for (let i = 0; i < bytes.length; i++) {
-				str += String.fromCharCode(bytes[i]);
-			}
-			return decodeURIComponent(escape(str));
+		loadPosts: async function(limit) {
+			let response = await axios.get(this.node + '/transactions/address/' + this.wall + '/limit/' + limit);
+			return response.data;
 		},
 		send: async function() {
 			let msg = this.message;
@@ -138,8 +109,43 @@ var communityApp = new Vue({
 				alert('Please, install Waves Keeper.\nFollow the link at the bottom of the page.');
 			}
 		},
-		checkKeeper: function() {
-			return typeof window.Waves !== 'undefined';
+		show: function() {
+			$('#community').show();
+			this.update();
+			this.start();
+		},
+		start: function() {
+			if (this.timer) return;
+			this.timer = setInterval(this.update, 10000);
+		},
+		stop: function() {
+			clearInterval(this.timer);
+			this.timer = false;
+		},
+		update: async function() {
+			let lastTx = await this.loadPosts(1);
+			let lastTime = lastTx[0][0].timestamp;
+			if (lastTime == this.last) return;
+			this.last = lastTime.valueOf();
+			let data = await this.loadPosts(10000);
+			this.messages = [];
+			await data[0].forEach(item => {
+				if (item.attachment && item.amount >= this.minAmount && (Constants.IS_MIR || item.assetId == MSG_ASSET_ID)) {
+					let msg = this.decode(item.attachment);
+					this.messages.unshift({
+						sender: item.sender,
+						text: msg,
+						time: item.timestamp,
+						amount: item.amount,
+						id: item.id
+					});
+					let pinned = this.messages.find(element => {
+						return element.amount > this.pinAmount ? element : false;
+					});
+					this.pinnedMessage = pinned ? pinned : '';
+				}
+			});
+			this.$refs.msgWrapper.scrollTop = this.$refs.msgWrapper.scrollHeight;
 		}
 	}
 });

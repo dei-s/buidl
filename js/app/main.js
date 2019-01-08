@@ -1,18 +1,16 @@
-/******************************************************************************
- * Copyright © 2016 The Waves Core Developers.                                *
- *                                                                            *
- * See the LICENSE.txt files at                                               *
- * the top-level directory of this distribution for the individual copyright  *
- * holder information and the developer policies on copyright and licensing.  *
- *                                                                            *
- * Unless otherwise agreed in a custom licensing agreement, no part of the    *
- * Waves software, including this file, may be copied, modified, propagated,  *
- * or distributed except according to the terms contained in the LICENSE.txt  *
- * file.                                                                      *
- *                                                                            *
- * Removal or modification of this copyright notice is prohibited.            *
- *                                                                            *
- ******************************************************************************/
+function appHideAllTab() {
+	votingApp.hide();
+	communityApp.hide();
+	$('#wrapper').css("height", "auto");
+	$('#wrapper').css("min-height", 0);
+}
+
+function appShowAngularTab() {
+	votingApp.hide();
+	communityApp.hide();
+	$('#wrapper').css("height", "100vh");
+	$('#wrapper').css("min-height", 320);
+}
 
 /**
  * Setup of main AngularJS application, with Restangular being defined as a dependency.
@@ -238,3 +236,19 @@ angular.module('app').run(['$templateCache', function($templateCache) {
 	);
 
 }]);
+
+/******************************************************************************
+ * Copyright © 2016 The Waves Core Developers.                                *
+ *                                                                            *
+ * See the LICENSE.txt files at                                               *
+ * the top-level directory of this distribution for the individual copyright  *
+ * holder information and the developer policies on copyright and licensing.  *
+ *                                                                            *
+ * Unless otherwise agreed in a custom licensing agreement, no part of the    *
+ * Waves software, including this file, may be copied, modified, propagated,  *
+ * or distributed except according to the terms contained in the LICENSE.txt  *
+ * file.                                                                      *
+ *                                                                            *
+ * Removal or modification of this copyright notice is prohibited.            *
+ *                                                                            *
+ ******************************************************************************/

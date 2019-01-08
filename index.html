@@ -320,7 +320,7 @@
 		<section id="tabs" class="fFade noSelect">
 			<div id="tabs-Iconset" class="centerIt">
 				<span waves-tab id="walletTabIcon"
-					onclick="votingApp.hide();"
+					onclick="appShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="wallet"
@@ -330,7 +330,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Wallet</u></center><br/>Area containing the main wallets."></span>
 				<span waves-tab id="portfolioTabIcon"
-					onclick="votingApp.hide();"
+					onclick="appShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="portfolio"
@@ -340,7 +340,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Portfolio</u></center><br/>Display all your assets, both digital and physical,<br/>as well as allowing transfers."></span>
 				<span waves-tab id="votingTabIcon"
-					onclick="votingApp.show();"
+					onclick="appHideAllTab();votingApp.show();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="voting"
@@ -350,7 +350,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Voting</u></center><br/>"></span>
 				<span waves-tab id="exchangeTabIcon"
-					onclick="votingApp.hide();"
+					onclick="appShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="exchange"
@@ -360,7 +360,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Waves Decentralized Exchange</u></center><br/>Access to Waves markets where you can<br/>conveniently buy, sell and trade tokens."></span>
 				<span waves-tab id="historyTabIcon"
-					onclick="votingApp.hide();"
+					onclick="appShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="history"
@@ -370,7 +370,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>History</u></center><br/>Access all your transaction records."></span>
 				<span waves-tab id="tokensTabIcon"
-					onclick="votingApp.hide();"
+					onclick="appShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="tokens"
@@ -380,7 +380,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Tokens Creation tab</u></center><br/>Area in which assets can be created."></span>
 				<span waves-tab id="communityTabIcon"
-					onclick="votingApp.hide();communityApp.start();"
+					onclick="appHideAllTab();communityApp.show();"
 					caption="'Community'"
 					current-page-id="nav.currentTab"
 					on-select="nav.changeTab(pageId)"
@@ -390,7 +390,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Community tab</u></center><br/>Resources to learn more about Digital Economy as <br/>wall address: 3PEPpJoJNqrU6T6AAdXB3yMzUseEaUPniCw."></span>
 				<span waves-tab id="blocksTabIcon"
-					onclick="votingApp.hide();"
+					onclick="appShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="blocks"
@@ -1099,44 +1099,6 @@
 
 			<!-- COMMUNITY TAB -->
 			<div id="mBB-community" class="mBB-content container-fluid" ng-switch-when="community">
-				<h2 class="sectionHeader">LATEST MESSAGE TO PROJECT {{ project.name }}</h2>
-				<div class="row">
-					<div class="col-md-12" ref="msgWrapper">
-						<table id="msg-list" class="table table-bordered table-striped">
-							<tr v-for="msg in messages">
-								<td>
-									{{ formatTime(msg.time)}}
-								</td>
-								<td>
-									<a :href="'https://wavesexplorer.com/tx/' + msg.id">{{ formatSender(msg.sender) }}</a>:
-								</td>
-								<td>
-									{{ msg.text }}
-								</td>
-								<td>
-									{{ formatAmount(msg.amount) }}
-								</td>
-							</tr>
-						</table>
-					</div>
-					<!--
-					<div class="col-md-6">
-						<h3>INFO</h3>
-						<table class="table">
-							<tr>
-								<td>Date</td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>Sender</td>
-								<td></td>
-							</tr>
-						</table>
-					</div>
-					-->
-				</div>
-				<div class="flex-row info bordered">
-				</div>
 			</div>
 			<!-- /COMMUNITY TAB -->
 
@@ -1185,9 +1147,51 @@
 
 
 
+<div id="community" class="mBB-content container-fluid">
+	<h2 class="sectionHeader">LATEST MESSAGE TO PROJECT {{ project.name }}</h2>
+	<div class="row">
+		<div class="col-md-6" ref="msgWrapper">
+			<table id="community-table" class="table table-bordered table-striped">
+				<tr v-for="msg in messages">
+					<td>
+						{{ formatTime(msg.time)}}
+					</td>
+					<td>
+						{{ msg.sender }} <!--a :href="'https://wavesexplorer.com/tx/' + msg.id">{{ formatSender(msg.sender) }}</a-->
+					</td>
+					<td>
+						{{ msg.text }}
+					</td>
+					<td>
+						{{ formatAmount(msg.amount) }}
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-md-6">
+			<button class="btn btn-lg btn-info" @click="update">Обновить</button>
+			<!--
+			<h3>INFO</h3>
+			<table class="table">
+				<tr>
+					<td>Date</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Sender</td>
+					<td></td>
+				</tr>
+			</table>
+			-->
+		</div>
+	</div>
+</div> <!-- community -->
+
+
+
+
 <div id="voting" class="mBB-content container-fluid" hidden style="width:100%;">
-	<h1>DECENTRALIZED VOTING</h1>
-	<br/>
+	<h2 class="sectionHeader">DECENTRALIZED VOTING</h2>
 	<div class="row content-voting-row">
 		<div class="col-lg-6">
 			<table id="voting-table" class="table table-striped table-hover">
