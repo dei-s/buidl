@@ -1320,48 +1320,54 @@
 			</table>
 		</div> <!-- voting-table-container -->
 		<div id="voting-panel-container" class="col-lg-6">
-			<div class="col-md-10" style="text-align:center;">
-				<button class="btn btn-lg" onclick="votingApp.showVotingForm();">Создать новое голосование</button>
-			</div>
-			<form id="voting-form" class="col-md-12" hidden>
-				<div class="form-group">
-					<label>Наименование</label>
-					<input id="voting-form-name" class="input-lg">
+			<div id="voting-primary-panel" class="panel panel-primary" hidden>
+				<div class="col-md-10" style="text-align:center;">
+					<button class="btn btn-lg" onclick="votingApp.showVotingForm();">Создать новое голосование</button>
 				</div>
-				<div>
-					<button id="voting-form-button-ok" class="btn btn-lg btn-warning" type="submit">Подписать и отправить</button>
-				</div>
-			</form>
-			<form id="vote-form" class="col-md-12" hidden>
-				<div class="form-group">
-					<div class="form-check">
-						<input type="radio" class="form-check-input" name="vote" id="vote1" value="yes" checked>
-						Yes
+			</div> <!-- voting-primary-panel -->
+			<div id="voting-info-panel" class="panel panel-info" hidden>
+				<form id="voting-form" class="col-md-12" hidden>
+					<div class="form-group">
+						<label>Наименование</label>
+						<input id="voting-form-name" class="input-lg">
 					</div>
-					<div class="form-check">
-						<input type="radio" class="form-check-input" name="vote" id="vote2" value="no" checked>No
+					<div>
+						<button id="voting-form-button-ok" class="btn btn-lg btn-warning" type="submit">Подписать и отправить</button>
 					</div>
-					<div class="form-check">
-						<input type="radio" class="form-check-input" name="vote" id="vote3" value="abstain" checked>Abstain
+				</form>
+			</div> <!-- voting-info-panel -->
+			<div id="voting-vote-panel" class="panel panel-default" hidden>
+				<form id="vote-form" class="col-md-12" hidden>
+					<div class="form-group">
+						<div class="form-check">
+							<input type="radio" class="form-check-input" name="vote" id="vote1" value="yes" checked>
+							Yes
+						</div>
+						<div class="form-check">
+							<input type="radio" class="form-check-input" name="vote" id="vote2" value="no" checked>No
+						</div>
+						<div class="form-check">
+							<input type="radio" class="form-check-input" name="vote" id="vote3" value="abstain" checked>Abstain
+						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<input id="vote-form-in1" type="text"/>
-				</div>
-				<div class="form-group">
-					<label for="vote-exampleTextarea">Ваш комментарий</label>
-					<textarea class="form-control" id="vote-exampleTextarea" rows="3"></textarea>
-				</div>
-				<div class="form-check disabled">
-					<label class="form-check-label">
-						<input type="checkbox" class="form-check-input" disabled>
-						Зашифровать
-					</label>
-				</div>
-				<div class="form-group">
-					<button class="btn btn-lg btn-warning" type="submit">Подписать и отправить</button>
-				</div>
-			</form>
+					<div class="form-group">
+						<input id="vote-form-in1" type="text"/>
+					</div>
+					<div class="form-group">
+						<label for="vote-exampleTextarea">Ваш комментарий</label>
+						<textarea class="form-control" id="vote-exampleTextarea" rows="3"></textarea>
+					</div>
+					<div class="form-check disabled">
+						<label class="form-check-label">
+							<input type="checkbox" class="form-check-input" disabled>
+							Зашифровать
+						</label>
+					</div>
+					<div class="form-group">
+						<button class="btn btn-lg btn-warning" type="submit">Подписать и отправить</button>
+					</div>
+				</form>
+			</div> <!-- voting-vote-panel -->
 		</div> <!-- voting-panel-container -->
 	</div> <!-- voting-main-container -->
 </div> <!-- voting -->
