@@ -1112,7 +1112,7 @@
 
 
 
-<div id="community" class="mBB-content container-fluid">
+<div id="community" class="container-fluid" hidden>
 	<h2 class="sectionHeader">LATEST MESSAGE TO PROJECT {{ project.name }}</h2>
 	<div class="row">
 		<div class="col-md-6" ref="msgWrapper">
@@ -1155,10 +1155,10 @@
 
 
 
-<div id="voting" class="mBB-content container-fluid" hidden style="width:100%;">
+<div id="voting" class="container-fluid" hidden>
 	<h2 class="sectionHeader">DECENTRALIZED VOTING</h2>
-	<div class="row content-voting-row">
-		<div class="col-lg-6">
+	<div id="voting-main-container" class="row content-voting-row">
+		<div id="voting-table-container" class="col-lg-6">
 			<table id="voting-table" class="table table-striped table-hover">
 				<thead>
 					<tr>
@@ -1189,8 +1189,8 @@
 					</tr>
 				</tbody>
 			</table>
-		</div>
-		<div class="col-lg-6">
+		</div> <!-- voting-table-container -->
+		<div id="voting-panel-container" class="col-lg-6">
 			<div class="col-md-10" style="text-align:center;">
 				<button class="btn btn-lg" onclick="votingApp.showVotingForm();">Создать новое голосование</button>
 			</div>
@@ -1233,8 +1233,8 @@
 					<button class="btn btn-lg btn-warning" type="submit">Подписать и отправить</button>
 				</div>
 			</form>
-		</div>
-	</div>
+		</div> <!-- voting-panel-container -->
+	</div> <!-- voting-main-container -->
 </div> <!-- voting -->
 
 
