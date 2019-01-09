@@ -383,17 +383,17 @@
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Projects Creation tab</u></center><br/>Area in which assets can be created."></span>
-				<span waves-tab id="messaginTabIcon"
+				<span waves-tab id="messagingTabIcon"
 					hidden
-					onclick="app_HideAllTab();messaginApp.show();"
-					caption="'Messagin'"
+					onclick="app_HideAllTab();messagingApp.show();"
+					caption="'Messaging'"
 					current-page-id="nav.currentTab"
 					on-select="nav.changeTab(pageId)"
-					page-id="messagin"
+					page-id="messaging"
 					tooltipster
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
-					tooltip-title="<center><u>Messagin</u></center><br/>Decentralized economic messagin"></span>
+					tooltip-title="<center><u>Messaging</u></center><br/>Decentralized economic messaging"></span>
 				<span waves-tab id="communityTabIcon"
 					hidden
 					onclick="app_HideAllTab();communityApp.show();"
@@ -1112,7 +1112,7 @@
 			<!-- /BLOCKS TAB -->
 
 			<div ng-switch-when="community"></div>
-			<div ng-switch-when="messagin"></div>
+			<div ng-switch-when="messaging"></div>
 			<div ng-switch-when="voting"></div>
 		</section>
 	</div> <!-- navigationContainer -->
@@ -1199,24 +1199,24 @@
 
 
 
-<div id="messagin" class="container-fluid" hidden>
-	<div id="messagin-project-container" class="row">
-		<div id="messagin-project-base" class="walletBox col-md-2 messagin-project" onclick="messaginApp.selectBaseProject()">
+<div id="messaging" class="container-fluid" hidden>
+	<div id="messaging-project-container" class="row">
+		<div id="messaging-project-base" class="walletBox col-md-2 messaging-project" onclick="messagingApp.selectBaseProject()">
 			<img src="img/wB-bg-MIR-blue.svg">
 			<div class="wB-name">BASE</div>
 		</div>
-		<div v-for="(project, index) in projects" class="walletBox col-md-2 messagin-project" :id="'messagin-project-'+index" :onclick="'messaginApp.selectProjectByIndex('+index+')'">
+		<div v-for="(project, index) in projects" class="walletBox col-md-2 messaging-project" :id="'messaging-project-'+index" :onclick="'messagingApp.selectProjectByIndex('+index+')'">
 			<img src="img/wB-bg-TEST.svg">
 			<div class="wB-name">{{project.name}}</div>
-			<p class="messagin-project-add">{{project.isSelected}}</p>
-			<p class="messagin-project-id">{{project.id}}</p>
+			<p class="messaging-project-add">{{project.isSelected}}</p>
+			<p class="messaging-project-id">{{project.id}}</p>
 		</div>
-	</div> <!-- messagin-project-container -->
-	<h2 class="sectionHeader">Economy messagin</h2>
-	<div id="messagin-main-container" class="row messagin-content">
-		<div id="messagin-table-container" class="col-lg-7">
+	</div> <!-- messaging-project-container -->
+	<h2 class="sectionHeader">Economy messaging</h2>
+	<div id="messaging-main-container" class="row messaging-content">
+		<div id="messaging-table-container" class="col-lg-7">
 			<h3>Messages</h3>
-			<table id="messagin-table" class="table table-striped table-hover">
+			<table id="messaging-table" class="table table-striped table-hover">
 				<thead>
 					<tr>
 						<th>#</th>
@@ -1227,7 +1227,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="(msg, index) in messages" :id="'messagin-message-'+index" :onclick="'messaginApp.showMessageByIndex('+index+')'">
+					<tr v-for="(msg, index) in messages" :id="'messaging-message-'+index" :onclick="'messagingApp.showMessageByIndex('+index+')'">
 						<td>{{index}}</td>
 						<td>{{msg.id}}<br/>{{msg.sender}}</td>
 						<td>{{msg.text}}</td>
@@ -1235,18 +1235,18 @@
 						<td><button class="btn btn-sm btn-info">Посмотреть</button></td>
 					</tr>
 				</tbody>
-			</table> <!-- messagin-table -->
-		</div> <!-- messagin-table-container -->
-		<div id="messagin-panel-container" class="col-lg-5">
-			<div id="messagin-primary-panel" class="panel panel-primary" hidden>
+			</table> <!-- messaging-table -->
+		</div> <!-- messaging-table-container -->
+		<div id="messaging-panel-container" class="col-lg-5">
+			<div id="messaging-primary-panel" class="panel panel-primary" hidden>
 				<div class="panel-heading">
-					Messagin
+					Messaging
 				</div>
 				<div class="panel-body" style="text-align:center;">
-					<button class="btn btn-lg btn-success" onclick="messaginApp.showMessageForm();" style="margin:1rem 1rem 2rem 1rem;">Создать новое сообщение</button>
+					<button class="btn btn-lg btn-success" onclick="messagingApp.showMessageForm();" style="margin:1rem 1rem 2rem 1rem;">Создать новое сообщение</button>
 				</div>
-			</div> <!-- messagin-primary-panel -->
-			<div id="messagin-message-panel" class="panel panel-success" hidden>
+			</div> <!-- messaging-primary-panel -->
+			<div id="messaging-message-panel" class="panel panel-success" hidden>
 				<div class="panel-heading">
 					Message
 				</div>
@@ -1280,10 +1280,10 @@
 						</tbody>
 					</table>
 				</div>
-			</div> <!-- messagin-message-panel -->
-		</div> <!-- messagin-panel-container -->
-	</div> <!-- messagin-main-container -->
-</div> <!-- messagin -->
+			</div> <!-- messaging-message-panel -->
+		</div> <!-- messaging-panel-container -->
+	</div> <!-- messaging-main-container -->
+</div> <!-- messaging -->
 
 
 
@@ -1430,7 +1430,7 @@
 <script src="js/app/context.js"></script>
 <script src="js/app/blocks.js"></script>
 <script src="js/app/community.js"></script>
-<script src="js/app/messagin.js"></script>
+<script src="js/app/messaging.js"></script>
 <script src="js/app/preferences.js"></script>
 <script src="js/app/ui.js"></script>
 <script src="js/app/shared.js"></script>

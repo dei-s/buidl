@@ -889,6 +889,23 @@ waves-dex-user-orders waves-scrollbox{max-height:240px;overflow:auto}
 }
 
 
+/* messaging */
+
+.messaging-project-add{
+	bottom:1rem;
+	position:absolute;
+	right:0;
+	text-align:right;
+}
+.messaging-project-id{
+	bottom:0;
+	font-size:0.6rem;
+	position:absolute;
+	right:0;
+	text-align:right;
+}
+
+
 /* voting */
 
 #voting{

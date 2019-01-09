@@ -1,6 +1,6 @@
 function app_HideAllVue() {
 	communityApp.hide();
-	messaginApp.hide();
+	messagingApp.hide();
 	votingApp.hide();
 }
 

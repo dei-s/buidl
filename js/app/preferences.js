@@ -7,7 +7,7 @@ var preferencesApp = (function(){
 		if (!e) return;
 		list.push({
 			eid: eid,
-			displayModeDefault: getCssDisplay('#messaginTabIcon')
+			displayModeDefault: getCssDisplay(eid)
 		});
 	}
 
@@ -33,7 +33,7 @@ var preferencesApp = (function(){
 	add('#blocksTabIcon');
 	add('#communityTabIcon');
 	add('#exchangeTabIcon');
-	add('#messaginTabIcon');
+	add('#messagingTabIcon');
 
 	return {
 		toggleDevMode: toggleDevMode
