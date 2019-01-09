@@ -1,3 +1,12 @@
+/**
+ * use core.storage (Storage)
+ * favorits - is array of favorit
+ * favorit = {
+ *     accountAddress: string,
+ *     assetId: string,        <- assetId, transactionId
+ *     displayName: string
+ * }
+ */
 var FavoritService = (function(){
 	'use strict';
 
