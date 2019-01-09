@@ -240,6 +240,9 @@
 		</div>
 
 		<div id="header-Iconset">
+			<a onclick="preferencesApp.toggleDevMode()">
+				<img class="header-Icon s-fade" tooltipster tooltip-theme="tooltipster-theme2" src="img/uiTB-iconset-preferences.svg" alt="Preferences" title="Preferences" />
+			</a>
 			<a ng-click="menu.showBackupDialog()">
 				<img class="header-Icon s-fade" tooltipster tooltip-theme="tooltipster-theme2" src="img/uiTB-iconset-backup.svg" alt="Backup" title="Backup"/>
 			</a>
@@ -350,6 +353,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Voting</u></center><br/>"></span>
 				<span waves-tab id="exchangeTabIcon"
+					hidden
 					onclick="appShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
@@ -380,6 +384,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Tokens Creation tab</u></center><br/>Area in which assets can be created."></span>
 				<span waves-tab id="communityTabIcon"
+					hidden
 					onclick="appHideAllTab();communityApp.show();"
 					caption="'Community'"
 					current-page-id="nav.currentTab"
@@ -390,6 +395,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Community tab</u></center><br/>Resources to learn more about Digital Economy as <br/>wall address: 3PEPpJoJNqrU6T6AAdXB3yMzUseEaUPniCw."></span>
 				<span waves-tab id="blocksTabIcon"
+					hidden
 					onclick="appShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
@@ -1325,6 +1331,7 @@
 <script src="js/app/context.js"></script>
 <script src="js/app/blocks.js"></script>
 <script src="js/app/community.js"></script>
+<script src="js/app/preferences.js"></script>
 <script src="js/app/ui.js"></script>
 <script src="js/app/shared.js"></script>
 <script src="js/app/login.js"></script>
