@@ -1,13 +1,17 @@
-function appHideAllTab() {
-	votingApp.hide();
+function app_HideAllVue() {
 	communityApp.hide();
+	messaginApp.hide();
+	votingApp.hide();
+}
+
+function app_HideAllTab() {
+	app_HideAllVue();
 	$('#wrapper').css("height", "auto");
 	$('#wrapper').css("min-height", 0);
 }
 
-function appShowAngularTab() {
-	votingApp.hide();
-	communityApp.hide();
+function app_ShowAngularTab() {
+	app_HideAllVue();
 	$('#wrapper').css("height", "100vh");
 	$('#wrapper').css("min-height", 320);
 }
@@ -23,6 +27,7 @@ function appShowAngularTab() {
 var __mockShowError = function(message) {};
 var __mockValidateAddress = function(address) {};
 
+// use app.context (ApplicationContext)
 var app = angular.module('app', [
 	'restangular',
 	'waves.core',

@@ -323,7 +323,7 @@
 		<section id="tabs" class="fFade noSelect">
 			<div id="tabs-Iconset" class="centerIt">
 				<span waves-tab id="walletTabIcon"
-					onclick="appShowAngularTab();"
+					onclick="app_ShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="wallet"
@@ -333,7 +333,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Wallet</u></center><br/>Area containing the main wallets."></span>
 				<span waves-tab id="portfolioTabIcon"
-					onclick="appShowAngularTab();"
+					onclick="app_ShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="portfolio"
@@ -343,7 +343,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Portfolio</u></center><br/>Display all your assets, both digital and physical,<br/>as well as allowing transfers."></span>
 				<span waves-tab id="votingTabIcon"
-					onclick="appHideAllTab();votingApp.show();"
+					onclick="app_HideAllTab();votingApp.show();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="voting"
@@ -354,7 +354,7 @@
 					tooltip-title="<center><u>Voting</u></center><br/>"></span>
 				<span waves-tab id="exchangeTabIcon"
 					hidden
-					onclick="appShowAngularTab();"
+					onclick="app_ShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="exchange"
@@ -364,7 +364,7 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Waves Decentralized Exchange</u></center><br/>Access to Waves markets where you can<br/>conveniently buy, sell and trade tokens."></span>
 				<span waves-tab id="historyTabIcon"
-					onclick="appShowAngularTab();"
+					onclick="app_ShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="history"
@@ -374,18 +374,18 @@
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>History</u></center><br/>Access all your transaction records."></span>
 				<span waves-tab id="tokensTabIcon"
-					onclick="appShowAngularTab();"
+					onclick="app_ShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="tokens"
-					caption="'Tokens Creation tab'"
+					caption="'Projects Creation tab'"
 					tooltipster
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
-					tooltip-title="<center><u>Tokens Creation tab</u></center><br/>Area in which assets can be created."></span>
+					tooltip-title="<center><u>Projects Creation tab</u></center><br/>Area in which assets can be created."></span>
 				<span waves-tab id="communityTabIcon"
 					hidden
-					onclick="appHideAllTab();communityApp.show();"
+					onclick="app_HideAllTab();communityApp.show();"
 					caption="'Community'"
 					current-page-id="nav.currentTab"
 					on-select="nav.changeTab(pageId)"
@@ -396,7 +396,7 @@
 					tooltip-title="<center><u>Community tab</u></center><br/>Resources to learn more about Digital Economy as <br/>wall address: 3PEPpJoJNqrU6T6AAdXB3yMzUseEaUPniCw."></span>
 				<span waves-tab id="blocksTabIcon"
 					hidden
-					onclick="appShowAngularTab();"
+					onclick="app_ShowAngularTab();"
 					on-select="nav.changeTab(pageId)"
 					current-page-id="nav.currentTab"
 					page-id="blocks"
