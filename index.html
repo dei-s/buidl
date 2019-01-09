@@ -383,6 +383,17 @@
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Projects Creation tab</u></center><br/>Area in which assets can be created."></span>
+				<span waves-tab id="messaginTabIcon"
+					hidden
+					onclick="app_HideAllTab();messaginApp.show();"
+					caption="'Messagin'"
+					current-page-id="nav.currentTab"
+					on-select="nav.changeTab(pageId)"
+					page-id="messagin"
+					tooltipster
+					tooltip-html
+					tooltip-theme="tooltipster-theme3"
+					tooltip-title="<center><u>Messagin</u></center><br/>Decentralized economic messagin"></span>
 				<span waves-tab id="communityTabIcon"
 					hidden
 					onclick="app_HideAllTab();communityApp.show();"
@@ -1188,6 +1199,91 @@
 
 
 
+<div id="messagin" class="container-fluid" hidden>
+	<h1>Economy messagin</h1>
+	<div id="messagin-project-container" class="row">
+		<div v-for="(project, index) in projects" class="walletBox col-md-2 messagin-project" :id="'messagin-project-'+index" :onclick="'messaginApp.selectProjectByIndex('+index+')'">
+			<img src="img/wB-bg-TEST.svg">
+			<div class="wB-name">{{project.name}}</div>
+			<p class="messagin-project-add">{{project.isSelected}}</p>
+			<p class="messagin-project-id">{{project.id}}</p>
+		</div>
+	</div> <!-- messagin-project-container -->
+	<div id="messagin-main-container" class="row messagin-content">
+		<div id="messagin-table-container" class="col-lg-7">
+			<h3>Messages</h3>
+			<table id="messagin-table" class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>TrId & Sender</th>
+						<th>Text</th>
+						<th>Create date</th>
+						<th>...</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(msg, index) in messages" :id="'messagin-message-'+index" :onclick="'messaginApp.showMessageByIndex('+index+')'">
+						<td>{{index}}</td>
+						<td>{{msg.id}}<br/>{{msg.sender}}</td>
+						<td>{{msg.text}}</td>
+						<td>{{formatTime(msg.time)}}</td>
+						<td><button class="btn btn-sm btn-info">Посмотреть</button></td>
+					</tr>
+				</tbody>
+			</table> <!-- messagin-table -->
+		</div> <!-- messagin-table-container -->
+		<div id="messagin-panel-container" class="col-lg-5">
+			<div id="messagin-primary-panel" class="panel panel-primary" hidden>
+				<div class="panel-heading">
+					Voting
+				</div>
+				<div class="panel-body" style="text-align:center;">
+					<button class="btn btn-lg btn-success" onclick="messaginApp.showMessageForm();" style="margin:1rem 1rem 2rem 1rem;">Создать новое сообщение</button>
+				</div>
+			</div> <!-- messagin-primary-panel -->
+			<div id="messagin-message-panel" class="panel panel-success" hidden>
+				<div class="panel-heading">
+					Message
+				</div>
+				<div class="panel-body">
+					<table class="table">
+						<tbody>
+							<tr>
+								<td>amount</td>
+								<td>{{message.amount}}</td>
+							</tr>
+							<tr>
+								<td>id</td>
+								<td>{{message.id}}</td>
+							</tr>
+							<tr>
+								<td>recipient</td>
+								<td>{{message.recipient}}</td>
+							</tr>
+							<tr>
+								<td>sender</td>
+								<td>{{message.sender}}</td>
+							</tr>
+							<tr>
+								<td>text</td>
+								<td>{{message.text}}</td>
+							</tr>
+							<tr>
+								<td>time</td>
+								<td>{{message.time}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div> <!-- messagin-message-panel -->
+		</div> <!-- messagin-panel-container -->
+	</div> <!-- messagin-main-container -->
+</div> <!-- messagin -->
+
+
+
+
 <div id="voting" class="container-fluid" hidden>
 	<h2 class="sectionHeader">DECENTRALIZED VOTING</h2>
 	<div id="voting-main-container" class="row content-voting-row">
@@ -1323,6 +1419,7 @@
 <script src="js/app/context.js"></script>
 <script src="js/app/blocks.js"></script>
 <script src="js/app/community.js"></script>
+<script src="js/app/messagin.js"></script>
 <script src="js/app/preferences.js"></script>
 <script src="js/app/ui.js"></script>
 <script src="js/app/shared.js"></script>
