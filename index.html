@@ -412,8 +412,8 @@
 		<section id="mBBody" class="fFade" ng-switch on="nav.currentTab">
 			<!-- WALLET TAB -->
 			<div id="mBB-wallet" class="mBB-content" ng-switch-when="wallet" ng-controller="walletListController as walletList">
-				<div class="flex-container">
-					<wallet-box class="walletBox"
+				<div class="flex-container row">
+					<wallet-box class="walletBox col-md-2"
 						ng-repeat="w in walletList.wallets"
 						balance="w.balance"
 						on-send="walletList.send(w)"
@@ -970,11 +970,6 @@
 			</waves-page>
 			<!-- / DEX TAB -->
 
-			<!-- VOTING TAB -->
-			<div id="mBB-voting" class="mBB-content container-fluid" ng-switch-when="voting">
-			</div>
-			<!-- / VOTING TAB -->
-
 			<!-- HISTORY TAB -->
 			<div id="mBB-history" class="mBB-content" ng-switch-when="history" ng-controller="historyController as history">
 				<transaction-history heading="LATEST TRANSACTIONS" transactions="history.transactions" limit-to="50"></transaction-history>
@@ -1068,46 +1063,6 @@
 			</div>
 			<!-- / TOKENS TAB -->
 
-			<!-- MESSAGES TAB -->
-			<div id="mBB-messages" class="mBB-content" ng-switch-when="messages">
-				<div class="phContent">
-					<h1>MESSAGING CENTER</h1>
-					<br/>
-					<p>Soon to be renamed/rebranded as CONTACTS, this is an area in which users will be able to add other individuals or groups to several list types, providing an easy way to keep track of friends, execute regular, automated payments, and much more.
-						<br/><br/>
-						The Contacts area services are estimated to be completed on the first half of 2017.
-					</p>
-					<br/><br/>
-					<img src="img/tab_cont_prev.svg" />
-				</div>
-				<!--
-				<div id="addContact-wPop" class="basePop">
-					<img class="wPop-header" src="img/modal-header.svg" />
-					<form id="addContactForm" class="wPop-content">
-						<h2 class="sectionHeader">ADD CONTACT</h2>
-						<p>Fill the fields below in order to add a new contact to your list:</p>
-						<p>Name</p>
-						<input type="text" id="contactname" placeholder="" class="wInput" />
-
-						<p>Address</p>
-						<input type="text" id="contactaddress" placeholder="" class="wInput" />
-
-						<p>Email</p>
-						<input type="email" id="contactemail" placeholder="" class="wInput" />
-
-						<br/><br/>
-						<button id="addContactSubmit" class="wButton s-fade">ADD CONTACT</button>
-					</form>
-				</div>
-				-->
-			</div>
-			<!-- / MESSAGES TAB -->
-
-			<!-- COMMUNITY TAB -->
-			<div id="mBB-community" class="mBB-content container-fluid" ng-switch-when="community">
-			</div>
-			<!-- /COMMUNITY TAB -->
-
 			<!-- BLOCKS TAB -->
 			<div id="mBB-blocks" class="mBB-content" ng-switch-when="blocks" ng-controller="blocksController as ctrl"> <!-- blocksController as blocks -->
 				<h2 class="sectionHeader">LATEST BLOCKS INFORMATION</h2>
@@ -1144,6 +1099,10 @@
 				</p>
 			</div>
 			<!-- /BLOCKS TAB -->
+
+			<div ng-switch-when="community"></div>
+			<div ng-switch-when="messagin"></div>
+			<div ng-switch-when="voting"></div>
 		</section>
 	</div> <!-- navigationContainer -->
 </div> <!-- Wrapper div END -->
