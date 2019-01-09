@@ -1200,8 +1200,11 @@
 
 
 <div id="messagin" class="container-fluid" hidden>
-	<h1>Economy messagin</h1>
 	<div id="messagin-project-container" class="row">
+		<div id="messagin-project-base" class="walletBox col-md-2 messagin-project" onclick="messaginApp.selectBaseProject()">
+			<img src="img/wB-bg-MIR-blue.svg">
+			<div class="wB-name">BASE</div>
+		</div>
 		<div v-for="(project, index) in projects" class="walletBox col-md-2 messagin-project" :id="'messagin-project-'+index" :onclick="'messaginApp.selectProjectByIndex('+index+')'">
 			<img src="img/wB-bg-TEST.svg">
 			<div class="wB-name">{{project.name}}</div>
@@ -1209,6 +1212,7 @@
 			<p class="messagin-project-id">{{project.id}}</p>
 		</div>
 	</div> <!-- messagin-project-container -->
+	<h2 class="sectionHeader">Economy messagin</h2>
 	<div id="messagin-main-container" class="row messagin-content">
 		<div id="messagin-table-container" class="col-lg-7">
 			<h3>Messages</h3>
@@ -1236,7 +1240,7 @@
 		<div id="messagin-panel-container" class="col-lg-5">
 			<div id="messagin-primary-panel" class="panel panel-primary" hidden>
 				<div class="panel-heading">
-					Voting
+					Messagin
 				</div>
 				<div class="panel-body" style="text-align:center;">
 					<button class="btn btn-lg btn-success" onclick="messaginApp.showMessageForm();" style="margin:1rem 1rem 2rem 1rem;">Создать новое сообщение</button>

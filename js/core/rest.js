@@ -1,7 +1,8 @@
 var RestApi = (function(){
 	'use strict';
 
-	async function getAddressTransactions(address, limit) {
+	async function getTransactionsByAddr(address, limit) {
+		if (limit > 10000) limit = 10000;
 		let response = await axios.get(Constants.NODE_ADDRESS + '/transactions/address/' + address + '/limit/' + limit);
 		return response.data;
 	}
@@ -29,7 +30,7 @@ var RestApi = (function(){
 	}
 
 	return {
-		getAddressTransactions: getAddressTransactions,
+		getTransactionsByAddr: getTransactionsByAddr,
 		getAssetDistribution: getAssetDistribution,
 		getHeight: getHeight,
 		getLastBlock: getLastBlock
