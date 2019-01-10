@@ -6,10 +6,10 @@
  * accounts - array of object. first accoun = base
  * account = {
  *     addr: string, <- account address
- *     cashe: {
+ *     cashe: [{
  *        assetId: string,
  *        msgs: []
- *     }
+ *     }],
  *     last: int     <- timestamp of last account transaction
  * }
  * projects - array of project
@@ -18,7 +18,7 @@
  *     description: asset.description,
  *     displayName: f.displayName,
  *     id: f.assetId,
- *     isMyAddress: messaginApp.isMyAddress(asset.sender),
+ *     isMyAddress: messagingApp.isMyAddress(asset.sender),
  *     name: asset.currency.displayName,
  *     reissuable: asset.reissuable ? 'Yes' : 'No',
  *     timestamp: asset.timestamp,
@@ -35,8 +35,8 @@
  * }
  */
 
-var messaginApp = new Vue({
-	el: '#messagin',
+var messagingApp = new Vue({
+	el: '#messaging',
 	data: {
 		accounts: [],
 		assetId: false, // selected project id, if base then assetId = false
@@ -48,12 +48,17 @@ var messaginApp = new Vue({
 		project: {}, // selected project
 		projectIndex: -1, // selected project
 		projects: [],
+		updateInterval: 30000,
 		updatingTimer: false
 	},
 	created: function() {
 		// Base account for input coin MIR, no token
 		this.accounts.push({
 			addr: '3MR1wocLPLr8tuPaPbur27oM7NdLFUNDLms',
+			cashe: [{
+				assetId: false,
+				msgs: []
+			}],
 			last: 0
 		});
 	},
@@ -80,9 +85,21 @@ var messaginApp = new Vue({
 			return JSON.stringify(obj);
 		},
 		findAccount: function(accountAddress) {
-			this.accounts.forEach(function(a,i){
-				if (a.addr == accountAddress) return i;
-			});
+			for (var i = 0; i < this.accounts.length; i++) {
+				if (this.accounts[i].addr == accountAddress) return i;
+			}
+			return -1;
+		},
+		findCashe: function(accountIndex, assetId) {
+			for (var j = 0; j < this.accounts[accountIndex].cashe.length; j++) {
+				if (this.accounts[accountIndex].cashe[j].assetId == assetId) return j;
+			}
+			return -1;
+		},
+		findCasheMessage: function(accountIndex, assetIndex, msgId) {
+			for (var i = 0; i < this.accounts[accountIndex].cashe[assetIndex].msgs.length; i++) {
+				if (this.accounts[accountIndex].cashe[assetIndex].msgs[i].id == msgId) return i;
+			}
 			return -1;
 		},
 		formatTime: function(timestamp) {
@@ -90,52 +107,89 @@ var messaginApp = new Vue({
 			return time.toLocaleString();
 		},
 		hide: function() {
-			$('#messagin').hide();
+			$('#messaging').hide();
 			this.stop();
 		},
 		hideAllPanels: function(hidePrimary) {
-			$('#messagin-message-panel').hide();
-			if (hidePrimary) $('#messagin-primary-panel').hide();
+			$('#messaging-message-panel').hide();
+			if (hidePrimary) $('#messaging-primary-panel').hide();
 		},
 		isMyAddress: function(addr) {
 			return addr == ApplicationContext.account.address;
 		},
-		loadAccountMessages: async function(accountAddress){
+		loadAccountMessages: async function(accountAddress, isFullRefresh){
+			// Если isFullRefresh - то массив newMessages заполняется не зависимо от того сохранены ли сообщения в кеше
+			// Если указан базовый адрес (isBaseAddr) - то функция возвращает и пришедшие и отправленные сообщения
+			// Если указан не базовый адрес - то функция возвращает только отправленные сообщения с указанного адреса
 			if (this.accounts.length <= 0) {
 				console.error('accounts is empty');
 				return;
 			}
 			if (!accountAddress) accountAddress = this.accounts[0].addr;
-			var msgs = [];
+			var isBaseAddr = (accountAddress == this.accounts[0].addr);
+			var newMessages = [];
 			var i = this.findAccount(accountAddress);
-			if (i >= 0) {
-				let lastTx = await RestApi.getTransactionsByAddr(accountAddress, 1);
-				let lastTime = lastTx[0][0].timestamp;
-				if (lastTime == this.accounts[i].last) return;
+			if (i < 0) {
+				this.accounts.push({
+					addr: accountAddress,
+					cashe: [{
+						assetId: messagingApp.assetId,
+						msgs: []
+					}],
+					last: 0
+				});
+				i = this.accounts.length-1;
+			}
+			let lastTx = await RestApi.getTransactionsByAddr(accountAddress, 1);
+			let lastTime = lastTx[0][0].timestamp;
+			if (!isFullRefresh && lastTime == this.accounts[i].last) return;
+			var j = this.findCashe(i, this.assetId);
+			if (j < 0) {
+				j = this.accounts[i].cashe.push({
+					assetId: this.assetId,
+					msgs: []
+				})-1;
 			}
 			var data = await RestApi.getTransactionsByAddr(accountAddress,1000);
 			data[0].forEach(function(item){
 				var ok = false;
-				if (messaginApp.assetId) {
-					ok = (item.assetId == messaginApp.assetId);
+				if (messagingApp.assetId) {
+					ok = (item.assetId == messagingApp.assetId);
 				} else {
 					ok = !item.assetId;
 				}
-				if (ok && item.attachment && item.amount >= messaginApp.minAmount && item.fee >= messaginApp.minFee) {
-					let msg = messaginApp.decode(item.attachment);
-					var message = {
-						amount: item.amount,
-						id: item.id,
-						recipient: item.recipient,
-						sender: item.sender,
-						text: msg,
-						time: item.timestamp
-					};
-					msgs.unshift(message);
+				if (ok && item.attachment && item.amount >= messagingApp.minAmount && item.fee >= messagingApp.minFee) {
+				}
+				if (ok && item.attachment && item.amount >= messagingApp.minAmount && item.fee >= messagingApp.minFee && (isBaseAddr || (item.recipient == messagingApp.accounts[0].addr && item.sender == accountAddress))) {
+					if (isFullRefresh) {
+						let msg = messagingApp.decode(item.attachment);
+						var message = {
+							amount: item.amount,
+							id: item.id,
+							recipient: item.recipient,
+							sender: item.sender,
+							text: msg,
+							time: item.timestamp
+						};
+						newMessages.unshift(message);
+						if (messagingApp.findCasheMessage(i,j,item.id) < 0) messagingApp.accounts[i].cashe[j].msgs.push(message);
+					} else if (messagingApp.findCasheMessage(i,j,item.id) < 0) {
+						let msg = messagingApp.decode(item.attachment);
+						var message = {
+							amount: item.amount,
+							id: item.id,
+							recipient: item.recipient,
+							sender: item.sender,
+							text: msg,
+							time: item.timestamp
+						};
+						newMessages.unshift(message);
+						messagingApp.accounts[i].cashe[j].msgs.push(message);
+					}
 				}
 			});
-			if (i >= 0) this.accounts[i].last = lastTime.valueOf();
-			return msgs;
+			messagingApp.accounts[i].last = lastTime.valueOf();
+			return newMessages;
 		},
 		loadPosts: function(address, limit) {
 			return RestApi.getTransactionsByAddr(address, limit);
@@ -151,9 +205,9 @@ var messaginApp = new Vue({
 			this.assetId = false;
 			this.project = {};
 			this.projectIndex = -1;
-			this.updateBase().then(function(){
-				messaginApp.updateSelected();
-				$('#messagin-primary-panel').show();
+			this.updateBase(true).then(function(){
+				messagingApp.updateSelected();
+				$('#messaging-primary-panel').show();
 			});
 		},
 		selectProjectByIndex: function(index) {
@@ -165,15 +219,13 @@ var messaginApp = new Vue({
 			this.projects[index].isSelected = true;
 			this.projectIndex = index;
 			this.project = this.projects[index];
-			this.assetId = this.project.id;
-			this.messages = [];
-			this.update().then(function(){
-				messaginApp.updateSelected();
-				$('#messagin-primary-panel').show();
+			this.update(true).then(function(){
+				messagingApp.updateSelected();
+				$('#messaging-primary-panel').show();
 			});
 		},
 		show: function() {
-			$('#messagin').show();
+			$('#messaging').show();
 			this.updateAll();
 			this.start();
 		},
@@ -181,11 +233,11 @@ var messaginApp = new Vue({
 			this.hideAllPanels(true);
 			this.message = this.messages[index];
 			this.messageIndex = index;
-			$('#messagin-message-panel').show();
+			$('#messaging-message-panel').show();
 		},
 		showMessagePanel: function() {
 			this.hideAllPanels(true);
-			$('#messagin-message-panel').show();
+			$('#messaging-message-panel').show();
 		},
 		showMessageByIndex: function(index) {
 			this.messageIndex = index;
@@ -194,35 +246,36 @@ var messaginApp = new Vue({
 		},
 		start: function() {
 			if (!this.updateTimer) {
-				this.updateTimer = setInterval(this.update, 20000);
+				this.updateTimer = setInterval(this.update, this.updateInterval);
 			}
 		},
 		stop: function() {
 			clearInterval(this.updateTimer);
 			this.updateTimer = false;
 		},
-		update: async function() {
-			if (!this.project.id) return await this.updateBase();
+		update: async function(isFullRefresh) {
+			if (!this.project.id) return await this.updateBase(isFullRefresh);
 			var height = await RestApi.getHeight();
 			if (this.assetId != this.project.id) {
 				this.messages = [];
 				this.assetId = this.project.id;
+				isFullRefresh = true;
 			}
-			var res = await RestApi.getAssetDistribution(this.project.id, height, 2000);
-			var newAccounts = [];
+
+			var res = await RestApi.getAssetDistribution(this.project.id, height);
+			var nAccounts = [];
 			for (var a in res) {
-				if (res.hasOwnProperty(a)) {
-					if (messaginApp.findAccount(a) < 0) newAccounts.push(a);
-				}
+				// Транзакции baseAddr не учитываем
+				if (a != this.accounts[0].addr) nAccounts.push(a);
 			}
-			if (newAccounts.length < 0) return;
-			newAccounts.forEach(function(accountAddress){
-				console.log('Запрашиваю транзакции нового держателя', accountAddress);
-				messaginApp.loadAccountMessages(accountAddress).then(function(msgs){
-					console.log('Результат loadAccountMessages:', accountAddress, msgs);
-					msgs.forEach(function(msg){
-						messaginApp.addMessage(msg);
-					});
+			nAccounts.forEach(function(accountAddress){
+				messagingApp.loadAccountMessages(accountAddress,isFullRefresh).then(function(msgs){
+					console.log('Результат loadAccountMessages', accountAddress, 'isFullRefresh', isFullRefresh, msgs);
+					if (msgs) {
+						msgs.forEach(function(msg){
+							messagingApp.addMessage(msg);
+						});
+					}
 				});
 			});
 			this.refresh();
@@ -232,14 +285,17 @@ var messaginApp = new Vue({
 			this.updateProjects();
 			this.selectBaseProject();
 		},
-		updateBase: async function() {
+		updateBase: async function(isFullRefresh) {
 			var height = await RestApi.getHeight();
-			this.messages = [];
+			if (isFullRefresh) this.messages = [];
 			accountAddress = this.accounts[0].addr;
-			messaginApp.loadAccountMessages(accountAddress).then(function(msgs){
-				msgs.forEach(function(msg){
-					messaginApp.addMessage(msg);
-				});
+			messagingApp.loadAccountMessages(accountAddress,isFullRefresh).then(function(msgs){
+				console.log('updateBase: Результат loadAccountMessages', accountAddress, 'isFullRefresh', isFullRefresh, msgs);
+				if (msgs) {
+					msgs.forEach(function(msg){
+						messagingApp.addMessage(msg);
+					});
+				}
 			});
 			this.refresh();
 		},
@@ -251,12 +307,12 @@ var messaginApp = new Vue({
 				favorits.forEach(function(f,i){
 					if (f.accountAddress == ApplicationContext.account.address) {
 						var asset = ApplicationContext.cache.assets[f.assetId];
-						messaginApp.addProject({
+						messagingApp.addProject({
 							creator: asset.sender,
 							description: asset.description,
 							displayName: f.displayName,
 							id: f.assetId,
-							isMyAddress: messaginApp.isMyAddress(asset.sender),
+							isMyAddress: messagingApp.isMyAddress(asset.sender),
 							name: asset.currency.displayName,
 							reissuable: asset.reissuable ? 'Yes' : 'No',
 							timestamp: asset.timestamp,
@@ -264,20 +320,20 @@ var messaginApp = new Vue({
 						});
 					}
 				});
-				if (messaginApp.projects.length <= 0) return;
-				var pi = messaginApp.projectIndex;
+				if (messagingApp.projects.length <= 0) return;
+				var pi = messagingApp.projectIndex;
 				if (pi < 0) pi = 0;
 			});
 		},
 		updateSelected: function() {
-			messaginApp.projects.forEach(function(p,i){
-				$('#messagin-project-'+i).removeClass("bg-primary");
+			messagingApp.projects.forEach(function(p,i){
+				$('#messaging-project-'+i).removeClass("bg-primary");
 			});
 			if (this.projectIndex >= 0) {
-				$('#messagin-project-'+this.projectIndex).addClass("bg-primary");
-				$('#messagin-project-base').removeClass("bg-primary");
+				$('#messaging-project-'+this.projectIndex).addClass("bg-primary");
+				$('#messaging-project-base').removeClass("bg-primary");
 			} else {
-				$('#messagin-project-base').addClass("bg-primary");
+				$('#messaging-project-base').addClass("bg-primary");
 			}
 		}
 	}
