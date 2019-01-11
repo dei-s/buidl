@@ -48,17 +48,8 @@ var app = angular.module('app', [
 	'app.portfolio'
 ]).config(AngularApplicationConfig).run(AngularApplicationRun);
 
-function AngularApplicationConfig($provide, $compileProvider, $validatorProvider, $qProvider, $sceDelegateProvider, $mdAriaProvider, applicationSettings) {
+function AngularApplicationConfig($provide, $compileProvider, $validatorProvider, $qProvider, $sceDelegateProvider, $mdAriaProvider) {
 	'use strict';
-
-	$provide.constant(applicationSettings,
-		angular.extend(applicationSettings, {
-			CLIENT_VERSION: Constants.VERSION,
-			NODE_ADDRESS: Constants.NODE_ADDRESS,
-			COINOMAT_ADDRESS: 'https://coinomat.com',
-			MATCHER_ADDRESS: Constants.MATCHER_ADDRESS,
-			DATAFEED_ADDRESS: 'https://marketdata.wavesplatform.com'
-		}));
 
 	$compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|local|data|file|chrome-extension):/);
 	$qProvider.errorOnUnhandledRejections(false);
@@ -141,17 +132,16 @@ function AngularApplicationConfig($provide, $compileProvider, $validatorProvider
 	}, 'String is too long. Please remove some characters.');
 }
 
-AngularApplicationConfig.$inject = ['$provide', '$compileProvider', '$validatorProvider', '$qProvider',
-	'$sceDelegateProvider', '$mdAriaProvider', 'constants.application'];
+AngularApplicationConfig.$inject = ['$provide', '$compileProvider', '$validatorProvider', '$qProvider', '$sceDelegateProvider', '$mdAriaProvider'];
 
-function AngularApplicationRun(rest, applicationConstants, notificationService) {
+function AngularApplicationRun(rest, notificationService) {
 	'use strict';
 
 	// restangular configuration
 	rest.setDefaultHttpFields({
 		timeout: 10000 // milliseconds
 	});
-	var url = applicationConstants.NODE_ADDRESS;
+	var url = Constants.NODE_ADDRESS;
 	rest.setBaseUrl(url);
 
 	// override mock methods cos in config phase services are not available yet
@@ -163,7 +153,7 @@ function AngularApplicationRun(rest, applicationConstants, notificationService) 
 	};
 }
 
-AngularApplicationRun.$inject = ['Restangular', 'constants.application', 'notificationService'];
+AngularApplicationRun.$inject = ['Restangular', 'notificationService'];
 
 angular.module('app').run(['$templateCache', function($templateCache) {
 	'use strict';

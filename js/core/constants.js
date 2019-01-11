@@ -4,6 +4,8 @@ var Constants = (function(){
 	return {
 		IS_MIR: true,
 		VERSION: '0.1.0',
+		COINOMAT_ADDRESS: 'https://coinomat.com',
+		DATAFEED_ADDRESS: 'https://marketdata.wavesplatform.com',
 		NODE_ADDRESS: 'https://node.mir.dei.su',
 		MATCHER_ADDRESS: 'https://m.mir.dei.su',
 		SUPPORT_LINK: 'dei.su',

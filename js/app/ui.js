@@ -24,15 +24,6 @@
 			LOGIN_SUCCESSFUL: 'login-successful',
 			LEASING_CANCEL: 'leasing-cancel'
 		});
-
-	angular
-		.module('app.ui')
-		// actual values are set in the application config phase
-		.constant('constants.application', {
-			CLIENT_VERSION: '',
-			NODE_ADDRESS: '',
-			COINOMAT_ADDRESS: ''
-		});
 })();
 
 (function () {
@@ -124,7 +115,7 @@
 		main: 'main-screen'
 	};
 
-	function HomeController($scope, $window, events, applicationConstants, utilsService, dialogService, applicationContext, notificationService, apiService) {
+	function HomeController($scope, $window, events, utilsService, dialogService, applicationContext, notificationService, apiService) {
 		$scope.isTestnet = utilsService.isTestnet;
 
 		var home = this;
@@ -133,7 +124,7 @@
 		home.logout = logout;
 
 		home.title = utilsService.isTestnet() ? 'TESTNET ' : '';
-		home.version = applicationConstants.CLIENT_VERSION;
+		home.version = Constants.CLIENT_VERSION;
 
 		$scope.$on(events.SPLASH_COMPLETED, function () {
 			home.screen = SCREENS.accounts;
@@ -174,7 +165,7 @@
 		}
 	}
 
-	HomeController.$inject = ['$scope', '$window', 'ui.events', 'constants.application', 'utilsService',
+	HomeController.$inject = ['$scope', '$window', 'ui.events', 'utilsService',
 		'dialogService', 'applicationContext', 'notificationService', 'apiService'];
 
 	angular
