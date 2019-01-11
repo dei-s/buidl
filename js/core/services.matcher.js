@@ -68,7 +68,7 @@
 				timestampBytes = utilityService.longToByteArray(timestamp),
 				signatureData = [].concat(publicKeyBytes, timestampBytes),
 
-				privateKeyBytes = cryptoService.base58.decode(sender.privateKey);
+				privateKeyBytes = Base58.decode(sender.privateKey);
 
 			return cryptoService.nonDeterministicSign(privateKeyBytes, signatureData);
 		}

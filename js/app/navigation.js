@@ -45,7 +45,7 @@
 
 		function initializeBackupFields() {
 			ctrl.seed = ApplicationContext.account.seed;
-			ctrl.encodedSeed = cryptoService.base58.encode(converters.stringToByteArray(ctrl.seed));
+			ctrl.encodedSeed = Base58.encode(converters.stringToByteArray(ctrl.seed));
 			ctrl.publicKey = ApplicationContext.account.keyPair.public;
 			ctrl.privateKey = ApplicationContext.account.keyPair.private;
 		}

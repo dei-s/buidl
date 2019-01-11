@@ -93,7 +93,7 @@ var AssetService = (function(){
 				feeAssetId: transfer.fee.currency.id,
 				senderPublicKey: sender.publicKey,
 				signature: signature,
-				attachment: cryptoService.base58.encode(transfer.attachment)
+				attachment: Base58.encode(transfer.attachment)
 			};
 		};
 

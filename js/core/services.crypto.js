@@ -1,3 +1,7 @@
+/**
+ * @requires {blake2b-256.js}
+ * @requires {Base58.js}
+ */
 var CryptoService = (function(){
 	'use strict';
 
@@ -51,16 +55,6 @@ var CryptoService = (function(){
 	function hashChain(noncedSecretPhraseBytes) {
 		return keccak(blake(new Uint8Array(noncedSecretPhraseBytes)));
 	}
-
-	// Base68 encoding/decoding implementation
-	/*var base58 = {
-		encode: function (buffer) {
-			return Base58.encode(buffer);
-		},
-		decode: function (string) {
-			return Base58.decode(string);
-		}
-	}*/
 
 	function buildAccountSeedHash(seedBytes) {
 		var data = appendNonce(seedBytes);
@@ -193,7 +187,6 @@ var CryptoService = (function(){
 		blake: blake,
 		keccak: keccak,
 		hashChain: hashChain,
-		//base58: base58,
 		buildAccountSeedHash: buildAccountSeedHash,
 		buildKeyPair: buildKeyPair,
 		buildPublicKey: buildPublicKey,
@@ -215,10 +208,6 @@ var CryptoService = (function(){
 	}
 })();
 
-/**
- * @requires {blake2b-256.js}
- * @requires {Base58.js}
- */
 (function() {
 	'use strict';
 
@@ -259,8 +248,6 @@ var CryptoService = (function(){
 			this.hashChain = function(noncedSecretPhraseBytes) {
 				return CryptoService.hashChain(noncedSecretPhraseBytes);
 			};
-
-			this.base58 = Base58;
 
 			this.buildAccountSeedHash = function(seedBytes) {
 				return CryptoService.buildAccountSeedHash(seedBytes);

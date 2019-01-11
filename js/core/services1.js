@@ -145,7 +145,7 @@
 						.post(signedMakeAssetNameUniqueTransaction);
 				},
 				isUniqueName: function (assetName) {
-					assetName = cryptoService.base58.encode(converters.stringToByteArray(assetName));
+					assetName = Base58.encode(converters.stringToByteArray(assetName));
 					return assetApi
 						.all('asset-id-by-unique-name')
 						.get(assetName)
