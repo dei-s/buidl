@@ -98,14 +98,6 @@ var Currency = (function () {
 			verified: true
 		});
 
-		var DEIP = new Currency({
-			id: '8Wj49jM8y9qfFx2QG6HxQXbiaxdnTt8EGm8mEqXJWFL4',
-			displayName: 'Platform',
-			shortName: 'DEIP',
-			precision: 2,
-			verified: true
-		});
-
 		var LIBRE = new Currency({
 			id: '8qqoeygkNFqSjqf8JrB1LtzkCPTS3zJPe3LHDotTJvdH',
 			displayName: 'Libre',
