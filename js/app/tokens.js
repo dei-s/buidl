@@ -24,7 +24,7 @@ var Tokens = (function(){
 			return;
 		}
 
-		var assetFee = getCreateAssetFeeByLength(assetName.length);
+		var assetFee = getAssetCreateFeeByLength(assetName.length);
 		if (assetFee > baseBalance) {
 			notificationService.error('Not enough funds for the issue transaction fee');
 			return;
@@ -116,7 +116,7 @@ var Tokens = (function(){
 		};
 	}
 
-	function getCreateAssetFeeByLength(len){
+	function getAssetCreateFeeByLength(len){
 		if (len == 1) {
 			return 1000000;
 		} else if (len == 2) {
@@ -129,8 +129,10 @@ var Tokens = (function(){
 			return 100;
 		} else if (len == 6) {
 			return 10;
+		} else if (len == 7) {
+			return 1;
 		}
-		return 1;
+		return 0.1;
 	}
 
 	function refreshAssetFee() {
@@ -166,8 +168,10 @@ var Tokens = (function(){
 						assetCreateFee.innerText = '100';
 					} else if (evl == 6) {
 						assetCreateFee.innerText = '10';
-					} else if (evl > 6) {
+					} else if (evl == 7) {
 						assetCreateFee.innerText = '1';
+					} else if (evl > 7) {
+						assetCreateFee.innerText = '0.1';
 					}
 				} else {
 					assetCreateFee.innerText = 1;
@@ -216,7 +220,6 @@ var Tokens = (function(){
 		assetCreate: assetCreate,
 		AssetTotalTokensOnKeyPress: AssetTotalTokensOnKeyPress,
 		createAssetIssueTransaction: createAssetIssueTransaction,
-		getCreateAssetFeeByLength: getCreateAssetFeeByLength,
 		refreshAssetFee: refreshAssetFee,
 		validateSender: validateSender,
 		validateAssetIssue: validateAssetIssue
