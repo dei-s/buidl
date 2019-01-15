@@ -87,6 +87,7 @@ var messagingApp = new Vue({
 			return typeof window.Mir !== 'undefined';
 		},
 		createNewMessage: function() {
+			this.message.text = $('#messaging-message-edit-text').val();
 			this.send(this.message.text, this.project.assetId, this.message.amount, this.message.fee).then(function(){
 				messagingApp.showPrimaryPanel();
 			});
@@ -274,7 +275,24 @@ var messagingApp = new Vue({
 					alert(err.message);
 				}
 			} else {
-				alert('Please, install Mir Keeper.\nFollow the link at the bottom of the page.');
+				if (msg) {
+					msg = converters.stringToByteArray(msg);
+				}
+				var assetTransfer = {
+					amount: this.message.amount,
+					attachment: msg,
+					fee: this.message.fee,
+					recipient: Address.cleanupOptionalPrefix(this.accounts[0].addr)
+				};
+				var sender = {
+					publicKey: ApplicationContext.account.keyPair.public,
+					privateKey: ApplicationContext.account.keyPair.private
+				};
+				// Create a transaction and wait for confirmation
+				var atd = AssetService.createAssetTransferTransaction(assetTransfer, sender);
+				atd.type = 4;
+				var data = await RestApi.broadcastTransaction(atd);
+				console.log(data);
 			}
 			this.showPrimaryPanel();
 		},
@@ -290,7 +308,7 @@ var messagingApp = new Vue({
 			this.message = {
 				amount: new Money(Constants.MINIMUM_MESSAGE_FEE, Currency.BASE),
 				assetId: '',
-				fee: new Money(Constants.MINIMUM_TRANSACTION_FEE, Currency.BASE),
+				fee: new Money(Constants.MINIMUM_MESSAGE_FEE, Currency.BASE),
 				id: '',
 				recipient: this.accounts[0].addr,
 				sender: ApplicationContext.account.address,

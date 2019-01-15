@@ -1,6 +1,16 @@
 var RestApi = (function(){
 	'use strict';
 
+	async function broadcastTransaction(assetTransferData) {
+		let response = await axios.post(Constants.NODE_ADDRESS + '/transactions/broadcast', JSON.stringify(assetTransferData), {
+			headers: {
+				'Accept': 'application/json, text/plain, */*',
+				'Content-Type': 'application/json;charset=UTF-8'
+			}
+		});
+		return response.data;
+	}
+
 	async function getTransactionsByAddr(address, limit) {
 		if (limit > 10000) limit = 10000;
 		let response = await axios.get(Constants.NODE_ADDRESS + '/transactions/address/' + address + '/limit/' + limit);
@@ -30,6 +40,7 @@ var RestApi = (function(){
 	}
 
 	return {
+		broadcastTransaction: broadcastTransaction,
 		getTransactionsByAddr: getTransactionsByAddr,
 		getAssetDistribution: getAssetDistribution,
 		getHeight: getHeight,
