@@ -891,6 +891,12 @@ waves-dex-user-orders waves-scrollbox{max-height:240px;overflow:auto}
 
 /* messaging */
 
+#messaging-message-buttons{
+	text-align:center;
+}
+#messaging-message-panel-heading{
+	text-align:center;
+}
 .messaging-project-add{
 	bottom:1rem;
 	position:absolute;
@@ -904,7 +910,6 @@ waves-dex-user-orders waves-scrollbox{max-height:240px;overflow:auto}
 	right:0;
 	text-align:right;
 }
-
 
 /* voting */
 

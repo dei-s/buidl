@@ -25,6 +25,7 @@ var Constants = (function(){
 		ALIAS_VERSION: 2,
 
 		/* ui */
+		MINIMUM_MESSAGE_FEE: 0.01,
 		MINIMUM_PAYMENT_AMOUNT : 1e-8,
 		MINIMUM_TRANSACTION_FEE : 0.001,
 		AMOUNT_DECIMAL_PLACES : 8,
@@ -48,8 +49,11 @@ var Constants = (function(){
 		add - addition - дополнение, пояснение
 
 		Vote example:
+		v:1,mt:6,tr:2evmK6eYHC3HdFjowBnYsYaUj9ZJz1ssGryKWshToxJX,vote:yes,add:"Принять участника petrenko_ivan13 в DEI"
 		{v:1,mt:6,tr:2evmK6eYHC3HdFjowBnYsYaUj9ZJz1ssGryKWshToxJX,vote:yes,add:"Принять участника petrenko_ivan13 в DEI"}
 		{v:1,mt:6,tr:2evmK6eYHC3HdFjowBnYsYaUj9ZJz1ssGryKWshToxJX,vote:yes,add:"vk.com/petrenko_ivan13 3PJ7J7SRCh3yYfHBvQAPCtZSFeThUL6gNRV"}
+
+		https://github.com/lightbend/config/blob/master/HOCON.md
 		*/
 		MSG_TYPE_OFFER: 1,
 		MSG_TYPE_OFFER_ACCEPT: 2,

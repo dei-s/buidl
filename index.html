@@ -1214,7 +1214,7 @@
 	</div> <!-- messaging-project-container -->
 	<h2 class="sectionHeader">Economy messaging</h2>
 	<div id="messaging-main-container" class="row messaging-content">
-		<div id="messaging-table-container" class="col-lg-7">
+		<div id="messaging-table-container" class="col-lg-8 table-responsive">
 			<h3>Messages</h3>
 			<table id="messaging-table" class="table table-striped table-hover">
 				<thead>
@@ -1229,45 +1229,66 @@
 				<tbody>
 					<tr v-for="(msg, index) in messages" :id="'messaging-message-'+index" :onclick="'messagingApp.showMessageByIndex('+index+')'">
 						<td>{{index}}</td>
-						<td>{{msg.id}}<br/>{{msg.sender}}</td>
-						<td>{{msg.text}}</td>
 						<td>{{formatTime(msg.time)}}</td>
+						<td><span :onclick="'console.log('+msg.id+')'">{{msg.id}}</span><br/>{{msg.sender}}</td>
+						<td>{{formatMsgText(msg.text)}}</td>
 						<td><button class="btn btn-sm btn-info">Посмотреть</button></td>
 					</tr>
 				</tbody>
 			</table> <!-- messaging-table -->
 		</div> <!-- messaging-table-container -->
-		<div id="messaging-panel-container" class="col-lg-5">
+		<div id="messaging-panel-container" class="col-lg-4">
 			<div id="messaging-primary-panel" class="panel panel-primary" hidden>
 				<div class="panel-heading">
 					Messaging
 				</div>
 				<div class="panel-body" style="text-align:center;">
-					<button class="btn btn-lg btn-success" onclick="messagingApp.showMessageForm();" style="margin:1rem 1rem 2rem 1rem;">Создать новое сообщение</button>
+					<button class="btn btn-lg btn-success" onclick="messagingApp.showCreateNewMessage()" style="margin:1rem 1rem 2rem 1rem;">Создать новое сообщение</button>
 				</div>
 			</div> <!-- messaging-primary-panel -->
 			<div id="messaging-message-panel" class="panel panel-success" hidden>
-				<div class="panel-heading">
-					Message
-				</div>
+				<div id="messaging-message-panel-heading" class="panel-heading">{{message.title}}</div>
 				<div class="panel-body">
-					<table class="table">
+					<table id="messaging-message-edit-table" class="table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Value</th>
+							</tr>
+						</thead>
 						<tbody>
 							<tr>
-								<td>amount</td>
-								<td>{{message.amount}}</td>
+								<td><a href="https://github.com/lightbend/config/blob/master/HOCON.md" target="_blank">text</a></td>
+								<td><textarea style="width:100%;">{{message.text}}</textarea></td>
 							</tr>
+							<tr>
+								<td>amount</td>
+								<td>{{message.amount.toTokens()}} {{message.amount.currency.displayName}}</td>
+							</tr>
+							<tr>
+								<td>fee</td>
+								<td>{{message.fee.toTokens()}} {{message.fee.currency.displayName}}</td>
+							</tr>
+							<tr>
+								<td>help</td>
+								<td>
+									Msg example:<br/>v:1,mt:1,add:"Продаю коллекцию монет СССР"
+									<br/>MSG_TYPE:<br/>OFFER: 1,<br/>OFFER_ACCEPT: 2,<br/>OFFER_REJECT: 3,<br/>OFFER_WITHDRAW: 4,<br/>VOTING: 5,<br/>VOTE: 6
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<table id="messaging-message-see-table" class="table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+						<tbody>
 							<tr>
 								<td>id</td>
 								<td>{{message.id}}</td>
-							</tr>
-							<tr>
-								<td>recipient</td>
-								<td>{{message.recipient}}</td>
-							</tr>
-							<tr>
-								<td>sender</td>
-								<td>{{message.sender}}</td>
 							</tr>
 							<tr>
 								<td>text</td>
@@ -1277,8 +1298,20 @@
 								<td>time</td>
 								<td>{{message.time}}</td>
 							</tr>
+							<tr>
+								<td>amount</td>
+								<td>{{message.amount.toTokens()}} {{message.amount.currency.displayName}}</td>
+							</tr>
+							<tr>
+								<td>fee</td>
+								<td>{{message.fee.toTokens()}} {{message.fee.currency.displayName}}</td>
+							</tr>
 						</tbody>
 					</table>
+					<div id="messaging-message-buttons">
+						<button class="btn btn-lg btn-light" onclick="messagingApp.cancelNewMessage()" style="margin:1rem 1rem 2rem 1rem;">Отмена</button>
+						<button class="btn btn-lg btn-primary" onclick="messagingApp.createNewMessage()" style="margin:1rem 1rem 2rem 1rem;">Создать</button>
+					</div>
 				</div>
 			</div> <!-- messaging-message-panel -->
 		</div> <!-- messaging-panel-container -->

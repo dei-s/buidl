@@ -26,7 +26,8 @@
  * }
  * messages - array of message
  * message = {
- *     amount: item.amount,
+ *     amount: Money,
+ *     fee: Money,
  *     id: item.id,
  *     recipient: item.recipient,
  *     sender: item.sender,
@@ -61,6 +62,15 @@ var messagingApp = new Vue({
 			}],
 			last: 0
 		});
+		this.message = {
+			amount: new Money(0, Currency.BASE),
+			fee: new Money(Constants.MINIMUM_TRANSACTION_FEE, Currency.BASE),
+			id: '',
+			recipient: '',
+			sender: '',
+			text: '',
+			time: 0
+		};
 	},
 	methods: {
 		addMessage: function(msg) {
@@ -69,6 +79,17 @@ var messagingApp = new Vue({
 		addProject: function(project) {
 			project.isSelected = false;
 			return this.projects.push(project);
+		},
+		cancelNewMessage: function() {
+			this.showPrimaryPanel();
+		},
+		checkKeeper: function() {
+			return typeof window.Mir !== 'undefined';
+		},
+		createNewMessage: function() {
+			this.send(this.message.text, this.project.assetId, this.message.amount, this.message.fee).then(function(){
+				messagingApp.showPrimaryPanel();
+			});
 		},
 		decode: function(text) {
 			let bytes = Base58.decode(text);
@@ -101,6 +122,10 @@ var messagingApp = new Vue({
 				if (this.accounts[accountIndex].cashe[assetIndex].msgs[i].id == msgId) return i;
 			}
 			return -1;
+		},
+		formatMsgText: function(text) {
+			if (text.length < 40) return text;
+			return text.slice(0,15) + '...' + text.slice(-15);
 		},
 		formatTime: function(timestamp) {
 			let time = new Date(timestamp);
@@ -164,7 +189,8 @@ var messagingApp = new Vue({
 					if (isFullRefresh) {
 						let msg = messagingApp.decode(item.attachment);
 						var message = {
-							amount: item.amount,
+							amount: new Money(item.amount, Currency.BASE),
+							fee: new Money(Constants.MINIMUM_TRANSACTION_FEE, Currency.BASE),
 							id: item.id,
 							recipient: item.recipient,
 							sender: item.sender,
@@ -176,7 +202,8 @@ var messagingApp = new Vue({
 					} else if (messagingApp.findCasheMessage(i,j,item.id) < 0) {
 						let msg = messagingApp.decode(item.attachment);
 						var message = {
-							amount: item.amount,
+							amount: new Money(item.amount, Currency.BASE),
+							fee: new Money(Constants.MINIMUM_TRANSACTION_FEE, Currency.BASE),
 							id: item.id,
 							recipient: item.recipient,
 							sender: item.sender,
@@ -207,7 +234,7 @@ var messagingApp = new Vue({
 			this.projectIndex = -1;
 			this.updateBase(true).then(function(){
 				messagingApp.updateSelected();
-				$('#messaging-primary-panel').show();
+				messagingApp.showPrimaryPanel();
 			});
 		},
 		selectProjectByIndex: function(index) {
@@ -221,13 +248,56 @@ var messagingApp = new Vue({
 			this.project = this.projects[index];
 			this.update(true).then(function(){
 				messagingApp.updateSelected();
-				$('#messaging-primary-panel').show();
+				this.showPrimaryPanel();
 			});
+		},
+		send: async function(msg, assetId, amount, fee) {
+			if (this.checkKeeper()) {
+				let params = {
+					type: 4,
+					data: {
+						amount: {
+							assetId: Currency.BASE.id, //assetId,
+							tokens: amount.toTokens()
+						},
+						fee: {
+							assetId: Currency.BASE.id,
+							tokens: fee.toTokens()
+						},
+						recipient: this.accounts[0].addr,
+						attachment: msg
+					}
+				}
+				try {
+					let res = await window.Mir.signAndPublishTransaction(params);
+				} catch (err) {
+					alert(err.message);
+				}
+			} else {
+				alert('Please, install Mir Keeper.\nFollow the link at the bottom of the page.');
+			}
+			this.showPrimaryPanel();
 		},
 		show: function() {
 			$('#messaging').show();
 			this.updateAll();
 			this.start();
+		},
+		showCreateNewMessage: function() {
+			this.showMessagePanel();
+			$('#messaging-message-edit-table').show();
+			$('#messaging-message-see-table').hide();
+			this.message = {
+				amount: new Money(Constants.MINIMUM_MESSAGE_FEE, Currency.BASE),
+				assetId: '',
+				fee: new Money(Constants.MINIMUM_TRANSACTION_FEE, Currency.BASE),
+				id: '',
+				recipient: this.accounts[0].addr,
+				sender: ApplicationContext.account.address,
+				text: '',
+				time: '',
+				title: "New message"
+			}
 		},
 		showMessageByIndex: function(index) {
 			this.hideAllPanels(true);
@@ -242,7 +312,11 @@ var messagingApp = new Vue({
 		showMessageByIndex: function(index) {
 			this.messageIndex = index;
 			this.message = this.messages[index];
-			this.showMessageForm();
+			this.showMessagePanel();
+		},
+		showPrimaryPanel: function() {
+			this.hideAllPanels();
+			$('#messaging-primary-panel').show();
 		},
 		start: function() {
 			if (!this.updateTimer) {
@@ -278,7 +352,7 @@ var messagingApp = new Vue({
 					}
 				});
 			});
-			this.refresh();
+			if (isFullRefresh) this.refresh();
 		},
 		updateAll: function() {
 			this.projects = [];
@@ -297,7 +371,7 @@ var messagingApp = new Vue({
 					});
 				}
 			});
-			this.refresh();
+			if (isFullRefresh) this.refresh();
 		},
 		updateProjects: async function() {
 			if (!FavoritService) return;
