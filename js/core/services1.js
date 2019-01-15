@@ -44,7 +44,7 @@
 
 	angular
 		.module('waves.core.services')
-		.service('apiService', ['Restangular', 'cryptoService', function (rest, cryptoService) {
+		.service('apiService', ['Restangular', function (rest) {
 			var blocksApi = rest.all('blocks');
 
 			this.blocks = {
