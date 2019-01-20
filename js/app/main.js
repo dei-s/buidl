@@ -227,7 +227,12 @@ angular.module('app').run(['$templateCache', function($templateCache) {
 
 
 	$templateCache.put('wallet/box.component',
-		"<img ng-src=\"img/{{::$ctrl.image}}\" alt=\"{{::$ctrl.displayName}}\"><div class=\"wB-name\">{{::$ctrl.displayName | uppercase}}</div><div class=\"wB-add\"></div><div class=\"wB-balInt\">{{$ctrl.integerBalance}}</div><div class=\"wB-balDec\">{{$ctrl.fractionBalance}}</div><div class=\"wB-buttons\"><a ng-click=\"$ctrl.onSend({currency: $ctrl.balance.currency})\"><div class=\"wB-but wB-butSend s-fade\"><p>SEND</p></div></a><a ng-click=\"$ctrl.onWithdraw({currency: $ctrl.balance.currency})\"><div class=\"wB-but wB-butRec s-fade\"><p>WITHDRAW</p></div></a><a ng-click=\"$ctrl.onDeposit({currency: $ctrl.balance.currency})\"><div class=\"wB-but wB-butTrade s-fade\"><p>DEPOSIT</p></div></a></div>"
+		"<img ng-src=\"img/{{::$ctrl.image}}\" alt=\"{{::$ctrl.displayName}}\"><div class=\"wB-name\">{{::$ctrl.displayName | uppercase}}</div><div class=\"wB-add\"></div><div class=\"wB-balInt\">{{$ctrl.integerBalance}}</div><div class=\"wB-balDec\">{{$ctrl.fractionBalance}}</div>"+
+		"<div class=\"wB-buttons\">"+
+		"<button class=\"btn s-button s-fade\" ng-click=\"$ctrl.onSend({currency: $ctrl.balance.currency})\">SEND</button>"+
+		"<button class=\"btn s-button s-fade\" ng-click=\"$ctrl.onWithdraw({currency: $ctrl.balance.currency})\">WITHDRAW</button>"+
+		"<button class=\"btn s-button s-fade\" ng-click=\"$ctrl.onDeposit({currency: $ctrl.balance.currency})\">DEPOSIT</button>"+
+		"</div>"
 	);
 
 }]);

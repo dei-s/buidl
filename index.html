@@ -430,6 +430,21 @@
 						on-send="walletList.send(w)"
 						on-withdraw="walletList.withdraw(w)"
 						on-deposit="walletList.deposit(w)"></wallet-box>
+					<div class="col-md-2 walletBox" ng-repeat="(index,w) in walletList.favorits" balance="w.balance" on-send="walletList.send(w)">
+						<img alt="{{w.displayName}}" ng-src="img/wB-bg-{{w.image}}.svg">
+						<div class="wB-name ng-binding">{{w.displayName}}</div>
+						<div class="wB-add"></div>
+						<div class="wB-balInt ng-binding">{{w.integerBalance}}</div>
+						<div class="wB-balDec ng-binding">{{w.fractionBalance}}</div>
+						<div class="wB-buttons">
+							<button class="btn s-button s-button2 s-fade" ng-click="walletList.send(w)">SEND</button>
+							<button class="btn s-button s-button2 s-fade" ng-click="walletList.voting(w)">VOTING</button>
+							<button class="btn s-button s-button2 s-fade" ng-click="walletList.messaging(w)">MESSAGING</button>
+						</div>
+					</div>
+					<div class="col-md-2 walletBox s-wallet-plus">
+						<span class="glyphicon glyphicon-plus"></span>
+					</div>
 				</div>
 
 				<div class="noDisp" ng-controller="walletSendController as send">

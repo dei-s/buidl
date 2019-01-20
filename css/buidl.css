@@ -517,14 +517,36 @@ span.tabs-radio img.selected{opacity:1;pointer-events:none}
 .wB-balInt{
 	font-size:2.5rem;
 }
-.wB-buttons{position:absolute;bottom:0;left:0;width:100%;height: 25%;margin-bottom:-5px;}
-.wB-buttons a{text-decoration:none}
-.wB-but{display:inline-block;position:relative;width:32.4%;height:80%;margin:.45%;background: #c7c7c775;overflow:hidden;font-family:Roboto;font-size:16px;color: #333333;border: 1px;outline:none;cursor:pointer;}
-.wB-but:hover{background: #333333c2;color: white;}
-.wB-but p{position:absolute;top:50%;left:50%;margin:0 -50% 0 0;transform:translate(-50%,-55%)}
-.wB-butSend{border-radius: 2px 2px 2px 2px;}
-.wB-butRec{border-radius:2px 2px 2px 2px}
-.wB-butTrade{border-radius: 2px 2px 2px 2px;}
+.wB-buttons{
+	position:absolute;
+	bottom:0;
+	left:0;
+	width:100%;
+	height:25%;
+}
+.s-button{
+	font-size:1rem;
+	margin:.5%;
+	overflow:hidden;
+	padding-left:0;
+	padding-right:0;
+	width:32%;
+}
+.s-button:hover{
+	background:#333333c2;
+	color:white;
+}
+.s-button2{
+	margin:0;
+}
+.s-wallet-plus{
+	cursor:pointer;
+	text-align:center;
+}
+.s-wallet-plus span{
+	font-size:3rem;
+	top:3rem;
+}
 
 /* PORTFOLIO */
 

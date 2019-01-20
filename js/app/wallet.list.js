@@ -77,11 +77,17 @@
 
 		function sendCommandEvent(event, currency) {
 			var assetWallet = findWalletByCurrency(currency);
+			if (!assetWallet) assetWallet = findFavoritByCurrency(currency);
 			var baseWallet = findWalletByCurrency(Currency.BASE);
-
 			$scope.$broadcast(event, {
 				assetBalance: assetWallet.balance,
 				baseBalance: baseWallet.balance
+			});
+		}
+
+		function findFavoritByCurrency(currency) {
+			return _.find(ctrl.favorits, function (w) {
+				return w.balance.currency === currency;
 			});
 		}
 
@@ -119,11 +125,13 @@
 			];
 		}
 
-		ctrl.transactions = [];
-		ctrl.send = send;
-		ctrl.withdraw = withdraw;
 		ctrl.deposit = deposit;
 		ctrl.depositFromCard = depositFromCard;
+		ctrl.messaging = messaging;
+		ctrl.send = send;
+		ctrl.transactions = [];
+		ctrl.voting = voting;
+		ctrl.withdraw = withdraw;
 
 		$scope.$on('$destroy', function () {
 			if (angular.isDefined(refreshPromise)) {
@@ -131,6 +139,10 @@
 				refreshPromise = undefined;
 			}
 		});
+
+		function messaging(w){
+			console.log('messaging', w);
+		}
 
 		function send (wallet) {
 			sendCommandEvent(events.WALLET_SEND, wallet.balance.currency);
@@ -198,6 +210,7 @@
 
 		function refreshWalletList() {
 			ctrl.wallets = defaultWallets;
+			ctrl.favorits = [];
 			if (FavoritService) {
 				var favorits = FavoritService.getFavorits();
 				if (favorits) {
@@ -205,30 +218,14 @@
 						favorits.forEach(function(f,i){
 							if (f.accountAddress == ApplicationContext.account.address) {
 								var asset = ApplicationContext.cache.assets[f.assetId];
-								/*
-								var s = 'displayName=' + asset.currency.displayName +
-									'creator=' + asset.sender +
-									'description' + asset.description +
-									isMyAddress(asset.sender)
-									'timestamp=' + asset.timestamp +
-									'totalTokens=' + asset.totalTokens.formatAmount() +
-									'reissuable=' + asset.reissuable ? 'Yes' : 'No';
-								*/
-								/*
-								var c = new Currency({
-									id: '',
-									displayName: f.displayName,
-									shortName: asset.currency.shortName,
-									precision: asset.currency.precition,
-									verified: true
-								});
-								*/
-								asset.balance.currency.displayNmae = f.displayName;
-								var w = {
+								ctrl.favorits.push({
 									balance: asset.balance,
-									depositWith: Currency.LBR
-								}
-								ctrl.wallets.push(w);
+									depositWith: Currency.LBR,
+									displayName: f.displayName,
+									fractionBalance: asset.balance.formatFractionPart(),
+									image: 'TEST',
+									integerBalance: asset.balance.formatIntegerPart()
+								});
 							}
 						});
 					});
@@ -241,16 +238,14 @@
 		}
 
 		function refreshWallets() {
-			apiService.address.balance(ApplicationContext.account.address)
-				.then(function (response) {
-					var baseWallet = findWalletByCurrency(Currency.BASE);
-					baseWallet.balance = Money.fromCoins(response.balance, Currency.BASE);
-				});
+			apiService.address.balance(ApplicationContext.account.address).then(function (response) {
+				var baseWallet = findWalletByCurrency(Currency.BASE);
+				baseWallet.balance = Money.fromCoins(response.balance, Currency.BASE);
+			});
 
 			apiService.assets.balance(ApplicationContext.account.address).then(function (response) {
 				_.forEach(response.balances, function (assetBalance) {
 					var id = assetBalance.assetId;
-
 					// adding asset details to cache
 					ApplicationContext.cache.putAsset(assetBalance.issueTransaction);
 					ApplicationContext.cache.updateAsset(id, assetBalance.balance,
@@ -261,6 +256,15 @@
 					var asset = ApplicationContext.cache.assets[wallet.balance.currency.id];
 					if (asset) {
 						wallet.balance = asset.balance;
+					}
+				});
+
+				ctrl.favorits.forEach(function(wallet){
+					var asset = ApplicationContext.cache.assets[wallet.balance.currency.id];
+					if (asset) {
+						wallet.balance = asset.balance;
+						wallet.fractionBalance = asset.balance.formatFractionPart();
+						wallet.integerBalance = asset.balance.formatIntegerPart();
 					}
 				});
 			});
@@ -277,6 +281,14 @@
 				.then(function () {
 					ctrl.transactions = txArray;
 				});
+		}
+
+		function voting(favorit){
+			console.log('voting', favorit);
+			var timer = setInterval(function(){
+				$('#votingTabIcon').children().click();
+				clearInterval(timer);
+			}, 100);
 		}
 
 		refreshWalletList();
