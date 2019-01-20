@@ -1,19 +1,3 @@
-/******************************************************************************
- * Copyright © 2016 The Waves Developers.                                     *
- *                                                                            *
- * See the LICENSE files at                                                   *
- * the top-level directory of this distribution for the individual copyright  *
- * holder information and the developer policies on copyright and licensing.  *
- *                                                                            *
- * Unless otherwise agreed in a custom licensing agreement, no part of the    *
- * Waves software, including this file, may be copied, modified, propagated,  *
- * or distributed except according to the terms contained in the LICENSE      *
- * file.                                                                      *
- *                                                                            *
- * Removal or modification of this copyright notice is prohibited.            *
- *                                                                            *
- ******************************************************************************/
-
 /**
  * @requires {decimal.js}
  */
@@ -126,6 +110,11 @@ var Currency = (function () {
 		return currencyCache[data.id];
 	}
 
+	function getByAssetId(assetId) {
+		if (assetId == '') return BASE;
+		return currencyCache[assetId];
+	}
+
 	function isCached(assetId) {
 		return currencyCache.hasOwnProperty(assetId);
 	}
@@ -160,6 +149,7 @@ var Currency = (function () {
 	if (isMir()) {
 		return {
 			create: Create,
+			getByAssetId: getByAssetId,
 			invalidateCache: invalidateCache,
 			isCached: isCached,
 			patchCurrencyIdsForTestnet: patchCurrencyIdsForTestnet,
@@ -170,6 +160,7 @@ var Currency = (function () {
 	} else {
 		return {
 			create: Create,
+			getByAssetId: getByAssetId,
 			invalidateCache: invalidateCache,
 			isCached: isCached,
 			patchCurrencyIdsForTestnet: patchCurrencyIdsForTestnet,
@@ -187,3 +178,19 @@ var Currency = (function () {
 
 // set up decimal to format 0.00000001 as is instead of 1e-8
 Decimal.config({toExpNeg: -(Currency.BASE.precision + 1)});
+
+/******************************************************************************
+ * Copyright © 2016 The Waves Developers.                                     *
+ *                                                                            *
+ * See the LICENSE files at                                                   *
+ * the top-level directory of this distribution for the individual copyright  *
+ * holder information and the developer policies on copyright and licensing.  *
+ *                                                                            *
+ * Unless otherwise agreed in a custom licensing agreement, no part of the    *
+ * Waves software, including this file, may be copied, modified, propagated,  *
+ * or distributed except according to the terms contained in the LICENSE      *
+ * file.                                                                      *
+ *                                                                            *
+ * Removal or modification of this copyright notice is prohibited.            *
+ *                                                                            *
+ ******************************************************************************/

@@ -64,7 +64,7 @@ var messagingApp = new Vue({
 		});
 		this.message = {
 			amount: new Money(0, Currency.BASE),
-			fee: new Money(Constants.MINIMUM_TRANSACTION_FEE, Currency.BASE),
+			fee: new Money(Constants.MINIMUM_MESSAGE_FEE, Currency.BASE),
 			id: '',
 			recipient: '',
 			sender: '',
@@ -186,7 +186,7 @@ var messagingApp = new Vue({
 				}
 				if (ok && item.attachment && item.amount >= messagingApp.minAmount && item.fee >= messagingApp.minFee && (isBaseAddr || (item.recipient == messagingApp.accounts[0].addr && item.sender == accountAddress))) {
 					let message = {
-						amount: Money.fromCoins(item.amount, Currency.BASE),
+						amount: Money.fromCoins(item.amount, Currency.getByAssetId(item.assetId)),
 						fee: Money.fromCoins(item.fee, Currency.BASE),
 						id: item.id,
 						recipient: item.recipient,
@@ -284,7 +284,7 @@ var messagingApp = new Vue({
 		},
 		showCreateNewMessage: function() {
 			this.message = {
-				amount: new Money(Constants.MINIMUM_MESSAGE_FEE, Currency.BASE),
+				amount: Money.fromTokens(Constants.MINIMUM_MESSAGE_FEE, Currency.getByAssetId(this.project.id)),
 				assetId: '',
 				fee: new Money(Constants.MINIMUM_MESSAGE_FEE, Currency.BASE),
 				id: '',
