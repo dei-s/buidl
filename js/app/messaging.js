@@ -44,13 +44,11 @@ var messagingApp = new Vue({
 		message: {}, // selected message
 		messageIndex: -1, // selected message
 		messages: [],
-		minAmount: 100000, // 0.001 MIR or Asset(Token)
-		minFee: 1000000, // 0.01 MIR
 		project: {}, // selected project
 		projectIndex: -1, // selected project
 		projects: [],
 		updateInterval: 30000,
-		updatingTimer: false
+		updateTimer: false
 	},
 	created: function() {
 		// Base account for input coin MIR, no token
@@ -64,7 +62,7 @@ var messagingApp = new Vue({
 		});
 		this.message = {
 			amount: new Money(0, Currency.BASE),
-			fee: new Money(Constants.MINIMUM_MESSAGE_FEE, Currency.BASE),
+			fee: new Money.fromCoins(Constants.MINIMUM_MESSAGE_FEE_COINS, Currency.BASE),
 			id: '',
 			recipient: '',
 			sender: '',
@@ -184,7 +182,7 @@ var messagingApp = new Vue({
 				} else {
 					ok = !item.assetId;
 				}
-				if (ok && item.attachment && item.amount >= messagingApp.minAmount && item.fee >= messagingApp.minFee && (isBaseAddr || (item.recipient == messagingApp.accounts[0].addr && item.sender == accountAddress))) {
+				if (ok && item.attachment && item.amount >= Constants.MINIMUM_MESSAGE_AMOUNT_COINS && item.fee >= Constants.MINIMUM_MESSAGE_FEE_COINS && (isBaseAddr || (item.recipient == messagingApp.accounts[0].addr && item.sender == accountAddress))) {
 					let message = {
 						amount: Money.fromCoins(item.amount, Currency.getByAssetId(item.assetId)),
 						fee: Money.fromCoins(item.fee, Currency.BASE),
@@ -194,8 +192,9 @@ var messagingApp = new Vue({
 						text: messagingApp.decode(item.attachment),
 						time: item.timestamp
 					};
-					if (isFullRefresh || messagingApp.findCasheMessage(i,j,item.id) < 0) newMessages.unshift(message);
-					if (messagingApp.findCasheMessage(i,j,item.id) < 0) messagingApp.accounts[i].cashe[j].msgs.push(message);
+					let mi = messagingApp.findCasheMessage(i,j,item.id);
+					if (isFullRefresh || mi < 0) newMessages.unshift(message);
+					if (mi < 0) messagingApp.accounts[i].cashe[j].msgs.push(message);
 				}
 			});
 			messagingApp.accounts[i].last = lastTime.valueOf();
@@ -260,13 +259,13 @@ var messagingApp = new Vue({
 				if (msg) {
 					msg = converters.stringToByteArray(msg);
 				}
-				var assetTransfer = {
-					amount: this.message.amount,
+				let assetTransfer = {
+					amount: amount,
 					attachment: msg,
-					fee: this.message.fee,
+					fee: fee,
 					recipient: Address.cleanupOptionalPrefix(this.accounts[0].addr)
 				};
-				var sender = {
+				let sender = {
 					publicKey: ApplicationContext.account.keyPair.public,
 					privateKey: ApplicationContext.account.keyPair.private
 				};
@@ -284,9 +283,9 @@ var messagingApp = new Vue({
 		},
 		showCreateNewMessage: function() {
 			this.message = {
-				amount: Money.fromTokens(Constants.MINIMUM_MESSAGE_FEE, Currency.getByAssetId(this.project.id)),
+				amount: Money.fromCoins(Constants.MINIMUM_MESSAGE_AMOUNT_CONS, Currency.getByAssetId(this.project.id)),
 				assetId: '',
-				fee: new Money(Constants.MINIMUM_MESSAGE_FEE, Currency.BASE),
+				fee: new Money.fromCoins(Constants.MINIMUM_MESSAGE_FEE_COINS, Currency.BASE),
 				id: '',
 				recipient: this.accounts[0].addr,
 				sender: ApplicationContext.account.address,
@@ -394,8 +393,6 @@ var messagingApp = new Vue({
 					}
 				});
 				if (messagingApp.projects.length <= 0) return;
-				var pi = messagingApp.projectIndex;
-				if (pi < 0) pi = 0;
 			});
 		},
 		updateSelected: function() {

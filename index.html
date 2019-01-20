@@ -1208,7 +1208,6 @@
 		<div v-for="(project, index) in projects" class="walletBox col-md-2 messaging-project" :id="'messaging-project-'+index" :onclick="'messagingApp.selectProjectByIndex('+index+')'">
 			<img src="img/wB-bg-TEST.svg">
 			<div class="wB-name">{{project.name}}</div>
-			<p class="messaging-project-add">{{project.isSelected}}</p>
 			<p class="messaging-project-id">{{project.id}}</p>
 		</div>
 	</div> <!-- messaging-project-container -->
