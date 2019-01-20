@@ -1327,90 +1327,251 @@
 
 
 <div id="voting" class="container-fluid" hidden>
+	<div id="voting-project-container" class="row">
+		<div id="voting-project-base" class="walletBox col-md-2 messaging-project" onclick="votingApp.selectBaseProject()">
+			<img src="img/wB-bg-MIR-blue.svg">
+			<div class="wB-name">BASE</div>
+		</div>
+		<div v-for="(project, index) in projects" class="walletBox col-md-2 voting-project" :id="'voting-project-'+index" :onclick="'votingApp.selectProjectByIndex('+index+')'">
+			<img src="img/wB-bg-TEST.svg">
+			<div class="wB-name">{{project.name}}</div>
+			<p class="voting-project-id">{{project.id}}</p>
+		</div>
+	</div> <!-- voting-project-container -->
 	<h2 class="sectionHeader">DECENTRALIZED VOTING</h2>
 	<div id="voting-main-container" class="row content-voting-row">
-		<div id="voting-table-container" class="col-lg-6">
+		<div id="voting-panel-container" class="col-lg-5">
+			<div id="voting-primary-panel" class="panel panel-primary" hidden>
+				<div class="panel-heading">
+					Voting
+				</div>
+				<div class="panel-body" style="text-align:center;">
+					<button class="btn btn-lg btn-success" onclick="votingApp.showCreateNewVoting();" style="margin:1rem 1rem 2rem 1rem;">Создать новое голосование</button>
+					<div class="well" hidden>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.
+					</div>
+				</div>
+				<div class="panel-body" style="text-align:center;">
+					<button class="btn btn-sm btn-info" onclick="votingApp.showVotePanel();">Посмотреть VotePanel</button>
+				</div>
+			</div> <!-- voting-primary-panel -->
+			<div id="voting-panel" class="panel panel-success" hidden>
+				<div id="voting-panel-heading" class="panel-heading">{{voting.title}}</div>
+				<div class="panel-body">
+					<table id="voting-edit-table" class="table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>name</td>
+								<td><input id="voting-edit-name">{{voting.name}}</input></td>
+							</tr>
+							<tr>
+								<td>amount</td>
+								<td>{{voting.amount.toTokens()}}={{voting.amount.toCoins()}} {{voting.amount.currency.displayName}}</td>
+							</tr>
+							<tr>
+								<td>fee</td>
+								<td>{{voting.fee.toTokens()}} {{voting.fee.currency.displayName}}</td>
+							</tr>
+							<tr>
+								<td><a href="https://github.com/lightbend/config/blob/master/HOCON.md" target="_blank">text</a></td>
+								<td><textarea id="voting-edit-text" style="width:100%;">{{voting.text}}</textarea></td>
+							</tr>
+						</tbody>
+					</table>
+					<table id="voting-info-table" class="table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>name</td>
+								<td style="word-break:break-all;">{{voting.name}}</td>
+							</tr>
+							<tr>
+								<td>creator</td>
+								<td>{{voting.creator.name}} ({{voting.creator.id}})</td>
+							</tr>
+							<tr>
+								<td>createdDate</td>
+								<td>{{formatTime(voting.createdDate)}} - {{voting.createdDate}}</td>
+							</tr>
+							<tr>
+								<td>expiarationDate</td>
+								<td>{{formatTime(voting.expirationDate)}} - {{voting.expirationDate}}</td>
+							</tr>
+							<tr>
+								<td>amount</td>
+								<td>{{voting.amount.toTokens()}}={{voting.amount.toCoins()}} {{voting.amount.currency.displayName}}</td>
+							</tr>
+							<tr>
+								<td>fee</td>
+								<td>{{voting.fee.toTokens()}} {{voting.fee.currency.displayName}}</td>
+							</tr>
+							<tr>
+								<td>id</td>
+								<td>{{voting.id}}</td>
+							</tr>
+							<tr>
+								<td>recipient</td>
+								<td>{{voting.recipient}}</td>
+							</tr>
+							<tr>
+								<td>text</td>
+								<td style="word-break:break-all;">{{voting.text}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<div id="voting-buttons">
+						<button class="btn btn-lg btn-light" onclick="votingApp.cancelNewVoting()" style="margin:1rem 1rem 2rem 1rem;">Отмена</button>
+						<button class="btn btn-lg btn-primary" onclick="votingApp.createNewVoting()" style="margin:1rem 1rem 2rem 1rem;">Создать</button>
+					</div>
+				</div>
+			</div> <!-- voting-panel -->
+			<div id="voting-vote-panel" class="panel panel-success" hidden>
+				<div id="voting-vote-panel-heading" class="panel-heading">{{vote.title}}</div>
+				<div class="panel-body">
+					<table id="voting-vote-edit-table" class="table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><a href="https://github.com/lightbend/config/blob/master/HOCON.md" target="_blank">text</a></td>
+								<td><textarea id="voting-vote-edit-text" style="width:100%;">{{vote.text}}</textarea></td>
+							</tr>
+							<tr>
+								<td>amount</td>
+								<td>{{vote.amount.toTokens()}}={{vote.amount.toCoins()}} {{vote.amount.currency.displayName}}</td>
+							</tr>
+							<tr>
+								<td>fee</td>
+								<td>{{vote.fee.toTokens()}} {{vote.fee.currency.displayName}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<table id="voting-vote-info-table" class="table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>time</td>
+								<td>{{formatTime(vote.timestamp)}} - {{vote.timestamp}}</td>
+							</tr>
+							<tr>
+								<td>name</td>
+								<td>{{vote.name}}</td>
+							</tr>
+							<tr>
+								<td>vote</td>
+								<td>{{vote.vote}}</td>
+							</tr>
+							<tr>
+								<td>add</td>
+								<td>{{vote.add}}</td>
+							</tr>
+							<tr>
+								<td>amount</td>
+								<td>{{vote.amount.toTokens()}}={{vote.amount.toCoins()}} {{vote.amount.currency.displayName}}</td>
+							</tr>
+							<tr>
+								<td>fee</td>
+								<td>{{vote.fee.toTokens()}} {{vote.fee.currency.displayName}}</td>
+							</tr>
+							<tr>
+								<td>id</td>
+								<td>{{vote.id}}</td>
+							</tr>
+							<tr>
+								<td>sender</td>
+								<td>{{vote.sender.name}} ({{vote.sender.id}})</td>
+							</tr>
+							<tr>
+								<td>recipient</td>
+								<td>{{vote.recipient}}</td>
+							</tr>
+							<tr>
+								<td>text</td>
+								<td style="word-break:break-all;">{{vote.text}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<!--form id="vote-form" class="col-md-12 panel-body" style="margin:1rem;">
+						<div class="form-group">
+							<div class="form-check">
+								<input type="radio" class="form-check-input" name="vote" id="vote1" value="yes" checked>
+								Yes
+							</div>
+							<div class="form-check">
+								<input type="radio" class="form-check-input" name="vote" id="vote2" value="no" checked>No
+							</div>
+							<div class="form-check">
+								<input type="radio" class="form-check-input" name="vote" id="vote3" value="abstain" checked>Abstain
+							</div>
+						</div>
+						<div class="form-group">
+							<input id="vote-form-in1" type="text"/>
+						</div>
+						<div class="form-group">
+							<label for="vote-exampleTextarea">Ваш комментарий</label>
+							<textarea class="form-control" id="vote-exampleTextarea" rows="3"></textarea>
+						</div>
+						<div class="form-check disabled">
+							<label class="form-check-label">
+								<input type="checkbox" class="form-check-input" disabled>
+								Зашифровать
+							</label>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-lg btn-warning" type="submit">Подписать и отправить</button>
+						</div>
+					</form-->
+					<div id="voting-vote-buttons">
+						<button class="btn btn-lg btn-light" onclick="votingApp.cancelNewVote()" style="margin:1rem 1rem 2rem 1rem;">Отмена</button>
+						<button class="btn btn-lg btn-primary" onclick="votingApp.createNewVote()" style="margin:1rem 1rem 2rem 1rem;">Создать</button>
+					</div>
+				</div>
+			</div> <!-- voting-vote-panel -->
+		</div> <!-- voting-panel-container -->
+		<div id="voting-table-container" class="col-lg-7 table-responsive">
 			<table id="voting-table" class="table table-striped table-hover">
 				<thead>
 					<tr>
-						<th>Id</th>
-						<th>Sender</th>
+						<th>#</th>
 						<th>Name</th>
+						<th>Creator</th>
 						<th>Create date</th>
 						<th>Expiration date</th>
 						<th>...</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr onclick="console.log(111);">
-						<td>1</td>
-						<td>prof1983</td>
-						<td>Создание нового проекта Platform</td>
-						<td>07.01.2019</td>
-						<td>01.02.2019</td>
-						<td><button class="btn btn-sm btn-info" onclick="votingApp.showVoteForm();">Посмотреть</button></td>
-					</tr>
-					<tr v-for="vot in votings">
-						<td>{{vot.id}}</td>
-						<td>{{vot.sender.name}}</td>
+					<tr v-for="(vot, index) in votings" :id="'voting-tr-'+index"> <!-- :onclick="'votingApp.showVotingByIndex('+index+')'" -->
+						<td>{{index}}</td>
 						<td>{{vot.name}}</td>
-						<td>{{vot.createdDate}}</td>
-						<td>{{vot.expirationDate}}</td>
-						<td><button class="btn btn-sm btn-info" onclick="console.log('123');">Посмотреть</button></td>
+						<td>{{vot.creator.name}} ({{vot.creator.id}})</td>
+						<td>{{formatTime(vot.createdDate)}}</td>
+						<td>{{formatTime(vot.expirationDate)}}</td>
+						<td><button class="btn btn-sm btn-info" :onclick="'votingApp.showVotingByIndex('+index+')'">Посмотреть</button></td>
 					</tr>
 				</tbody>
-			</table>
+			</table> <!-- voting-table -->
 		</div> <!-- voting-table-container -->
-		<div id="voting-panel-container" class="col-lg-6">
-			<div id="voting-primary-panel" class="panel panel-primary" hidden>
-				<div class="col-md-10" style="text-align:center;">
-					<button class="btn btn-lg" onclick="votingApp.showVotingForm();">Создать новое голосование</button>
-				</div>
-			</div> <!-- voting-primary-panel -->
-			<div id="voting-info-panel" class="panel panel-info" hidden>
-				<form id="voting-form" class="col-md-12" hidden>
-					<div class="form-group">
-						<label>Наименование</label>
-						<input id="voting-form-name" class="input-lg">
-					</div>
-					<div>
-						<button id="voting-form-button-ok" class="btn btn-lg btn-warning" type="submit">Подписать и отправить</button>
-					</div>
-				</form>
-			</div> <!-- voting-info-panel -->
-			<div id="voting-vote-panel" class="panel panel-default" hidden>
-				<form id="vote-form" class="col-md-12" hidden>
-					<div class="form-group">
-						<div class="form-check">
-							<input type="radio" class="form-check-input" name="vote" id="vote1" value="yes" checked>
-							Yes
-						</div>
-						<div class="form-check">
-							<input type="radio" class="form-check-input" name="vote" id="vote2" value="no" checked>No
-						</div>
-						<div class="form-check">
-							<input type="radio" class="form-check-input" name="vote" id="vote3" value="abstain" checked>Abstain
-						</div>
-					</div>
-					<div class="form-group">
-						<input id="vote-form-in1" type="text"/>
-					</div>
-					<div class="form-group">
-						<label for="vote-exampleTextarea">Ваш комментарий</label>
-						<textarea class="form-control" id="vote-exampleTextarea" rows="3"></textarea>
-					</div>
-					<div class="form-check disabled">
-						<label class="form-check-label">
-							<input type="checkbox" class="form-check-input" disabled>
-							Зашифровать
-						</label>
-					</div>
-					<div class="form-group">
-						<button class="btn btn-lg btn-warning" type="submit">Подписать и отправить</button>
-					</div>
-				</form>
-			</div> <!-- voting-vote-panel -->
-		</div> <!-- voting-panel-container -->
 	</div> <!-- voting-main-container -->
 </div> <!-- voting -->
 
