@@ -1130,16 +1130,16 @@
 			<table id="community-table" class="table table-bordered table-striped">
 				<tr v-for="msg in messages">
 					<td>
-						{{ formatTime(msg.time)}}
+						{{formatTime(msg.time)}}
 					</td>
 					<td>
-						{{ msg.sender }} <!--a :href="'https://wavesexplorer.com/tx/' + msg.id">{{ formatSender(msg.sender) }}</a-->
+						{{msg.sender}}
 					</td>
 					<td>
-						{{ msg.text }}
+						{{msg.text}}
 					</td>
 					<td>
-						{{ formatAmount(msg.amount) }}
+						{{formatAmount(msg.amount)}}
 					</td>
 				</tr>
 			</table>
