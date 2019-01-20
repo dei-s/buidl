@@ -111,7 +111,7 @@ var Currency = (function () {
 	}
 
 	function getByAssetId(assetId) {
-		if (assetId == '') return BASE;
+		if (!assetId || assetId == '') return BASE;
 		return currencyCache[assetId];
 	}
 
