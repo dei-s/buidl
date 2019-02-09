@@ -1,19 +1,3 @@
-/******************************************************************************
- * Copyright © 2016 The Waves Developers.                                     *
- *                                                                            *
- * See the LICENSE files at                                                   *
- * the top-level directory of this distribution for the individual copyright  *
- * holder information and the developer policies on copyright and licensing.  *
- *                                                                            *
- * Unless otherwise agreed in a custom licensing agreement, no part of the    *
- * Waves software, including this file, may be copied, modified, propagated,  *
- * or distributed except according to the terms contained in the LICENSE      *
- * file.                                                                      *
- *                                                                            *
- * Removal or modification of this copyright notice is prohibited.            *
- *                                                                            *
- ******************************************************************************/
-
 (function () {
 	'use strict';
 
@@ -41,7 +25,11 @@
 
 		ctrl.blockHeight = 0;
 		ctrl.address = ApplicationContext.account.address;
-		ctrl.addressQr = 'waves://' + ctrl.address;
+		if (isMir()) {
+			ctrl.addressQr = 'mir://' + ctrl.address;
+		} else {
+			ctrl.addressQr = 'waves://' + ctrl.address;
+		}
 
 		function initializeBackupFields() {
 			ctrl.seed = ApplicationContext.account.seed;
@@ -126,7 +114,7 @@
 	var ALIAS_MINIMUM_LENGTH = 4;
 	var ALIAS_MAXIMUM_LENGTH = 30;
 
-	function WavesCreateAliasController($scope, $timeout, events, applicationContext, dialogService, notificationService, transactionBroadcast, formattingService, aliasRequestService, apiService) {
+	function CreateAliasController($scope, $timeout, events, applicationContext, dialogService, notificationService, transactionBroadcast, formattingService, aliasRequestService, apiService) {
 		var ctrl = this;
 
 		ctrl.fee = DEFAULT_FEE;
@@ -208,17 +196,17 @@
 		}
 	}
 
-	WavesCreateAliasController.$inject = ['$scope', '$timeout', 'navigation.events', 'applicationContext', 'dialogService', 'notificationService', 'transactionBroadcast', 'formattingService', 'aliasRequestService', 'apiService'];
+	CreateAliasController.$inject = ['$scope', '$timeout', 'navigation.events', 'applicationContext', 'dialogService', 'notificationService', 'transactionBroadcast', 'formattingService', 'aliasRequestService', 'apiService'];
 
 	angular
 		.module('app.navigation')
-		.controller('createAliasController', WavesCreateAliasController);
+		.controller('createAliasController', CreateAliasController);
 })();
 
 (function () {
 	'use strict';
 
-	function WavesTabController($scope, dialogService) {
+	function TabController($scope, dialogService) {
 		$scope.isSelected = function () {
 			return $scope.pageId === $scope.currentPageId;
 		};
@@ -231,24 +219,40 @@
 		};
 	}
 
-	function WavesTabLink(scope, element) {
+	function TabLink(scope, element) {
 		element.addClass('tabs-radio');
 	}
 
 	angular
 		.module('app.navigation')
-		.directive('wavesTab', function WavesTabDirective() {
+		.directive('baseTab', function () {
 			return {
 				restrict: 'A',
-				controller: ['$scope', 'dialogService', WavesTabController],
+				controller: ['$scope', 'dialogService', TabController],
 				scope: {
 					pageId: '@',
 					caption: '<',
 					onSelect: '&',
 					currentPageId: '<'
 				},
-				link: WavesTabLink,
+				link: TabLink,
 				templateUrl: 'navigation/tab.directive'
 			};
 		});
 })();
+
+/******************************************************************************
+ * Copyright © 2016 The Waves Developers.                                     *
+ *                                                                            *
+ * See the LICENSE files at                                                   *
+ * the top-level directory of this distribution for the individual copyright  *
+ * holder information and the developer policies on copyright and licensing.  *
+ *                                                                            *
+ * Unless otherwise agreed in a custom licensing agreement, no part of the    *
+ * Waves software, including this file, may be copied, modified, propagated,  *
+ * or distributed except according to the terms contained in the LICENSE      *
+ * file.                                                                      *
+ *                                                                            *
+ * Removal or modification of this copyright notice is prohibited.            *
+ *                                                                            *
+ ******************************************************************************/
