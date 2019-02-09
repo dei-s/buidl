@@ -416,6 +416,16 @@
 					tooltip-html
 					tooltip-theme="tooltipster-theme3"
 					tooltip-title="<center><u>Blocks tab</u></center><br/>Block information for testing purposes."></span>
+				<span base-tab id="socialTabIcon"
+					onclick="app_HideAllTab();socialApp.show();"
+					on-select="nav.changeTab(pageId)"
+					current-page-id="nav.currentTab"
+					page-id="social"
+					caption="'Social'"
+					tooltipster
+					tooltip-html
+					tooltip-theme="tooltipster-theme3"
+					tooltip-title="<center><u>Social tab</u></center><br/>Social payment to the funds: safety, health, education, social welfare and economic development."></span>
 			</div>
 		</section>
 
@@ -1128,6 +1138,7 @@
 
 			<div ng-switch-when="community"></div>
 			<div ng-switch-when="messaging"></div>
+			<div ng-switch-when="social"></div>
 			<div ng-switch-when="voting"></div>
 		</section>
 	</div> <!-- navigationContainer -->
@@ -1210,6 +1221,26 @@
 		</form>
 	</div>
 </div> <!-- contacts -->
+
+
+
+
+<div id="social" class="container-fluid" hidden>
+	<h2 class="sectionHeader">Social payment</h2>
+	<div id="social-main-container" class="row">
+		<div id="social-panel-container" class="col-lg-6">
+			<div id="social-primary-panel" class="panel panel-primary">
+				...
+			</div>
+			<div id="social-payment-panel" class="panel panel-success" hidden>
+				...
+			</div>
+		</div>
+		<div id="social-table-container" class="col-lg-6">
+			...
+		</div>
+	</div>
+</div> <!-- social -->
 
 
 
@@ -1661,6 +1692,7 @@
 <script src="js/app/voting.js"></script>
 <script src="js/app/main.js"></script>
 <script src="js/app/template.js"></script>
+<script src="js/app/social.js"></script>
 
 
 </body>
