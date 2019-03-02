@@ -112,6 +112,7 @@ var AssetService = (function(){
 	}
 
 	return {
+		buildId: buildId,
 		createAssetReissueTransaction: createAssetReissueTransaction,
 		createAssetTransferTransaction: createAssetTransferTransaction,
 		validateAssetReissue: validateAssetReissue,
