@@ -283,7 +283,7 @@ var messagingApp = new Vue({
 		},
 		showCreateNewMessage: function() {
 			this.message = {
-				amount: Money.fromCoins(Constants.MINIMUM_MESSAGE_AMOUNT_CONS, Currency.getByAssetId(this.project.id)),
+				amount: Money.fromCoins(Constants.MINIMUM_MESSAGE_AMOUNT_COINS, Currency.getByAssetId(this.project.id)),
 				assetId: '',
 				fee: new Money.fromCoins(Constants.MINIMUM_MESSAGE_FEE_COINS, Currency.BASE),
 				id: '',
